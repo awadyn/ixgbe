@@ -775,7 +775,7 @@ static void ixgbe_get_regs(struct net_device *netdev,
 		regs_buff[924 + i] = IXGBE_GET_STAT(adapter, pxoffrxc[i]);
 	*/
 	for (i = 0; i < 8; i++)
-	  regs_buff[885 + i] = IXGBE_READ_REG(hw, IXGBE_MPC[i]);
+	  regs_buff[885 + i] = IXGBE_READ_REG(hw, IXGBE_MPC(i));
 	regs_buff[893] = IXGBE_READ_REG(hw, IXGBE_MLFC);
 	regs_buff[894] = IXGBE_READ_REG(hw, IXGBE_MRFC);
 	regs_buff[895] = IXGBE_READ_REG(hw, IXGBE_RLEC);
@@ -788,7 +788,7 @@ static void ixgbe_get_regs(struct net_device *netdev,
 	for (i = 0; i < 8; i++)
 	  regs_buff[908 + i] = IXGBE_READ_REG(hw, IXGBE_PXONRXC(i));
 	for (i = 0; i < 8; i++)
-	  regs_buff[916 + i] = IXGBE_READ_REG(hw, IXGBE_PXFFTXC(i));
+	  regs_buff[916 + i] = IXGBE_READ_REG(hw, IXGBE_PXOFFTXC(i));
 	for (i = 0; i < 8; i++)
 	  regs_buff[924 + i] = IXGBE_READ_REG(hw, IXGBE_PXOFFRXC(i));
 	//regs_buff[932] = IXGBE_GET_STAT(adapter, prc64);
@@ -868,13 +868,13 @@ static void ixgbe_get_regs(struct net_device *netdev,
 	for (i = 0; i < 16; i++)
 	regs_buff[1022 + i] = IXGBE_GET_STAT(adapter, qbtc[i]);*/
 	for (i = 0; i < 16; i++)
-	  regs_buff[974 + i] = IXGBE_READ_REG(hw, IXGBE_QPRC[i]);
+	  regs_buff[974 + i] = IXGBE_READ_REG(hw, IXGBE_QPRC(i));
 	for (i = 0; i < 16; i++)
-	  regs_buff[990 + i] = IXGBE_READ_REG(hw, IXGBE_QPTC[i]);
+	  regs_buff[990 + i] = IXGBE_READ_REG(hw, IXGBE_QPTC(i));
 	for (i = 0; i < 16; i++)
-	  regs_buff[1006 + i] = IXGBE_READ_REG(hw, IXGBE_QBRC[i]);
+	  regs_buff[1006 + i] = IXGBE_READ_REG(hw, IXGBE_QBRC(i));
 	for (i = 0; i < 16; i++)
-	  regs_buff[1022 + i] = IXGBE_READ_REG(hw, IXGBE_QBTC[i]);
+	  regs_buff[1022 + i] = IXGBE_READ_REG(hw, IXGBE_QBTC(i));
 
 	/* MAC */
 	regs_buff[1038] = IXGBE_READ_REG(hw, IXGBE_PCS1GCFIG);

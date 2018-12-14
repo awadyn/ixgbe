@@ -968,7 +968,7 @@ static void ixgbe_update_xoff_rx_lfc(struct ixgbe_adapter *adapter)
 	struct ixgbe_hw *hw = &adapter->hw;
 	struct ixgbe_hw_stats *hwstats = &adapter->stats;
 	int i;
-	u32 data;
+	u32 data=0;
 
 	if ((hw->fc.current_mode != ixgbe_fc_full) &&
 	    (hw->fc.current_mode != ixgbe_fc_rx_pause))
@@ -976,10 +976,11 @@ static void ixgbe_update_xoff_rx_lfc(struct ixgbe_adapter *adapter)
 
 	switch (hw->mac.type) {
 	case ixgbe_mac_82598EB:
-		data = IXGBE_READ_REG(hw, IXGBE_LXOFFRXC);
-		break;
+	  data = IXGBE_READ_REG(hw, IXGBE_LXOFFRXC);
+	  break;
 	default:
-		data = IXGBE_READ_REG(hw, IXGBE_LXOFFRXCNT);
+	  data=0;
+	  //data = IXGBE_READ_REG(hw, IXGBE_LXOFFRXCNT);
 	}
 	hwstats->lxoffrxc += data;
 
@@ -1011,14 +1012,15 @@ static void ixgbe_update_xoff_received(struct ixgbe_adapter *adapter)
 
 	/* update stats for each tc, only valid with PFC enabled */
 	for (i = 0; i < MAX_TX_PACKET_BUFFERS; i++) {
-		u32 pxoffrxc;
+		u32 pxoffrxc = 0;
 
 		switch (hw->mac.type) {
 		case ixgbe_mac_82598EB:
-			pxoffrxc = IXGBE_READ_REG(hw, IXGBE_PXOFFRXC(i));
+		  pxoffrxc = IXGBE_READ_REG(hw, IXGBE_PXOFFRXC(i));
 			break;
 		default:
-			pxoffrxc = IXGBE_READ_REG(hw, IXGBE_PXOFFRXCNT(i));
+		  pxoffrxc=0;
+		  //pxoffrxc = IXGBE_READ_REG(hw, IXGBE_PXOFFRXCNT(i));
 		}
 		hwstats->pxoffrxc[i] += pxoffrxc;
 		/* Get the TC for given UP */
@@ -6624,11 +6626,13 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 	struct ixgbe_hw *hw = &adapter->hw;
 	struct ixgbe_hw_stats *hwstats = &adapter->stats;
 	u64 total_mpc = 0;
-	u32 i, missed_rx = 0, mpc, bprc, lxon, lxoff, xon_off_tot;
+	u32 i, missed_rx = 0, mpc=0;
 	u64 non_eop_descs = 0, restart_queue = 0, tx_busy = 0;
 	u64 alloc_rx_page_failed = 0, alloc_rx_buff_failed = 0;
 	u64 bytes = 0, packets = 0, hw_csum_rx_error = 0;
 
+	printk(KERN_INFO "\t *** ixgbe_update_stats\n");
+	
 	if (test_bit(__IXGBE_DOWN, &adapter->state) ||
 	    test_bit(__IXGBE_RESETTING, &adapter->state))
 		return;
@@ -6675,24 +6679,24 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 	netdev->stats.tx_bytes = bytes;
 	netdev->stats.tx_packets = packets;
 
-	hwstats->crcerrs += IXGBE_READ_REG(hw, IXGBE_CRCERRS);
+	//hwstats->crcerrs += IXGBE_READ_REG(hw, IXGBE_CRCERRS);
 
 	/* 8 register reads */
 	for (i = 0; i < 8; i++) {
 		/* for packet buffers not used, the register should read 0 */
-		mpc = IXGBE_READ_REG(hw, IXGBE_MPC(i));
+		//mpc = IXGBE_READ_REG(hw, IXGBE_MPC(i));
 		missed_rx += mpc;
 		hwstats->mpc[i] += mpc;
 		total_mpc += hwstats->mpc[i];
-		hwstats->pxontxc[i] += IXGBE_READ_REG(hw, IXGBE_PXONTXC(i));
-		hwstats->pxofftxc[i] += IXGBE_READ_REG(hw, IXGBE_PXOFFTXC(i));
+		//hwstats->pxontxc[i] += IXGBE_READ_REG(hw, IXGBE_PXONTXC(i));
+		//hwstats->pxofftxc[i] += IXGBE_READ_REG(hw, IXGBE_PXOFFTXC(i));
 		switch (hw->mac.type) {
 		case ixgbe_mac_82598EB:
-			hwstats->rnbc[i] += IXGBE_READ_REG(hw, IXGBE_RNBC(i));
-			hwstats->qbtc[i] += IXGBE_READ_REG(hw, IXGBE_QBTC(i));
-			hwstats->qbrc[i] += IXGBE_READ_REG(hw, IXGBE_QBRC(i));
-			hwstats->pxonrxc[i] +=
-				IXGBE_READ_REG(hw, IXGBE_PXONRXC(i));
+		  //hwstats->rnbc[i] += IXGBE_READ_REG(hw, IXGBE_RNBC(i));
+		  //hwstats->qbtc[i] += IXGBE_READ_REG(hw, IXGBE_QBTC(i));
+		  //hwstats->qbrc[i] += IXGBE_READ_REG(hw, IXGBE_QBRC(i));
+		  //hwstats->pxonrxc[i] +=
+		  //IXGBE_READ_REG(hw, IXGBE_PXONRXC(i));
 			break;
 		case ixgbe_mac_82599EB:
 		case ixgbe_mac_X540:
@@ -6709,8 +6713,8 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 
 	/*16 register reads */
 	for (i = 0; i < 16; i++) {
-		hwstats->qptc[i] += IXGBE_READ_REG(hw, IXGBE_QPTC(i));
-		hwstats->qprc[i] += IXGBE_READ_REG(hw, IXGBE_QPRC(i));
+	  //hwstats->qptc[i] += IXGBE_READ_REG(hw, IXGBE_QPTC(i));
+	  //hwstats->qprc[i] += IXGBE_READ_REG(hw, IXGBE_QPRC(i));
 		if ((hw->mac.type == ixgbe_mac_82599EB) ||
 		    (hw->mac.type == ixgbe_mac_X540) ||
 		    (hw->mac.type == ixgbe_mac_X550) ||
@@ -6723,9 +6727,9 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 		}
 	}
 
-	hwstats->gprc += IXGBE_READ_REG(hw, IXGBE_GPRC);
+	//hwstats->gprc += IXGBE_READ_REG(hw, IXGBE_GPRC);
 	/* work around hardware counting issue */
-	hwstats->gprc -= missed_rx;
+	//hwstats->gprc -= missed_rx;
 
 	ixgbe_update_xoff_received(adapter);
 
@@ -6748,18 +6752,18 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 		hwstats->b2ogprc += IXGBE_READ_REG(hw, IXGBE_B2OGPRC);
 		/* fall through */
 	case ixgbe_mac_82599EB:
-		for (i = 0; i < 16; i++)
-			adapter->hw_rx_no_dma_resources +=
-					     IXGBE_READ_REG(hw, IXGBE_QPRDC(i));
+	  /*for (i = 0; i < 16; i++)
+		  adapter->hw_rx_no_dma_resources +=
+		    IXGBE_READ_REG(hw, IXGBE_QPRDC(i));
 		hwstats->gorc += IXGBE_READ_REG(hw, IXGBE_GORCL);
-		IXGBE_READ_REG(hw, IXGBE_GORCH); /* to clear */
+		IXGBE_READ_REG(hw, IXGBE_GORCH);  to clear 
 		hwstats->gotc += IXGBE_READ_REG(hw, IXGBE_GOTCL);
-		IXGBE_READ_REG(hw, IXGBE_GOTCH); /* to clear */
+		IXGBE_READ_REG(hw, IXGBE_GOTCH);  to clear 
 		hwstats->tor += IXGBE_READ_REG(hw, IXGBE_TORL);
-		IXGBE_READ_REG(hw, IXGBE_TORH); /* to clear */
+		IXGBE_READ_REG(hw, IXGBE_TORH);  to clear 
 		hwstats->lxonrxc += IXGBE_READ_REG(hw, IXGBE_LXONRXCNT);
 		hwstats->fdirmatch += IXGBE_READ_REG(hw, IXGBE_FDIRMATCH);
-		hwstats->fdirmiss += IXGBE_READ_REG(hw, IXGBE_FDIRMISS);
+		hwstats->fdirmiss += IXGBE_READ_REG(hw, IXGBE_FDIRMISS);*/
 #ifdef IXGBE_FCOE
 		hwstats->fccrc += IXGBE_READ_REG(hw, IXGBE_FCCRC);
 		hwstats->fcoerpdc += IXGBE_READ_REG(hw, IXGBE_FCOERPDC);
@@ -6786,7 +6790,7 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 	default:
 		break;
 	}
-	bprc = IXGBE_READ_REG(hw, IXGBE_BPRC);
+	/*bprc = IXGBE_READ_REG(hw, IXGBE_BPRC);
 	hwstats->bprc += bprc;
 	hwstats->mprc += IXGBE_READ_REG(hw, IXGBE_MPRC);
 	if (hw->mac.type == ixgbe_mac_82598EB)
@@ -6804,11 +6808,11 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 	lxoff = IXGBE_READ_REG(hw, IXGBE_LXOFFTXC);
 	hwstats->lxofftxc += lxoff;
 	hwstats->gptc += IXGBE_READ_REG(hw, IXGBE_GPTC);
-	hwstats->mptc += IXGBE_READ_REG(hw, IXGBE_MPTC);
+	hwstats->mptc += IXGBE_READ_REG(hw, IXGBE_MPTC);*/
 	/*
 	 * 82598 errata - tx of flow control packets is included in tx counters
 	 */
-	xon_off_tot = lxon + lxoff;
+	/*xon_off_tot = lxon + lxoff;
 	hwstats->gptc -= xon_off_tot;
 	hwstats->mptc -= xon_off_tot;
 	hwstats->gotc -= (xon_off_tot * (ETH_ZLEN + ETH_FCS_LEN));
@@ -6823,7 +6827,7 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
 	hwstats->ptc511 += IXGBE_READ_REG(hw, IXGBE_PTC511);
 	hwstats->ptc1023 += IXGBE_READ_REG(hw, IXGBE_PTC1023);
 	hwstats->ptc1522 += IXGBE_READ_REG(hw, IXGBE_PTC1522);
-	hwstats->bptc += IXGBE_READ_REG(hw, IXGBE_BPTC);
+	hwstats->bptc += IXGBE_READ_REG(hw, IXGBE_BPTC);*/
 
 	/* Fill out the OS statistics structure */
 	netdev->stats.multicast = hwstats->mprc;
