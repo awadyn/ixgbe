@@ -62,7 +62,8 @@
 /* TX/RX descriptor defines */
 #define IXGBE_DEFAULT_TXD		    512
 #define IXGBE_DEFAULT_TX_WORK		    256
-#define IXGBE_MAX_TXD			   4096
+//#define IXGBE_MAX_TXD			   4096 
+#define IXGBE_MAX_TXD			   8192
 #define IXGBE_MIN_TXD			     64
 
 #if (PAGE_SIZE < 8192)
@@ -70,7 +71,8 @@
 #else
 #define IXGBE_DEFAULT_RXD		    128
 #endif
-#define IXGBE_MAX_RXD			   4096
+//#define IXGBE_MAX_RXD			   4096
+#define IXGBE_MAX_RXD			   8192
 #define IXGBE_MIN_RXD			     64
 
 #define IXGBE_ETH_P_LLDP		 0x88CC
@@ -102,7 +104,7 @@
  *	 up negative.  In these cases we should fall back to the 3K
  *	 buffers.
  */
-#if (PAGE_SIZE < 8192)
+//#if (PAGE_SIZE < 8192)
 #define IXGBE_MAX_2K_FRAME_BUILD_SKB (IXGBE_RXBUFFER_1536 - NET_IP_ALIGN)
 #define IXGBE_2K_TOO_SMALL_WITH_PADDING \
 ((NET_SKB_PAD + IXGBE_RXBUFFER_1536) > SKB_WITH_OVERHEAD(IXGBE_RXBUFFER_2K))
@@ -129,9 +131,9 @@ static inline int ixgbe_skb_pad(void)
 	 * cache-line alignment.
 	 */
 	if (IXGBE_2K_TOO_SMALL_WITH_PADDING)
-		rx_buf_len = IXGBE_RXBUFFER_3K + SKB_DATA_ALIGN(NET_IP_ALIGN);
+	  rx_buf_len = IXGBE_RXBUFFER_3K + SKB_DATA_ALIGN(NET_IP_ALIGN);
 	else
-		rx_buf_len = IXGBE_RXBUFFER_1536;
+	  rx_buf_len = IXGBE_RXBUFFER_1536;
 
 	/* if needed make room for NET_IP_ALIGN */
 	rx_buf_len -= NET_IP_ALIGN;
@@ -139,10 +141,10 @@ static inline int ixgbe_skb_pad(void)
 	return ixgbe_compute_pad(rx_buf_len);
 }
 
-#define IXGBE_SKB_PAD	ixgbe_skb_pad()
-#else
-#define IXGBE_SKB_PAD	(NET_SKB_PAD + NET_IP_ALIGN)
-#endif
+#define IXGBE_SKB_PAD ixgbe_skb_pad()
+//#else
+//#define IXGBE_SKB_PAD	(NET_SKB_PAD + NET_IP_ALIGN)
+//#endif
 
 /*
  * NOTE: netdev_alloc_skb reserves up to 64 bytes, NET_IP_ALIGN means we
@@ -235,7 +237,11 @@ struct vf_macvlans {
 struct ixgbe_tx_buffer {
 	union ixgbe_adv_tx_desc *next_to_watch;
 	unsigned long time_stamp;
-	struct sk_buff *skb;
+	union {
+		struct sk_buff *skb;
+		/* XDP uses address ptr on irq_clean */
+		void *data;
+	};
 	unsigned int bytecount;
 	unsigned short gso_segs;
 	__be16 protocol;
@@ -271,6 +277,7 @@ struct ixgbe_rx_queue_stats {
 	u64 rsc_count;
 	u64 rsc_flush;
 	u64 non_eop_descs;
+	u64 alloc_rx_page;
 	u64 alloc_rx_page_failed;
 	u64 alloc_rx_buff_failed;
 	u64 csum_err;
@@ -288,6 +295,7 @@ enum ixgbe_ring_state_t {
 	__IXGBE_TX_XPS_INIT_DONE,
 	__IXGBE_TX_DETECT_HANG,
 	__IXGBE_HANG_CHECK_ARMED,
+	__IXGBE_TX_XDP_RING,
 };
 
 #define ring_uses_build_skb(ring) \
@@ -314,10 +322,17 @@ struct ixgbe_fwd_adapter {
 	set_bit(__IXGBE_RX_RSC_ENABLED, &(ring)->state)
 #define clear_ring_rsc_enabled(ring) \
 	clear_bit(__IXGBE_RX_RSC_ENABLED, &(ring)->state)
+#define ring_is_xdp(ring) \
+	test_bit(__IXGBE_TX_XDP_RING, &(ring)->state)
+#define set_ring_xdp(ring) \
+	set_bit(__IXGBE_TX_XDP_RING, &(ring)->state)
+#define clear_ring_xdp(ring) \
+	clear_bit(__IXGBE_TX_XDP_RING, &(ring)->state)
 struct ixgbe_ring {
 	struct ixgbe_ring *next;	/* pointer to next ring in q_vector */
 	struct ixgbe_q_vector *q_vector; /* backpointer to host q_vector */
 	struct net_device *netdev;	/* netdev ring belongs to */
+	struct bpf_prog *xdp_prog;
 	struct device *dev;		/* device for DMA mapping */
 	struct ixgbe_fwd_adapter *l2_accel_priv;
 	void *desc;			/* descriptor ring memory */
@@ -330,6 +345,9 @@ struct ixgbe_ring {
 	dma_addr_t dma;			/* phys. address of descriptor ring */
 	unsigned int size;		/* length in bytes */
 
+        unsigned int bsizepkt;
+        unsigned int bsizehdr;
+   
 	u16 count;			/* amount of descriptors */
 
 	u8 queue_index; /* needed for multiqueue queue management */
@@ -379,6 +397,7 @@ enum ixgbe_ring_f_enum {
 #define IXGBE_MAX_FCOE_INDICES		8
 #define MAX_RX_QUEUES			(IXGBE_MAX_FDIR_INDICES + 1)
 #define MAX_TX_QUEUES			(IXGBE_MAX_FDIR_INDICES + 1)
+#define MAX_XDP_QUEUES			(IXGBE_MAX_FDIR_INDICES + 1)
 #define IXGBE_MAX_L2A_QUEUES		4
 #define IXGBE_BAD_L2A_QUEUE		3
 #define IXGBE_MAX_MACVLANS		31
@@ -402,27 +421,35 @@ struct ixgbe_ring_feature {
  */
 static inline unsigned int ixgbe_rx_bufsz(struct ixgbe_ring *ring)
 {
-	if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state))
-		return IXGBE_RXBUFFER_3K;
-#if (PAGE_SIZE < 8192)
-	if (ring_uses_build_skb(ring))
-		return IXGBE_MAX_2K_FRAME_BUILD_SKB;
-#endif
-	return IXGBE_RXBUFFER_2K;
+  if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state))
+    return IXGBE_RXBUFFER_3K;
+  //#if (PAGE_SIZE < 8192)
+  if (ring_uses_build_skb(ring))
+    return IXGBE_MAX_2K_FRAME_BUILD_SKB;
+	//#endif
+  return IXGBE_RXBUFFER_2K;
 }
 
 static inline unsigned int ixgbe_rx_pg_order(struct ixgbe_ring *ring)
 {
-#if (PAGE_SIZE < 8192)
-	if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state))
-		return 1;
-#endif
-	return 0;
+  //  #if (PAGE_SIZE < 8192)
+  if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state))
+    return 1;
+	//#endif
+  return 0;
+
 }
 #define ixgbe_rx_pg_size(_ring) (PAGE_SIZE << ixgbe_rx_pg_order(_ring))
 
+#define IXGBE_ITR_ADAPTIVE_MIN_INC	2
+#define IXGBE_ITR_ADAPTIVE_MIN_USECS	10
+#define IXGBE_ITR_ADAPTIVE_MAX_USECS	126
+#define IXGBE_ITR_ADAPTIVE_LATENCY	0x80
+#define IXGBE_ITR_ADAPTIVE_BULK		0x00
+
 struct ixgbe_ring_container {
 	struct ixgbe_ring *ring;	/* pointer to linked list of rings */
+	unsigned long next_update;	/* jiffies value of last update */
 	unsigned int total_bytes;	/* total bytes processed this int */
 	unsigned int total_packets;	/* total packets processed this int */
 	u16 work_limit;			/* total work allowed per interrupt */
@@ -461,7 +488,6 @@ struct ixgbe_q_vector {
 	/* for dynamic allocation of rings associated with this q_vector */
 	struct ixgbe_ring ring[0] ____cacheline_internodealigned_in_smp;
 };
-
 
 #ifdef CONFIG_IXGBE_HWMON
 
@@ -556,6 +582,7 @@ struct ixgbe_adapter {
 	unsigned long active_vlans[BITS_TO_LONGS(VLAN_N_VID)];
 	/* OS defined structs */
 	struct net_device *netdev;
+	struct bpf_prog *xdp_prog;
 	struct pci_dev *pdev;
 
 	unsigned long state;
@@ -622,6 +649,10 @@ struct ixgbe_adapter {
 	__be16 vxlan_port;
 	__be16 geneve_port;
 
+	/* XDP */
+	int num_xdp_queues;
+	struct ixgbe_ring *xdp_ring[MAX_XDP_QUEUES];
+
 	/* TX */
 	struct ixgbe_ring *tx_ring[MAX_TX_QUEUES] ____cacheline_aligned_in_smp;
 
@@ -638,6 +669,7 @@ struct ixgbe_adapter {
 	u64 rsc_total_count;
 	u64 rsc_total_flush;
 	u64 non_eop_descs;
+	u32 alloc_rx_page;
 	u32 alloc_rx_page_failed;
 	u32 alloc_rx_buff_failed;
 
@@ -668,6 +700,7 @@ struct ixgbe_adapter {
 
 	u64 tx_busy;
 	unsigned int tx_ring_count;
+	unsigned int xdp_ring_count;
 	unsigned int rx_ring_count;
 
 	u32 link_speed;
@@ -839,7 +872,7 @@ void ixgbe_down(struct ixgbe_adapter *adapter);
 void ixgbe_reinit_locked(struct ixgbe_adapter *adapter);
 void ixgbe_reset(struct ixgbe_adapter *adapter);
 void ixgbe_set_ethtool_ops(struct net_device *netdev);
-int ixgbe_setup_rx_resources(struct ixgbe_ring *);
+int ixgbe_setup_rx_resources(struct ixgbe_adapter *, struct ixgbe_ring *);
 int ixgbe_setup_tx_resources(struct ixgbe_ring *);
 void ixgbe_free_rx_resources(struct ixgbe_ring *);
 void ixgbe_free_tx_resources(struct ixgbe_ring *);
@@ -975,6 +1008,9 @@ void ixgbe_ptp_check_pps_event(struct ixgbe_adapter *adapter);
 void ixgbe_sriov_reinit(struct ixgbe_adapter *adapter);
 #endif
 
+netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
+				  struct ixgbe_adapter *adapter,
+				  struct ixgbe_ring *tx_ring);
 u32 ixgbe_rss_indir_tbl_entries(struct ixgbe_adapter *adapter);
 void ixgbe_store_key(struct ixgbe_adapter *adapter);
 void ixgbe_store_reta(struct ixgbe_adapter *adapter);

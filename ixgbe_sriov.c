@@ -182,10 +182,6 @@ void ixgbe_enable_sriov(struct ixgbe_adapter *adapter, unsigned int max_vfs)
 	if (!pre_existing_vfs && !max_vfs)
 		return;
 
-	if (!pre_existing_vfs)
-		dev_warn(&adapter->pdev->dev,
-			 "Enabling SR-IOV VFs using the module parameter is deprecated - please use the pci sysfs interface.\n");
-
 	/* If there are pre-existing VFs then we have to force
 	 * use of that many - over ride any module parameter value.
 	 * This may result from the user unloading the PF driver
@@ -291,7 +287,8 @@ int ixgbe_disable_sriov(struct ixgbe_adapter *adapter)
 	if (adapter->ring_feature[RING_F_VMDQ].limit == 1) {
 		adapter->flags &= ~IXGBE_FLAG_VMDQ_ENABLED;
 		adapter->flags &= ~IXGBE_FLAG_SRIOV_ENABLED;
-		rss = min_t(int, IXGBE_MAX_RSS_INDICES, num_online_cpus());
+		rss = min_t(int, ixgbe_max_rss_indices(adapter),
+			    num_online_cpus());
 	} else {
 		rss = min_t(int, IXGBE_MAX_L2A_QUEUES, num_online_cpus());
 	}
@@ -379,7 +376,9 @@ static int ixgbe_pci_sriov_disable(struct pci_dev *dev)
 {
 	struct ixgbe_adapter *adapter = pci_get_drvdata(dev);
 	int err;
+#ifdef CONFIG_PCI_IOV
 	u32 current_flags = adapter->flags;
+#endif
 
 	err = ixgbe_disable_sriov(adapter);
 

@@ -366,25 +366,6 @@ s32 ixgbe_start_hw_gen2(struct ixgbe_hw *hw)
 	}
 	IXGBE_WRITE_FLUSH(hw);
 
-#ifndef CONFIG_SPARC
-	/* Disable relaxed ordering */
-	for (i = 0; i < hw->mac.max_tx_queues; i++) {
-		u32 regval;
-
-		regval = IXGBE_READ_REG(hw, IXGBE_DCA_TXCTRL_82599(i));
-		regval &= ~IXGBE_DCA_TXCTRL_DESC_WRO_EN;
-		IXGBE_WRITE_REG(hw, IXGBE_DCA_TXCTRL_82599(i), regval);
-	}
-
-	for (i = 0; i < hw->mac.max_rx_queues; i++) {
-		u32 regval;
-
-		regval = IXGBE_READ_REG(hw, IXGBE_DCA_RXCTRL(i));
-		regval &= ~(IXGBE_DCA_RXCTRL_DATA_WRO_EN |
-			    IXGBE_DCA_RXCTRL_HEAD_WRO_EN);
-		IXGBE_WRITE_REG(hw, IXGBE_DCA_RXCTRL(i), regval);
-	}
-#endif
 	return 0;
 }
 
@@ -3569,8 +3550,10 @@ void ixgbe_set_rxpba_generic(struct ixgbe_hw *hw,
 	case (PBA_STRATEGY_EQUAL):
 		/* Divide the remaining Rx packet buffer evenly among the TCs */
 		rxpktsize = (pbsize / (num_pb - i)) << IXGBE_RXPBSIZE_SHIFT;
-		for (; i < num_pb; i++)
+		for (; i < num_pb; i++) {
 			IXGBE_WRITE_REG(hw, IXGBE_RXPBSIZE(i), rxpktsize);
+			printk(KERN_INFO "\t *** IXGBE_RXPBSIZE(%d)=%d", i, (int)rxpktsize);
+		}
 		break;
 	default:
 		break;
@@ -3585,7 +3568,9 @@ void ixgbe_set_rxpba_generic(struct ixgbe_hw *hw,
 	txpbthresh = (txpktsize / 1024) - IXGBE_TXPKT_SIZE_MAX;
 	for (i = 0; i < num_pb; i++) {
 		IXGBE_WRITE_REG(hw, IXGBE_TXPBSIZE(i), txpktsize);
+		printk(KERN_INFO "\t *** IXGBE_TXPBSIZE(%d)=%d", i, (int)txpktsize);
 		IXGBE_WRITE_REG(hw, IXGBE_TXPBTHRESH(i), txpbthresh);
+		printk(KERN_INFO "\t *** IXGBE_TXPBTHRESH(%d)=%d", i, (int)txpbthresh);
 	}
 
 	/* Clear unused TCs, if any, to zero buffer size*/
@@ -3594,6 +3579,8 @@ void ixgbe_set_rxpba_generic(struct ixgbe_hw *hw,
 		IXGBE_WRITE_REG(hw, IXGBE_TXPBSIZE(i), 0);
 		IXGBE_WRITE_REG(hw, IXGBE_TXPBTHRESH(i), 0);
 	}
+
+	printk(KERN_INFO "\t *** IXGBE_DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
 }
 
 /**
@@ -3800,10 +3787,10 @@ s32 ixgbe_set_fw_drv_ver_generic(struct ixgbe_hw *hw, u8 maj, u8 min,
 	fw_cmd.ver_build = build;
 	fw_cmd.ver_sub = sub;
 	fw_cmd.hdr.checksum = 0;
-	fw_cmd.hdr.checksum = ixgbe_calculate_checksum((u8 *)&fw_cmd,
-				(FW_CEM_HDR_LEN + fw_cmd.hdr.buf_len));
 	fw_cmd.pad = 0;
 	fw_cmd.pad2 = 0;
+	fw_cmd.hdr.checksum = ixgbe_calculate_checksum((u8 *)&fw_cmd,
+				(FW_CEM_HDR_LEN + fw_cmd.hdr.buf_len));
 
 	for (i = 0; i <= FW_CEM_MAX_RETRIES; i++) {
 		ret_val = ixgbe_host_interface_command(hw, &fw_cmd,
@@ -4100,8 +4087,8 @@ bool ixgbe_mng_present(struct ixgbe_hw *hw)
 		return false;
 
 	fwsm = IXGBE_READ_REG(hw, IXGBE_FWSM(hw));
-	fwsm &= IXGBE_FWSM_MODE_MASK;
-	return fwsm == IXGBE_FWSM_FW_MODE_PT;
+
+	return !!(fwsm & IXGBE_FWSM_FW_MODE_PT);
 }
 
 /**
