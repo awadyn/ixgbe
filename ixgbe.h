@@ -119,7 +119,7 @@ static inline int ixgbe_compute_pad(int rx_buf_len)
 	return pad_size;
 }
 
-static inline int ixgbe_skb_pad(void)
+static inline int ixgbe_skb_pad(int b)
 {
 	int rx_buf_len;
 
@@ -131,7 +131,8 @@ static inline int ixgbe_skb_pad(void)
 	 * cache-line alignment.
 	 */
 	if (IXGBE_2K_TOO_SMALL_WITH_PADDING)
-	  rx_buf_len = IXGBE_RXBUFFER_3K + SKB_DATA_ALIGN(NET_IP_ALIGN);
+	  //rx_buf_len = IXGBE_RXBUFFER_3K + SKB_DATA_ALIGN(NET_IP_ALIGN);
+	  rx_buf_len = b + SKB_DATA_ALIGN(NET_IP_ALIGN);
 	else
 	  rx_buf_len = IXGBE_RXBUFFER_1536;
 
@@ -141,7 +142,7 @@ static inline int ixgbe_skb_pad(void)
 	return ixgbe_compute_pad(rx_buf_len);
 }
 
-#define IXGBE_SKB_PAD ixgbe_skb_pad()
+#define IXGBE_SKB_PAD(b) ixgbe_skb_pad(b)
 //#else
 //#define IXGBE_SKB_PAD	(NET_SKB_PAD + NET_IP_ALIGN)
 //#endif
@@ -422,11 +423,12 @@ struct ixgbe_ring_feature {
 static inline unsigned int ixgbe_rx_bufsz(struct ixgbe_ring *ring)
 {
   if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state))
-    return IXGBE_RXBUFFER_3K;
+    return ring->bsizepkt;
+    //return IXGBE_RXBUFFER_3K;
   //#if (PAGE_SIZE < 8192)
   if (ring_uses_build_skb(ring))
     return IXGBE_MAX_2K_FRAME_BUILD_SKB;
-	//#endif
+  //#endif
   return IXGBE_RXBUFFER_2K;
 }
 

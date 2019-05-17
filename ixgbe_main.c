@@ -1579,7 +1579,7 @@ static inline void ixgbe_rx_checksum(struct ixgbe_ring *ring,
 
 static inline unsigned int ixgbe_rx_offset(struct ixgbe_ring *rx_ring)
 {
-	return ring_uses_build_skb(rx_ring) ? IXGBE_SKB_PAD : 0;
+  return ring_uses_build_skb(rx_ring) ? IXGBE_SKB_PAD(rx_ring->bsizepkt) : 0;
 }
 
 static bool ixgbe_alloc_mapped_page(struct ixgbe_ring *rx_ring,
@@ -3758,14 +3758,16 @@ static void ixgbe_configure_srrctl(struct ixgbe_adapter *adapter,
 		reg_idx &= mask;
 	}
 
-	/* configure header buffer length, needed for RSC */
-	srrctl = IXGBE_RX_HDR_SIZE << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT;
+	/* /\* configure header buffer length, needed for RSC *\/ */
+	/* srrctl = IXGBE_RX_HDR_SIZE << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT; */
 
-	/* configure the packet buffer length */
-	if (test_bit(__IXGBE_RX_3K_BUFFER, &rx_ring->state))
-		srrctl |= IXGBE_RXBUFFER_3K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
-	else
-		srrctl |= IXGBE_RXBUFFER_2K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
+	/* /\* configure the packet buffer length *\/ */
+	/* if (test_bit(__IXGBE_RX_3K_BUFFER, &rx_ring->state)) */
+	/* 	srrctl |= IXGBE_RXBUFFER_3K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT; */
+	/* else */
+	/* 	srrctl |= IXGBE_RXBUFFER_2K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT; */
+	srrctl = rx_ring->bsizehdr << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT;
+	srrctl |=  rx_ring->bsizepkt >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
 
 	/* configure descriptor type */
 	srrctl |= IXGBE_SRRCTL_DESCTYPE_ADV_ONEBUF;
@@ -6475,6 +6477,10 @@ int ixgbe_setup_rx_resources(struct ixgbe_adapter *adapter,
 	rx_ring->size = rx_ring->count * sizeof(union ixgbe_adv_rx_desc);
 	rx_ring->size = ALIGN(rx_ring->size, 4096);
 
+	// make it a variable
+	rx_ring->bsizepkt = IXGBE_RXBUFFER_3K;
+	rx_ring->bsizehdr = IXGBE_RXBUFFER_256;
+	
 	set_dev_node(dev, ring_node);
 	rx_ring->desc = dma_alloc_coherent(dev,
 					   rx_ring->size,
