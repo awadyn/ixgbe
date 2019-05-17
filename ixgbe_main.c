@@ -1989,21 +1989,25 @@ static bool ixgbe_can_reuse_rx_page(struct ixgbe_rx_buffer *rx_buffer)
 	if (unlikely(ixgbe_page_is_reserved(page)))
 		return false;
 
-#if (PAGE_SIZE < 8192)
 	/* if we are only owner of page we can reuse it */
 	if (unlikely((page_ref_count(page) - pagecnt_bias) > 1))
-		return false;
-#else
-	/* The last offset is a bit aggressive in that we assume the
-	 * worst case of FCoE being enabled and using a 3K buffer.
-	 * However this should have minimal impact as the 1K extra is
-	 * still less than one buffer in size.
-	 */
-#define IXGBE_LAST_OFFSET \
-	(SKB_WITH_OVERHEAD(PAGE_SIZE) - IXGBE_RXBUFFER_3K)
-	if (rx_buffer->page_offset > IXGBE_LAST_OFFSET)
-		return false;
-#endif
+	  return false;
+	
+/* #if (PAGE_SIZE < 8192) */
+/* 	/\* if we are only owner of page we can reuse it *\/ */
+/* 	if (unlikely((page_ref_count(page) - pagecnt_bias) > 1)) */
+/* 		return false; */
+/* #else */
+/* 	/\* The last offset is a bit aggressive in that we assume the */
+/* 	 * worst case of FCoE being enabled and using a 3K buffer. */
+/* 	 * However this should have minimal impact as the 1K extra is */
+/* 	 * still less than one buffer in size. */
+/* 	 *\/ */
+/* #define IXGBE_LAST_OFFSET \ */
+/* 	(SKB_WITH_OVERHEAD(PAGE_SIZE) - IXGBE_RXBUFFER_3K) */
+/* 	if (rx_buffer->page_offset > IXGBE_LAST_OFFSET) */
+/* 		return false; */
+/* #endif */
 
 	/* If we have drained the page fragment pool we need to update
 	 * the pagecnt_bias and page count so that we fully restock the
@@ -2037,20 +2041,22 @@ static void ixgbe_add_rx_frag(struct ixgbe_ring *rx_ring,
 			      struct sk_buff *skb,
 			      unsigned int size)
 {
-#if (PAGE_SIZE < 8192)
-	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2;
-#else
-	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
-				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
-				SKB_DATA_ALIGN(size);
-#endif
-	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buffer->page,
-			rx_buffer->page_offset, size, truesize);
-#if (PAGE_SIZE < 8192)
-	rx_buffer->page_offset ^= truesize;
-#else
-	rx_buffer->page_offset += truesize;
-#endif
+  unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2;
+/* #if (PAGE_SIZE < 8192) */
+/* 	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2; */
+/* #else */
+/* 	unsigned int truesize = ring_uses_build_skb(rx_ring) ? */
+/* 				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) : */
+/* 				SKB_DATA_ALIGN(size); */
+/* #endif */
+  skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buffer->page,
+		  rx_buffer->page_offset, size, truesize);
+  rx_buffer->page_offset ^= truesize;
+/* #if (PAGE_SIZE < 8192) */
+/* 	rx_buffer->page_offset ^= truesize; */
+/* #else */
+/* 	rx_buffer->page_offset += truesize; */
+/* #endif */
 }
 
 static struct ixgbe_rx_buffer *ixgbe_get_rx_buffer(struct ixgbe_ring *rx_ring,
@@ -2121,12 +2127,13 @@ static struct sk_buff *ixgbe_construct_skb(struct ixgbe_ring *rx_ring,
 					   union ixgbe_adv_rx_desc *rx_desc)
 {
 	unsigned int size = xdp->data_end - xdp->data;
-#if (PAGE_SIZE < 8192)
 	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2;
-#else
-	unsigned int truesize = SKB_DATA_ALIGN(xdp->data_end -
-					       xdp->data_hard_start);
-#endif
+/* #if (PAGE_SIZE < 8192) */
+/* 	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2; */
+/* #else */
+/* 	unsigned int truesize = SKB_DATA_ALIGN(xdp->data_end - */
+/* 					       xdp->data_hard_start); */
+/* #endif */
 	struct sk_buff *skb;
 
 	/* prefetch first cache line of first page */
@@ -2162,11 +2169,12 @@ static struct sk_buff *ixgbe_construct_skb(struct ixgbe_ring *rx_ring,
 		skb_add_rx_frag(skb, 0, rx_buffer->page,
 				xdp->data - page_address(rx_buffer->page),
 				size, truesize);
-#if (PAGE_SIZE < 8192)
 		rx_buffer->page_offset ^= truesize;
-#else
-		rx_buffer->page_offset += truesize;
-#endif
+/* #if (PAGE_SIZE < 8192) */
+/* 		rx_buffer->page_offset ^= truesize; */
+/* #else */
+/* 		rx_buffer->page_offset += truesize; */
+/* #endif */
 	} else {
 		memcpy(__skb_put(skb, size),
 		       xdp->data, ALIGN(size, sizeof(long)));
@@ -2182,13 +2190,14 @@ static struct sk_buff *ixgbe_build_skb(struct ixgbe_ring *rx_ring,
 				       union ixgbe_adv_rx_desc *rx_desc)
 {
 	unsigned int metasize = xdp->data - xdp->data_meta;
-#if (PAGE_SIZE < 8192)
 	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2;
-#else
-	unsigned int truesize = SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) +
-				SKB_DATA_ALIGN(xdp->data_end -
-					       xdp->data_hard_start);
-#endif
+/* #if (PAGE_SIZE < 8192) */
+/* 	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2; */
+/* #else */
+/* 	unsigned int truesize = SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) + */
+/* 				SKB_DATA_ALIGN(xdp->data_end - */
+/* 					       xdp->data_hard_start); */
+/* #endif */
 	struct sk_buff *skb;
 
 	/* Prefetch first cache line of first page. If xdp->data_meta
@@ -2217,11 +2226,12 @@ static struct sk_buff *ixgbe_build_skb(struct ixgbe_ring *rx_ring,
 		IXGBE_CB(skb)->dma = rx_buffer->dma;
 
 	/* update buffer offset */
-#if (PAGE_SIZE < 8192)
 	rx_buffer->page_offset ^= truesize;
-#else
-	rx_buffer->page_offset += truesize;
-#endif
+/* #if (PAGE_SIZE < 8192) */
+/* 	rx_buffer->page_offset ^= truesize; */
+/* #else */
+/* 	rx_buffer->page_offset += truesize; */
+/* #endif */
 
 	return skb;
 }
@@ -2280,17 +2290,20 @@ static void ixgbe_rx_buffer_flip(struct ixgbe_ring *rx_ring,
 				 struct ixgbe_rx_buffer *rx_buffer,
 				 unsigned int size)
 {
-#if (PAGE_SIZE < 8192)
-	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2;
+  unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2;
+  rx_buffer->page_offset ^= truesize;
+  
+/* #if (PAGE_SIZE < 8192) */
+/* 	unsigned int truesize = ixgbe_rx_pg_size(rx_ring) / 2; */
 
-	rx_buffer->page_offset ^= truesize;
-#else
-	unsigned int truesize = ring_uses_build_skb(rx_ring) ?
-				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) :
-				SKB_DATA_ALIGN(size);
+/* 	rx_buffer->page_offset ^= truesize; */
+/* #else */
+/* 	unsigned int truesize = ring_uses_build_skb(rx_ring) ? */
+/* 				SKB_DATA_ALIGN(IXGBE_SKB_PAD + size) : */
+/* 				SKB_DATA_ALIGN(size); */
 
-	rx_buffer->page_offset += truesize;
-#endif
+/* 	rx_buffer->page_offset += truesize; */
+/* #endif */
 }
 
 /**
@@ -3539,8 +3552,8 @@ void ixgbe_configure_tx_ring(struct ixgbe_adapter *adapter,
 	if (!ring->q_vector || (ring->q_vector->itr < IXGBE_100K_ITR))
 		txdctl |= 1u << 16;	/* WTHRESH = 1 */
 	else
-		txdctl |= 8u << 16;	/* WTHRESH = 8 */
-
+		txdctl |= 2u << 16;	/* WTHRESH = 8 */
+	
 	/*
 	 * Setting PTHRESH to 32 both improves performance
 	 * and avoids a TX hang with DFP enabled
@@ -4282,7 +4295,7 @@ static void ixgbe_set_rx_buffer_len(struct ixgbe_adapter *adapter)
 		IXGBE_WRITE_REG(hw, IXGBE_MHADD, mhadd);
 	}
 	mhadd = IXGBE_READ_REG(hw, IXGBE_MHADD);
-	printk(KERN_INFO "\t *** MFS=%d\n", (int)((hlreg0 >> 16)&0xFFFF));
+	printk(KERN_INFO "\t *** MFS=%d\n", (int)((mhadd >> 16)&0xFFFF));
 		
 	hlreg0 = IXGBE_READ_REG(hw, IXGBE_HLREG0);
 	/* set jumbo enable since MHADD.MFS is keeping size locked at max_frame */

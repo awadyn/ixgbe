@@ -2341,12 +2341,14 @@ static bool ixgbe_update_rsc(struct ixgbe_adapter *adapter)
 		if (!(adapter->flags2 & IXGBE_FLAG2_RSC_ENABLED)) {
 			adapter->flags2 |= IXGBE_FLAG2_RSC_ENABLED;
 			e_info(probe, "rx-usecs value high enough to re-enable RSC\n");
+			printk(KERN_INFO "\t *** ixgbe_update_rsc: rx-usecs value high enough to re-enable RSC\n");
 			return true;
 		}
 	/* if interrupt rate is too high then disable RSC */
 	} else if (adapter->flags2 & IXGBE_FLAG2_RSC_ENABLED) {
 		adapter->flags2 &= ~IXGBE_FLAG2_RSC_ENABLED;
 		e_info(probe, "rx-usecs set too low, disabling RSC\n");
+		printk(KERN_INFO "\t *** ixgbe_update_rsc: rx-usecs set too low, disabling RSC\n");		
 		return true;
 	}
 	return false;
@@ -2358,71 +2360,78 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 	struct ixgbe_q_vector *q_vector;
 	int i;
-	u16 tx_itr_param, rx_itr_param, tx_itr_prev;
+	//u16 tx_itr_param, rx_itr_param, tx_itr_prev;
 	bool need_reset = false;
 
-	if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) {
-		/* reject Tx specific changes in case of mixed RxTx vectors */
-		if (ec->tx_coalesce_usecs)
-			return -EINVAL;
-		tx_itr_prev = adapter->rx_itr_setting;
-	} else {
-		tx_itr_prev = adapter->tx_itr_setting;
-	}
+	/* if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) { */
+	/* 	/\* reject Tx specific changes in case of mixed RxTx vectors *\/ */
+	/* 	if (ec->tx_coalesce_usecs) */
+	/* 		return -EINVAL; */
+	/* 	tx_itr_prev = adapter->rx_itr_setting; */
+	/* } else { */
+	/* 	tx_itr_prev = adapter->tx_itr_setting; */
+	/* } */
 
 	if ((ec->rx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)) ||
 	    (ec->tx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)))
 		return -EINVAL;
 
-	if (ec->rx_coalesce_usecs > 1)
-		adapter->rx_itr_setting = ec->rx_coalesce_usecs << 2;
-	else
-		adapter->rx_itr_setting = ec->rx_coalesce_usecs;
-
-	if (adapter->rx_itr_setting == 1)
-		rx_itr_param = IXGBE_20K_ITR;
-	else
-		rx_itr_param = adapter->rx_itr_setting;
-
-	if (ec->tx_coalesce_usecs > 1)
-		adapter->tx_itr_setting = ec->tx_coalesce_usecs << 2;
-	else
-		adapter->tx_itr_setting = ec->tx_coalesce_usecs;
-
-	if (adapter->tx_itr_setting == 1)
-		tx_itr_param = IXGBE_12K_ITR;
-	else
-		tx_itr_param = adapter->tx_itr_setting;
-
-	/* mixed Rx/Tx */
-	if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count)
-		adapter->tx_itr_setting = adapter->rx_itr_setting;
-
-	/* detect ITR changes that require update of TXDCTL.WTHRESH */
-	if ((adapter->tx_itr_setting != 1) &&
-	    (adapter->tx_itr_setting < IXGBE_100K_ITR)) {
-		if ((tx_itr_prev == 1) ||
-		    (tx_itr_prev >= IXGBE_100K_ITR))
-			need_reset = true;
-	} else {
-		if ((tx_itr_prev != 1) &&
-		    (tx_itr_prev < IXGBE_100K_ITR))
-			need_reset = true;
+	if (ec->rx_coalesce_usecs > 1) {
+	  adapter->rx_itr_setting = ec->rx_coalesce_usecs << 2;
+	  printk(KERN_INFO "\t *** ixgbe_set_coalesc: adapter->rx_itr_setting = %d\n", adapter->rx_itr_setting);
 	}
+	else {
+	  adapter->rx_itr_setting = ec->rx_coalesce_usecs;
+	}
+	/* if (adapter->rx_itr_setting == 1) */
+	/* 	rx_itr_param = IXGBE_20K_ITR; */
+	/* else */
+	/* 	rx_itr_param = adapter->rx_itr_setting; */
+
+	/* if (ec->tx_coalesce_usecs > 1) */
+	/* 	adapter->tx_itr_setting = ec->tx_coalesce_usecs << 2; */
+	/* else */
+	/* 	adapter->tx_itr_setting = ec->tx_coalesce_usecs; */
+
+	/* if (adapter->tx_itr_setting == 1) */
+	/* 	tx_itr_param = IXGBE_12K_ITR; */
+	/* else */
+	/* 	tx_itr_param = adapter->tx_itr_setting; */
+
+	/* /\* mixed Rx/Tx *\/ */
+	/* if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) */
+	/* 	adapter->tx_itr_setting = adapter->rx_itr_setting; */
+
+	/* /\* detect ITR changes that require update of TXDCTL.WTHRESH *\/ */
+	/* if ((adapter->tx_itr_setting != 1) && */
+	/*     (adapter->tx_itr_setting < IXGBE_100K_ITR)) { */
+	/* 	if ((tx_itr_prev == 1) || */
+	/* 	    (tx_itr_prev >= IXGBE_100K_ITR)) */
+	/* 		need_reset = true; */
+	/* } else { */
+	/* 	if ((tx_itr_prev != 1) && */
+	/* 	    (tx_itr_prev < IXGBE_100K_ITR)) */
+	/* 		need_reset = true; */
+	/* } */
 
 	/* check the old value and enable RSC if necessary */
 	need_reset |= ixgbe_update_rsc(adapter);
 
 	for (i = 0; i < adapter->num_q_vectors; i++) {
-		q_vector = adapter->q_vector[i];
-		if (q_vector->tx.count && !q_vector->rx.count)
-			/* tx only */
-			q_vector->itr = tx_itr_param;
-		else
-			/* rx only or mixed */
-			q_vector->itr = rx_itr_param;
-		ixgbe_write_eitr(q_vector);
+	  q_vector = adapter->q_vector[i];
+	  q_vector->itr = (u16)(adapter->rx_itr_setting);
+	  ixgbe_write_eitr(q_vector);
 	}
+	/* for (i = 0; i < adapter->num_q_vectors; i++) { */
+	/* 	q_vector = adapter->q_vector[i]; */
+	/* 	if (q_vector->tx.count && !q_vector->rx.count) */
+	/* 		/\* tx only *\/ */
+	/* 		q_vector->itr = tx_itr_param; */
+	/* 	else */
+	/* 		/\* rx only or mixed *\/ */
+	/* 		q_vector->itr = rx_itr_param; */
+	/* 	ixgbe_write_eitr(q_vector); */
+	/* } */
 
 	/*
 	 * do reset here at the end to make sure EITR==0 case is handled
