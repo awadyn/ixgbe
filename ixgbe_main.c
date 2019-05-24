@@ -3531,10 +3531,6 @@ void ixgbe_configure_tx_ring(struct ixgbe_adapter *adapter,
 	IXGBE_WRITE_REG(hw, IXGBE_TDLEN(reg_idx),
 			ring->count * sizeof(union ixgbe_adv_tx_desc));
 
-	if((int)reg_idx == 0) {
-	  printk(KERN_INFO "\t *** TDLEN=%d\n", ring->count);
-	}
-	
 	IXGBE_WRITE_REG(hw, IXGBE_TDH(reg_idx), 0);
 	IXGBE_WRITE_REG(hw, IXGBE_TDT(reg_idx), 0);
 	ring->tail = adapter->io_addr + IXGBE_TDT(reg_idx);
@@ -3549,17 +3545,32 @@ void ixgbe_configure_tx_ring(struct ixgbe_adapter *adapter,
 	 * to or less than the number of on chip descriptors, which is
 	 * currently 40.
 	 */
-	if (!ring->q_vector || (ring->q_vector->itr < IXGBE_100K_ITR))
-		txdctl |= 1u << 16;	/* WTHRESH = 1 */
-	else
-		txdctl |= 2u << 16;	/* WTHRESH = 8 */
+	/* if (!ring->q_vector || (ring->q_vector->itr < IXGBE_100K_ITR))  */
+	/* 	txdctl |= 1u << 16;	/\* WTHRESH = 1 *\/ */
+	/* else */
+	/* 	txdctl |= 2u << 16;	/\* WTHRESH = 8 *\/ */
+
+	if (!ring->q_vector || (ring->q_vector->itr < IXGBE_100K_ITR)) {
+	  txdctl |= 1u << 16;	/* WTHRESH = 1 */
+	}
+	else {
+	  txdctl |= (ring->wthresh) << 16;	/* WTHRESH = 2 */
+	}
 	
 	/*
 	 * Setting PTHRESH to 32 both improves performance
 	 * and avoids a TX hang with DFP enabled
 	 */
-	txdctl |= (1u << 8) |	/* HTHRESH = 1 */
-		   32;		/* PTHRESH = 32 */
+	//txdctl |= (1u << 8) |	/* HTHRESH = 1 */
+	//	   32;		/* PTHRESH = 32 */
+	txdctl |= ((ring->hthresh) << 8) |	/* HTHRESH = 1 */
+	  (ring->pthresh);		/* PTHRESH = 32 */
+
+	if((int)reg_idx == 0) {
+		printk(KERN_INFO "\t *** TDLEN=%d\n", ring->count);
+		printk(KERN_INFO "\t *** ring->wthresh:%d ring->hthresh:%d ring->pthresh:%d\n", ring->wthresh, ring->hthresh, ring->pthresh);
+	}
+	
 
 	/* reinitialize flowdirector state */
 	if (adapter->flags & IXGBE_FLAG_FDIR_HASH_CAPABLE) {
@@ -4042,7 +4053,9 @@ static void ixgbe_configure_rscctl(struct ixgbe_adapter *adapter,
 	 * total size of max desc * buf_len is not greater
 	 * than 65536
 	 */
-	rscctrl |= IXGBE_RSCCTL_MAXDESC_16;
+	//rscctrl |= IXGBE_RSCCTL_MAXDESC_16;
+	rscctrl |= ring->maxdesc;
+	
 	IXGBE_WRITE_REG(hw, IXGBE_RSCCTL(reg_idx), rscctrl);
 
 	if((int)reg_idx == 0) {
@@ -5633,8 +5646,8 @@ static void ixgbe_setup_gpie(struct ixgbe_adapter *adapter)
 		 */
 		switch (hw->mac.type) {
 		case ixgbe_mac_82598EB:
-			IXGBE_WRITE_REG(hw, IXGBE_EIAM, IXGBE_EICS_RTX_QUEUE);
-			break;
+		        IXGBE_WRITE_REG(hw, IXGBE_EIAM, IXGBE_EICS_RTX_QUEUE);
+		        break;
 		case ixgbe_mac_82599EB:
 		case ixgbe_mac_X540:
 		case ixgbe_mac_X550:
@@ -5655,7 +5668,6 @@ static void ixgbe_setup_gpie(struct ixgbe_adapter *adapter)
 	/* gpie |= IXGBE_GPIE_EIMEN; */
 
 	if (adapter->flags & IXGBE_FLAG_SRIOV_ENABLED) {
-	  printk(KERN_INFO "\t *** SRIOV_ENABLED\n");
 		gpie &= ~IXGBE_GPIE_VTMODE_MASK;
 
 		switch (adapter->ring_feature[RING_F_VMDQ].mask) {
@@ -5697,6 +5709,10 @@ static void ixgbe_setup_gpie(struct ixgbe_adapter *adapter)
 	default:
 		break;
 	}
+
+	gpie &= ~(0x7 << 11);
+	gpie |= (adapter->rsc_delay << 11);
+	printk(KERN_INFO "\t *** RSC Delay=%d\n", (int)((gpie >> 11)&0x7));
 
 	IXGBE_WRITE_REG(hw, IXGBE_GPIE, gpie);
 }
@@ -6384,6 +6400,10 @@ int ixgbe_setup_tx_resources(struct ixgbe_ring *tx_ring)
 	tx_ring->size = tx_ring->count * sizeof(union ixgbe_adv_tx_desc);
 	tx_ring->size = ALIGN(tx_ring->size, 4096);
 
+	tx_ring->wthresh = 2;
+	tx_ring->hthresh = 1;
+	tx_ring->pthresh = 32;
+
 	set_dev_node(dev, ring_node);
 	tx_ring->desc = dma_alloc_coherent(dev,
 					   tx_ring->size,
@@ -6480,7 +6500,8 @@ int ixgbe_setup_rx_resources(struct ixgbe_adapter *adapter,
 	// make it a variable
 	rx_ring->bsizepkt = IXGBE_RXBUFFER_3K;
 	rx_ring->bsizehdr = IXGBE_RXBUFFER_256;
-	
+	rx_ring->maxdesc = IXGBE_RSCCTL_MAXDESC_16;	
+		
 	set_dev_node(dev, ring_node);
 	rx_ring->desc = dma_alloc_coherent(dev,
 					   rx_ring->size,
@@ -6675,6 +6696,10 @@ int ixgbe_open(struct net_device *netdev)
 	struct ixgbe_hw *hw = &adapter->hw;
 	int err, queues;
 
+	/* default params */
+	adapter->dtxmxszrq = 16;
+	adapter->rsc_delay = 0x0;
+	  
 	/* disallow open during test */
 	if (test_bit(__IXGBE_TESTING, &adapter->state))
 		return -EBUSY;

@@ -2372,9 +2372,9 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	/* 	tx_itr_prev = adapter->tx_itr_setting; */
 	/* } */
 
-	if ((ec->rx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)) ||
-	    (ec->tx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)))
-		return -EINVAL;
+	/* if ((ec->rx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)) || */
+	/*     (ec->tx_coalesce_usecs > (IXGBE_MAX_EITR >> 2))) */
+	/* 	return -EINVAL; */
 
 	if (ec->rx_coalesce_usecs > 1) {
 	  adapter->rx_itr_setting = ec->rx_coalesce_usecs << 2;
@@ -2383,6 +2383,9 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	else {
 	  adapter->rx_itr_setting = ec->rx_coalesce_usecs;
 	}
+
+	
+	
 	/* if (adapter->rx_itr_setting == 1) */
 	/* 	rx_itr_param = IXGBE_20K_ITR; */
 	/* else */
@@ -2441,6 +2444,38 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	if (need_reset)
 		ixgbe_do_reset(netdev);
 
+	if (ec->rx_max_coalesced_frames) {
+	  printk(KERN_INFO "\t *** Update DTXMXSZRQ = %d\n", ec->rx_max_coalesced_frames);
+	}
+
+	if (ec->rx_coalesce_usecs_irq) {
+	  printk(KERN_INFO "\t *** Update WTHRESH = %d\n", ec->rx_coalesce_usecs_irq);
+	}
+
+	if (ec->rx_max_coalesced_frames_irq) {
+	  printk(KERN_INFO "\t *** Update HTHRESH = %d\n", ec->rx_max_coalesced_frames_irq);
+	}
+
+	if (ec->tx_coalesce_usecs) {
+	  printk(KERN_INFO "\t *** Update PTHRESH = %d\n", ec->tx_coalesce_usecs);
+	}
+
+	if (ec->tx_max_coalesced_frames) {
+	  printk(KERN_INFO "\t *** Update BSIZEPACKET = %d\n", ec->tx_max_coalesced_frames);
+	}
+
+	if (ec->tx_coalesce_usecs_irq) {
+	  printk(KERN_INFO "\t *** Update BSIZEHEADER = %d\n", ec->tx_coalesce_usecs_irq);
+	}
+
+	if (ec->tx_max_coalesced_frames_irq) {
+	  printk(KERN_INFO "\t *** Update MAXDESC = %d\n", ec->tx_max_coalesced_frames_irq);
+	}
+
+	if (ec->rx_coalesce_usecs_low) {
+	  printk(KERN_INFO "\t *** Update RSCDELAY = %d\n", ec->rx_coalesce_usecs_low);
+	}
+		
 	return 0;
 }
 

@@ -346,9 +346,14 @@ struct ixgbe_ring {
 	dma_addr_t dma;			/* phys. address of descriptor ring */
 	unsigned int size;		/* length in bytes */
 
+        /* new params */
         unsigned int bsizepkt;
         unsigned int bsizehdr;
-   
+        u32 wthresh;
+        u32 hthresh;
+        u32 pthresh;
+        u32 maxdesc;
+  
 	u16 count;			/* amount of descriptors */
 
 	u8 queue_index; /* needed for multiqueue queue management */
@@ -651,6 +656,10 @@ struct ixgbe_adapter {
 	__be16 vxlan_port;
 	__be16 geneve_port;
 
+        /* updated params */
+        u32 dtxmxszrq;
+        u32 rsc_delay;
+  
 	/* XDP */
 	int num_xdp_queues;
 	struct ixgbe_ring *xdp_ring[MAX_XDP_QUEUES];
