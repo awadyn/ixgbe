@@ -2359,10 +2359,13 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 	struct ixgbe_q_vector *q_vector;
+	struct ixgbe_hw *hw = &adapter->hw;
 	int i;
+        u32 dtxmx;
+	//u32 dtxmx, txdctl, srrctl;
 	//u16 tx_itr_param, rx_itr_param, tx_itr_prev;
 	bool need_reset = false;
-
+	
 	/* if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) { */
 	/* 	/\* reject Tx specific changes in case of mixed RxTx vectors *\/ */
 	/* 	if (ec->tx_coalesce_usecs) */
@@ -2445,37 +2448,90 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 		ixgbe_do_reset(netdev);
 
 	if (ec->rx_max_coalesced_frames) {
-	  printk(KERN_INFO "\t *** Update DTXMXSZRQ = %d\n", ec->rx_max_coalesced_frames);
+	  adapter->dtxmxszrq = ec->rx_max_coalesced_frames;	  
+	  dtxmx = (u32)adapter->dtxmxszrq;
+	  IXGBE_WRITE_REG(hw, IXGBE_DTXMXSZRQ, dtxmx);
+	  printk(KERN_INFO "\t *** Update DTXMXSZRQ = %d\n", (int)dtxmx);
+	  goto reset;
 	}
 
-	if (ec->rx_coalesce_usecs_irq) {
+	if (ec->rx_coalesce_usecs_irq) {	  
+	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
+	    txdctl = IXGBE_READ_REG(hw, IXGBE_TXDCTL(i));
+	    txdctl &= ~0x7F << 16;
+	    txdctl |= ec->rx_coalesce_usecs_irq << 16;
+	    IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(i), txdctl);
+	    }*/
+	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	    adapter->tx_ring[i]->wthresh = ec->rx_coalesce_usecs_irq;
+	  }
 	  printk(KERN_INFO "\t *** Update WTHRESH = %d\n", ec->rx_coalesce_usecs_irq);
+	  goto reset;
 	}
 
 	if (ec->rx_max_coalesced_frames_irq) {
+	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
+	    txdctl = IXGBE_READ_REG(hw, IXGBE_TXDCTL(i));
+	    txdctl &= ~0x7F << 8;
+	    txdctl |= ec->rx_max_coalesced_frames_irq << 8;
+	    IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(i), txdctl);
+	    }*/
+	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	    adapter->tx_ring[i]->hthresh = ec->rx_max_coalesced_frames_irq;
+	  }
 	  printk(KERN_INFO "\t *** Update HTHRESH = %d\n", ec->rx_max_coalesced_frames_irq);
+	  goto reset;
 	}
 
 	if (ec->tx_coalesce_usecs) {
+	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
+	    txdctl = IXGBE_READ_REG(hw, IXGBE_TXDCTL(i));
+	    txdctl &= ~0x7F;
+	    txdctl |= ec->tx_coalesce_usecs;
+	    IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(i), txdctl);
+	    }*/
+	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	    adapter->tx_ring[i]->pthresh = ec->tx_coalesce_usecs;
+	  }
 	  printk(KERN_INFO "\t *** Update PTHRESH = %d\n", ec->tx_coalesce_usecs);
+	  goto reset;
 	}
 
 	if (ec->tx_max_coalesced_frames) {
+	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	    adapter->rx_ring[i]->bsizepkt = ec->tx_max_coalesced_frames;
+	  }
 	  printk(KERN_INFO "\t *** Update BSIZEPACKET = %d\n", ec->tx_max_coalesced_frames);
+	  goto reset;
 	}
 
 	if (ec->tx_coalesce_usecs_irq) {
+	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	    adapter->rx_ring[i]->bsizehdr = ec->tx_coalesce_usecs_irq;
+	  }
 	  printk(KERN_INFO "\t *** Update BSIZEHEADER = %d\n", ec->tx_coalesce_usecs_irq);
+	  goto reset;
 	}
 
 	if (ec->tx_max_coalesced_frames_irq) {
+	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	    adapter->rx_ring[i]->maxdesc = ec->tx_max_coalesced_frames_irq;
+	  }
 	  printk(KERN_INFO "\t *** Update MAXDESC = %d\n", ec->tx_max_coalesced_frames_irq);
+	  goto reset;
 	}
 
 	if (ec->rx_coalesce_usecs_low) {
+	  adapter->rsc_delay = ec->rx_coalesce_usecs_low;
 	  printk(KERN_INFO "\t *** Update RSCDELAY = %d\n", ec->rx_coalesce_usecs_low);
+	  goto reset;
 	}
-		
+
+	return 0;
+
+reset:
+	ixgbe_down(adapter);
+	ixgbe_up(adapter);
 	return 0;
 }
 
