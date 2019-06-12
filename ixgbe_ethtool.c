@@ -2527,6 +2527,13 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  goto reset;
 	}
 
+        if (ec->rx_max_coalesced_frames_low) {
+	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	    printk(KERN_INFO "\t *** DUMP_DYNAMIC_ITR[%d] = %lld\n", i, adapter->rx_ring[i]->num_dynamic_itrs_fired);
+	    adapter->rx_ring[i]->num_dynamic_itrs_fired = 0;
+	  }
+	}
+	
 	return 0;
 
 reset:

@@ -354,6 +354,9 @@ struct ixgbe_ring {
         u32 pthresh;
         u32 maxdesc;
   
+        /* special counters */
+        u64 num_dynamic_itrs_fired;
+  
 	u16 count;			/* amount of descriptors */
 
 	u8 queue_index; /* needed for multiqueue queue management */

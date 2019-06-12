@@ -2758,9 +2758,10 @@ void ixgbe_write_eitr(struct ixgbe_q_vector *q_vector)
 		break;
 	}
 	IXGBE_WRITE_REG(hw, IXGBE_EITR(v_idx), itr_reg);
-	if((int)v_idx == 0) {
+	adapter->rx_ring[v_idx]->num_dynamic_itrs_fired ++;
+	/*if((int)v_idx == 0 && adapter->rx_itr_setting == 0) {
 	  printk(KERN_INFO "\t *** IXGBE_EITR(0) == 0x%X\n", itr_reg);
-	}
+	  }*/
 }
 
 static void ixgbe_set_itr(struct ixgbe_q_vector *q_vector)
@@ -6346,10 +6347,10 @@ static int ixgbe_sw_init(struct ixgbe_adapter *adapter,
 #endif /* CONFIG_PCI_IOV */
 
 	/* enable itr by default in dynamic mode */
-	//adapter->rx_itr_setting = 1;
-	//adapter->tx_itr_setting = 1;
-	adapter->rx_itr_setting = 0;
-	adapter->tx_itr_setting = 0;
+	adapter->rx_itr_setting = 1;
+	adapter->tx_itr_setting = 1;
+	//adapter->rx_itr_setting = 0;
+	//adapter->tx_itr_setting = 0;
 	printk(KERN_INFO "\t *** DITR=%d\n", adapter->rx_itr_setting);
 	
 	/* set default ring sizes */
@@ -6501,7 +6502,8 @@ int ixgbe_setup_rx_resources(struct ixgbe_adapter *adapter,
 	rx_ring->bsizepkt = IXGBE_RXBUFFER_3K;
 	rx_ring->bsizehdr = IXGBE_RXBUFFER_256;
 	rx_ring->maxdesc = IXGBE_RSCCTL_MAXDESC_16;	
-		
+	rx_ring->num_dynamic_itrs_fired = 0;
+	
 	set_dev_node(dev, ring_node);
 	rx_ring->desc = dma_alloc_coherent(dev,
 					   rx_ring->size,
