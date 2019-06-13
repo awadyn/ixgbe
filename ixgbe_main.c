@@ -2758,10 +2758,15 @@ void ixgbe_write_eitr(struct ixgbe_q_vector *q_vector)
 		break;
 	}
 	IXGBE_WRITE_REG(hw, IXGBE_EITR(v_idx), itr_reg);
-	adapter->rx_ring[v_idx]->num_dynamic_itrs_fired ++;
-	/*if((int)v_idx == 0 && adapter->rx_itr_setting == 0) {
-	  printk(KERN_INFO "\t *** IXGBE_EITR(0) == 0x%X\n", itr_reg);
-	  }*/
+	if((int)v_idx == 1) {
+	  adapter->log_itrs[adapter->log_itrs_cnt] = itr_reg;
+	  adapter->log_itrs_cnt ++;
+	  if(adapter->log_itrs_cnt >= 10000) adapter->log_itrs_cnt = 0;
+	}
+	//adapter->rx_ring[v_idx]->num_dynamic_itrs_fired ++;
+	//if((int)v_idx == 0 && adapter->rx_itr_setting == 0) {
+	// printk(KERN_INFO "\t *** IXGBE_EITR(0) == 0x%X\n", itr_reg);
+	//}
 }
 
 static void ixgbe_set_itr(struct ixgbe_q_vector *q_vector)
@@ -6696,12 +6701,16 @@ int ixgbe_open(struct net_device *netdev)
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 	struct ixgbe_hw *hw = &adapter->hw;
-	int err, queues;
+	int err, queues, i;
 
 	/* default params */
 	adapter->dtxmxszrq = 16;
 	adapter->rsc_delay = 0x0;
-	  
+	adapter->log_itrs_cnt = 0;
+	for(i=0;i<10000;i++) {
+	  adapter->log_itrs[i] = 0;
+	}
+	
 	/* disallow open during test */
 	if (test_bit(__IXGBE_TESTING, &adapter->state))
 		return -EBUSY;

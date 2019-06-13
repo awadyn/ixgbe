@@ -2528,10 +2528,17 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	}
 
         if (ec->rx_max_coalesced_frames_low) {
-	  for (i = 0; i < adapter->num_q_vectors; i++) {
+	  printk(KERN_INFO "\n\t xxx DUMP_DYNAMIC_ITR[1] log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);
+	  for (i = 0; i < adapter->log_itrs_cnt; i++) {
+	    printk(KERN_INFO "\t xxx %d %d\n", i, (adapter->log_itrs[i] >> 3) & 0x1FF);
+	    adapter->log_itrs[i] = 0;
+	  }
+	  printk(KERN_INFO "\n\t xxx DUMP_DYNAMIC_ITR[1] log_itrs_cnt = %d END\n", adapter->log_itrs_cnt);
+	  adapter->log_itrs_cnt = 0;
+	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
 	    printk(KERN_INFO "\t *** DUMP_DYNAMIC_ITR[%d] = %lld\n", i, adapter->rx_ring[i]->num_dynamic_itrs_fired);
 	    adapter->rx_ring[i]->num_dynamic_itrs_fired = 0;
-	  }
+	    }*/
 	}
 	
 	return 0;

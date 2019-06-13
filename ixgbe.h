@@ -662,6 +662,8 @@ struct ixgbe_adapter {
         /* updated params */
         u32 dtxmxszrq;
         u32 rsc_delay;
+        u32 log_itrs[10000];
+        u32 log_itrs_cnt;
   
 	/* XDP */
 	int num_xdp_queues;
