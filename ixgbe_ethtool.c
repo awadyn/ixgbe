@@ -2528,17 +2528,28 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	}
 
         if (ec->rx_max_coalesced_frames_low) {
-	  printk(KERN_INFO "\n\t xxx DUMP_DYNAMIC_ITR[1] log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);
+	  printk(KERN_INFO "\n\t xxx log_cnt = %d START\n", adapter->log_cnt);
+	  printk(KERN_INFO "\t xxx totalrxbytes = %d\n", adapter->totalrxbytes);
+	  for (i = 0; i < adapter->log_cnt; i++) {
+	    printk(KERN_INFO "\t xxx %d work_done:%d rxbytes:%d rxpackets:%d txbytes:%d txpackets:%d\n", i, adapter->log_work_done[i], adapter->log_rxbytes[i], adapter->log_rxpackets[i], adapter->log_txbytes[i], adapter->log_txpackets[i]);
+	    
+	    adapter->log_work_done[i]=0;
+	    //adapter->log_budget[i]=0;
+	    adapter->log_rxbytes[i]=0;
+	    adapter->log_rxpackets[i]=0;
+	    adapter->log_txbytes[i]=0;
+	    adapter->log_txpackets[i]=0;
+	  }
+	  adapter->totalrxbytes = 0;
+	  adapter->log_cnt = 0;
+	  
+	  printk(KERN_INFO "\n\t xxx log_cnt = %d END\n", adapter->log_itrs_cnt);
 	  for (i = 0; i < adapter->log_itrs_cnt; i++) {
-	    printk(KERN_INFO "\t xxx %d %d\n", i, (adapter->log_itrs[i] >> 3) & 0x1FF);
+	    printk(KERN_INFO "\t xxx %d itr:%d\n", i, adapter->log_itrs[i]);
 	    adapter->log_itrs[i] = 0;
 	  }
-	  printk(KERN_INFO "\n\t xxx DUMP_DYNAMIC_ITR[1] log_itrs_cnt = %d END\n", adapter->log_itrs_cnt);
 	  adapter->log_itrs_cnt = 0;
-	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
-	    printk(KERN_INFO "\t *** DUMP_DYNAMIC_ITR[%d] = %lld\n", i, adapter->rx_ring[i]->num_dynamic_itrs_fired);
-	    adapter->rx_ring[i]->num_dynamic_itrs_fired = 0;
-	    }*/
+	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);
 	}
 	
 	return 0;

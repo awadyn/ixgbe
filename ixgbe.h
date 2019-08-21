@@ -1,3 +1,4 @@
+
 /*******************************************************************************
 
   Intel 10 Gigabit PCI Express Linux driver
@@ -662,8 +663,18 @@ struct ixgbe_adapter {
         /* updated params */
         u32 dtxmxszrq;
         u32 rsc_delay;
-        u32 log_itrs[10000];
+        u32 totalrxbytes;
+        u32 log_work_done[50000];
+  //  log_budget[50000];
+        u32 log_rxbytes[50000];
+        u32 log_rxpackets[50000];
+        u32 log_txbytes[50000];
+        u32 log_txpackets[50000];
+        u32 log_itrs[50000];
+        u32 log_cnt;
         u32 log_itrs_cnt;
+        
+        
   
 	/* XDP */
 	int num_xdp_queues;

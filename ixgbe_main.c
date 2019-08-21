@@ -1176,7 +1176,8 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	unsigned int total_bytes = 0, total_packets = 0;
 	unsigned int budget = q_vector->tx.work_limit;
 	unsigned int i = tx_ring->next_to_clean;
-
+	int v_idx = q_vector->v_idx;
+	  
 	if (test_bit(__IXGBE_DOWN, &adapter->state))
 		return true;
 
@@ -1263,10 +1264,15 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	u64_stats_update_begin(&tx_ring->syncp);
 	tx_ring->stats.bytes += total_bytes;
 	tx_ring->stats.packets += total_packets;
+/*	if(v_idx == 1) {
+	  adapter->log_txbytes[adapter->log_cnt] = total_bytes;
+	  adapter->log_txpackets[adapter->log_cnt] = total_packets;
+	}
+*/
 	u64_stats_update_end(&tx_ring->syncp);
 	q_vector->tx.total_bytes += total_bytes;
 	q_vector->tx.total_packets += total_packets;
-
+	
 	if (check_for_tx_hang(tx_ring) && ixgbe_check_tx_hang(tx_ring)) {
 		/* schedule immediate reset if we believe we hung */
 		struct ixgbe_hw *hw = &adapter->hw;
@@ -2331,7 +2337,8 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 #endif /* IXGBE_FCOE */
 	u16 cleaned_count = ixgbe_desc_unused(rx_ring);
 	bool xdp_xmit = false;
-
+	int v_idx = q_vector->v_idx;
+	
 	while (likely(total_rx_packets < budget)) {
 		union ixgbe_adv_rx_desc *rx_desc;
 		struct ixgbe_rx_buffer *rx_buffer;
@@ -2455,14 +2462,20 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 
 		xdp_do_flush_map();
 	}
-
+		
 	u64_stats_update_begin(&rx_ring->syncp);
 	rx_ring->stats.packets += total_rx_packets;
 	rx_ring->stats.bytes += total_rx_bytes;
+/*	if(v_idx == 1) {
+	  adapter->totalrxbytes += total_rx_bytes;
+	  adapter->log_rxbytes[adapter->log_cnt] = total_rx_bytes;
+	  adapter->log_rxpackets[adapter->log_cnt] = total_rx_packets;
+	}
+*/
 	u64_stats_update_end(&rx_ring->syncp);
 	q_vector->rx.total_packets += total_rx_packets;
 	q_vector->rx.total_bytes += total_rx_bytes;
-
+	
 	return total_rx_packets;
 }
 
@@ -2758,15 +2771,15 @@ void ixgbe_write_eitr(struct ixgbe_q_vector *q_vector)
 		break;
 	}
 	IXGBE_WRITE_REG(hw, IXGBE_EITR(v_idx), itr_reg);
-	if((int)v_idx == 1) {
-	  adapter->log_itrs[adapter->log_itrs_cnt] = itr_reg;
-	  adapter->log_itrs_cnt ++;
-	  if(adapter->log_itrs_cnt >= 10000) adapter->log_itrs_cnt = 0;
-	}
-	//adapter->rx_ring[v_idx]->num_dynamic_itrs_fired ++;
-	//if((int)v_idx == 0 && adapter->rx_itr_setting == 0) {
-	// printk(KERN_INFO "\t *** IXGBE_EITR(0) == 0x%X\n", itr_reg);
-	//}
+
+	/*if(v_idx == 1) {
+	  adapter->log_itrs[adapter->log_itrs_cnt] = (u32)((itr_reg >> 3) & 0x3FF)*2;
+	  adapter->log_itrs_cnt += 1;
+	  if(adapter->log_itrs_cnt >= 50000) {
+	    printk(KERN_INFO "\t *** adapter->log_itrs_cnt >= 50000");
+	    adapter->log_itrs_cnt = 0;
+	  }
+	  }*/
 }
 
 static void ixgbe_set_itr(struct ixgbe_q_vector *q_vector)
@@ -3215,7 +3228,8 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	struct ixgbe_ring *ring;
 	int per_ring_budget, work_done = 0;
 	bool clean_complete = true;
-
+	int v_idx = q_vector->v_idx;
+	
 #ifdef CONFIG_IXGBE_DCA
 	if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
 		ixgbe_update_dca(q_vector);
@@ -3227,15 +3241,24 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	}
 
 	/* Exit if we are called by netpoll */
-	if (budget <= 0)
-		return budget;
-
+	if (budget <= 0) {
+	  return budget;
+	}
+	
 	/* attempt to distribute budget to each queue fairly, but don't allow
 	 * the budget to go below 1 because we'll exit polling */
-	if (q_vector->rx.count > 1)
+	if (q_vector->rx.count > 1) {
 		per_ring_budget = max(budget/q_vector->rx.count, 1);
-	else
+		/*if(v_idx == 1) {
+		  printk(KERN_INFO "\t *** budget=%d q_vector->rx.count=%d per_ring_budget=%d\n", budget, q_vector->rx.count, per_ring_budget);
+		  }*/
+	}
+	else {
 		per_ring_budget = budget;
+		/*if(v_idx == 1) {
+		  printk(KERN_INFO "\t *** budget=%d q_vector->rx.count=%d per_ring_budget=%d\n", budget, q_vector->rx.count, per_ring_budget);
+		  }*/
+	}
 
 	ixgbe_for_each_ring(ring, q_vector->rx) {
 		int cleaned = ixgbe_clean_rx_irq(q_vector, ring,
@@ -3247,9 +3270,9 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	}
 
 	/* If all work not completed, return budget and keep polling */
-	if (!clean_complete)
-		return budget;
-
+	if (!clean_complete) {
+	  return budget;
+	}
 	/* all work done, exit the polling mode */
 	napi_complete_done(napi, work_done);
 	if (adapter->rx_itr_setting & 1)
@@ -3257,6 +3280,17 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	if (!test_bit(__IXGBE_DOWN, &adapter->state))
 		ixgbe_irq_enable_queues(adapter, BIT_ULL(q_vector->v_idx));
 
+	//if(v_idx == 1 || v_idx == 3 || v_idx == 5 || v_idx == 7 || v_idx == 9 || v_idx == 11 || v_idx == 13 || v_idx == 15) {
+/*	if(v_idx == 1) {
+	  adapter->log_work_done[adapter->log_cnt] += work_done;
+	  //adapter->log_budget[adapter->log_cnt] = per_ring_budget;
+	  adapter->log_cnt +=1;
+	  if(adapter->log_cnt >= 50000) {
+	    printk(KERN_INFO "\t *** adapter->log_cnt >= 50000");
+	    adapter->log_cnt = 0;
+	  }
+	  }*/
+	
 	return min(work_done, budget - 1);
 }
 
@@ -3416,8 +3450,10 @@ static int ixgbe_request_irq(struct ixgbe_adapter *adapter)
 	struct net_device *netdev = adapter->netdev;
 	int err;
 
-	if (adapter->flags & IXGBE_FLAG_MSIX_ENABLED)
+	if (adapter->flags & IXGBE_FLAG_MSIX_ENABLED) {
 		err = ixgbe_request_msix_irqs(adapter);
+		printk(KERN_INFO "\t *** IXGBE_FLAG_MSIX_ENABLED\n");
+	}
 	else if (adapter->flags & IXGBE_FLAG_MSI_ENABLED)
 		err = request_irq(adapter->pdev->irq, ixgbe_intr, 0,
 				  netdev->name, adapter);
@@ -6352,10 +6388,10 @@ static int ixgbe_sw_init(struct ixgbe_adapter *adapter,
 #endif /* CONFIG_PCI_IOV */
 
 	/* enable itr by default in dynamic mode */
-	adapter->rx_itr_setting = 1;
-	adapter->tx_itr_setting = 1;
-	//adapter->rx_itr_setting = 0;
-	//adapter->tx_itr_setting = 0;
+	//adapter->rx_itr_setting = 1;
+	//adapter->tx_itr_setting = 1;
+	adapter->rx_itr_setting = 0;
+	adapter->tx_itr_setting = 0;
 	printk(KERN_INFO "\t *** DITR=%d\n", adapter->rx_itr_setting);
 	
 	/* set default ring sizes */
@@ -6707,8 +6743,16 @@ int ixgbe_open(struct net_device *netdev)
 	adapter->dtxmxszrq = 16;
 	adapter->rsc_delay = 0x0;
 	adapter->log_itrs_cnt = 0;
-	for(i=0;i<10000;i++) {
-	  adapter->log_itrs[i] = 0;
+	adapter->log_cnt = 0;
+	adapter->totalrxbytes = 0;
+	for(i=0;i<50000;i++) {
+	  adapter->log_work_done[i]=0;
+	  //adapter->log_budget[i]=0;
+	  adapter->log_rxbytes[i]=0;
+	  adapter->log_rxpackets[i]=0;
+	  adapter->log_txbytes[i]=0;
+	  adapter->log_txpackets[i]=0;
+	  adapter->log_itrs[i]=0;
 	}
 	
 	/* disallow open during test */
