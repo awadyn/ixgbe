@@ -2361,7 +2361,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	struct ixgbe_q_vector *q_vector;
 	struct ixgbe_hw *hw = &adapter->hw;
 	int i;
-        u32 dtxmx;
+        u32 dtxmx, txdctl;
 	//u32 dtxmx, txdctl, srrctl;
 	//u16 tx_itr_param, rx_itr_param, tx_itr_prev;
 	bool need_reset = false;
@@ -2466,7 +2466,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	    adapter->tx_ring[i]->wthresh = ec->rx_coalesce_usecs_irq;
 	  }
 	  printk(KERN_INFO "\t *** Update WTHRESH = %d\n", ec->rx_coalesce_usecs_irq);
-	  goto reset;
+	  //goto reset;
 	}
 
 	if (ec->rx_max_coalesced_frames_irq) {
@@ -2480,7 +2480,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	    adapter->tx_ring[i]->hthresh = ec->rx_max_coalesced_frames_irq;
 	  }
 	  printk(KERN_INFO "\t *** Update HTHRESH = %d\n", ec->rx_max_coalesced_frames_irq);
-	  goto reset;
+	  //goto reset;
 	}
 
 	if (ec->tx_coalesce_usecs) {
@@ -2494,7 +2494,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	    adapter->tx_ring[i]->pthresh = ec->tx_coalesce_usecs;
 	  }
 	  printk(KERN_INFO "\t *** Update PTHRESH = %d\n", ec->tx_coalesce_usecs);
-	  goto reset;
+	  //goto reset;
 	}
 
 	if (ec->tx_max_coalesced_frames) {
@@ -2528,7 +2528,14 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	}
 
         if (ec->rx_max_coalesced_frames_low) {
-	  printk(KERN_INFO "\n\t xxx log_cnt = %d START\n", adapter->log_cnt);
+	  printk(KERN_INFO "\t XXX DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
+	  printk(KERN_INFO "\t XXX RSC_Delay=%d\n", (int)((IXGBE_READ_REG(hw, IXGBE_EITR(1)) >> 3)&0x1FF));
+	  txdctl = (u32)IXGBE_READ_REG(hw, IXGBE_TXDCTL(1));
+	  printk(KERN_INFO "\t XXX PTHRESH=%d\n", txdctl & 0x7F);
+	  printk(KERN_INFO "\t XXX HTHRESH=%d\n", (txdctl >> 8) & 0x7F);
+	  printk(KERN_INFO "\t XXX WTHRESH=%d\n", (txdctl >> 16) & 0x7F);
+	  
+	  /*printk(KERN_INFO "\n\t xxx log_cnt = %d START\n", adapter->log_cnt);
 	  printk(KERN_INFO "\t xxx totalrxbytes = %d\n", adapter->totalrxbytes);
 	  for (i = 0; i < adapter->log_cnt; i++) {
 	    printk(KERN_INFO "\t xxx %d work_done:%d rxbytes:%d rxpackets:%d txbytes:%d txpackets:%d\n", i, adapter->log_work_done[i], adapter->log_rxbytes[i], adapter->log_rxpackets[i], adapter->log_txbytes[i], adapter->log_txpackets[i]);
@@ -2549,9 +2556,19 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	    adapter->log_itrs[i] = 0;
 	  }
 	  adapter->log_itrs_cnt = 0;
-	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);
+	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);*/
 	}
-	
+
+	if (ec->tx_coalesce_usecs_low) {
+	  int tmp = ec->tx_coalesce_usecs_low;
+	  if (tmp == 1) {
+	    adapter->dca_en = 0;
+	  } else {
+	    adapter->dca_en = 1;
+	  }
+	  printk(KERN_INFO "\t *** Update DCA = %d\n", adapter->dca_en);
+	  //goto reset;
+	}
 	return 0;
 
 reset:

@@ -1340,7 +1340,8 @@ static void ixgbe_update_tx_dca(struct ixgbe_adapter *adapter,
 	u32 txctrl = 0;
 	u16 reg_offset;
 
-	if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	if (adapter->dca_en)
 		txctrl = dca3_get_tag(tx_ring->dev, cpu);
 
 	switch (hw->mac.type) {
@@ -1367,6 +1368,8 @@ static void ixgbe_update_tx_dca(struct ixgbe_adapter *adapter,
 		  IXGBE_DCA_TXCTRL_DESC_DCA_EN;
 
 	IXGBE_WRITE_REG(hw, reg_offset, txctrl);
+	if(tx_ring->reg_idx == 1)
+	  printk(KERN_INFO "\t *** ixgbe_update_tx_dca txctrl: 0x%X\n", txctrl);
 }
 
 static void ixgbe_update_rx_dca(struct ixgbe_adapter *adapter,
@@ -1376,8 +1379,9 @@ static void ixgbe_update_rx_dca(struct ixgbe_adapter *adapter,
 	struct ixgbe_hw *hw = &adapter->hw;
 	u32 rxctrl = 0;
 	u8 reg_idx = rx_ring->reg_idx;
-
-	if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	
+	//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	if (adapter->dca_en)
 		rxctrl = dca3_get_tag(rx_ring->dev, cpu);
 
 	switch (hw->mac.type) {
@@ -1399,6 +1403,8 @@ static void ixgbe_update_rx_dca(struct ixgbe_adapter *adapter,
 		  IXGBE_DCA_RXCTRL_DESC_DCA_EN;
 
 	IXGBE_WRITE_REG(hw, IXGBE_DCA_RXCTRL(reg_idx), rxctrl);
+	if(reg_idx == 1)
+	  printk(KERN_INFO "\t *** ixgbe_update_rx_dca rxctrl: 0x%X\n", rxctrl);
 }
 
 static void ixgbe_update_dca(struct ixgbe_q_vector *q_vector)
@@ -1426,7 +1432,8 @@ static void ixgbe_setup_dca(struct ixgbe_adapter *adapter)
 	int i;
 
 	/* always use CB2 mode, difference is masked in the CB driver */
-	if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	if (adapter->dca_en)
 		IXGBE_WRITE_REG(&adapter->hw, IXGBE_DCA_CTRL,
 				IXGBE_DCA_CTRL_DCA_MODE_CB2);
 	else
@@ -1444,13 +1451,15 @@ static int __ixgbe_notify_dca(struct device *dev, void *data)
 	struct ixgbe_adapter *adapter = dev_get_drvdata(dev);
 	unsigned long event = *(unsigned long *)data;
 
-	if (!(adapter->flags & IXGBE_FLAG_DCA_CAPABLE))
+	//if (!(adapter->flags & IXGBE_FLAG_DCA_CAPABLE))
+	if (!(adapter->dca_en))
 		return 0;
 
 	switch (event) {
 	case DCA_PROVIDER_ADD:
 		/* if we're already enabled, don't do it again */
-		if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+		//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	        if (adapter->dca_en)
 			break;
 		if (dca_add_requester(dev) == 0) {
 			adapter->flags |= IXGBE_FLAG_DCA_ENABLED;
@@ -1460,7 +1469,8 @@ static int __ixgbe_notify_dca(struct device *dev, void *data)
 		}
 		/* fall through - DCA is disabled. */
 	case DCA_PROVIDER_REMOVE:
-		if (adapter->flags & IXGBE_FLAG_DCA_ENABLED) {
+	        //if (adapter->flags & IXGBE_FLAG_DCA_ENABLED) {
+	        if (adapter->dca_en) {
 			dca_remove_requester(dev);
 			adapter->flags &= ~IXGBE_FLAG_DCA_ENABLED;
 			IXGBE_WRITE_REG(&adapter->hw, IXGBE_DCA_CTRL,
@@ -1787,7 +1797,8 @@ static bool ixgbe_is_non_eop(struct ixgbe_ring *rx_ring,
 			     struct sk_buff *skb)
 {
 	u32 ntc = rx_ring->next_to_clean + 1;
-
+	//int v_idx = rx_ring->q_vector->v_idx;
+	
 	/* fetch, update, and store next to clean */
 	ntc = (ntc < rx_ring->count) ? ntc : 0;
 	rx_ring->next_to_clean = ntc;
@@ -1809,7 +1820,11 @@ static bool ixgbe_is_non_eop(struct ixgbe_ring *rx_ring,
 			ntc = le32_to_cpu(rx_desc->wb.upper.status_error);
 			ntc &= IXGBE_RXDADV_NEXTP_MASK;
 			ntc >>= IXGBE_RXDADV_NEXTP_SHIFT;
-		}
+
+			//if(v_idx == 1) {
+	                //       printk(KERN_INFO "\t *** RSC ixgbe_is_non_eop\n");
+	                //}
+	        }
 	}
 
 	/* if we are the last buffer then there is nothing else to do */
@@ -2776,7 +2791,7 @@ void ixgbe_write_eitr(struct ixgbe_q_vector *q_vector)
 	  adapter->log_itrs[adapter->log_itrs_cnt] = (u32)((itr_reg >> 3) & 0x3FF)*2;
 	  adapter->log_itrs_cnt += 1;
 	  if(adapter->log_itrs_cnt >= 50000) {
-	    printk(KERN_INFO "\t *** adapter->log_itrs_cnt >= 50000");
+	  printk(KERN_INFO "\t *** adapter->log_itrs_cnt >= 50000");
 	    adapter->log_itrs_cnt = 0;
 	  }
 	  }*/
@@ -3231,8 +3246,9 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	int v_idx = q_vector->v_idx;
 	
 #ifdef CONFIG_IXGBE_DCA
-	if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
-		ixgbe_update_dca(q_vector);
+	//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
+	if (adapter->dca_en)
+	  ixgbe_update_dca(q_vector);
 #endif
 
 	ixgbe_for_each_ring(ring, q_vector->tx) {
@@ -3592,12 +3608,12 @@ void ixgbe_configure_tx_ring(struct ixgbe_adapter *adapter,
 	/* else */
 	/* 	txdctl |= 2u << 16;	/\* WTHRESH = 8 *\/ */
 
-	if (!ring->q_vector || (ring->q_vector->itr < IXGBE_100K_ITR)) {
-	  txdctl |= 1u << 16;	/* WTHRESH = 1 */
-	}
-	else {
-	  txdctl |= (ring->wthresh) << 16;	/* WTHRESH = 2 */
-	}
+	//if (!ring->q_vector || (ring->q_vector->itr < IXGBE_100K_ITR)) {
+	//  txdctl |= 1u << 16;	/* WTHRESH = 1 */
+	//}
+	//else {
+	txdctl |= (ring->wthresh) << 16;	/* WTHRESH = 2 */
+	  //}
 	
 	/*
 	 * Setting PTHRESH to 32 both improves performance
@@ -3639,9 +3655,9 @@ void ixgbe_configure_tx_ring(struct ixgbe_adapter *adapter,
 	memset(ring->tx_buffer_info, 0,
 	       sizeof(struct ixgbe_tx_buffer) * ring->count);
 
-	if((int)reg_idx == 0) {
+	/*if((int)reg_idx == 0) {
 	  printk(KERN_INFO "\t *** PTHRESH=%d HTRESH=%d WTHRESH=%d\n", (int)(txdctl & 0x7F), (int)((txdctl >> 8) & 0x7F), (int)((txdctl >> 16) & 0x7F));
-	}
+	  }*/
 		
 	/* enable queue */
 	IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(reg_idx), txdctl);
@@ -4100,9 +4116,9 @@ static void ixgbe_configure_rscctl(struct ixgbe_adapter *adapter,
 	
 	IXGBE_WRITE_REG(hw, IXGBE_RSCCTL(reg_idx), rscctrl);
 
-	if((int)reg_idx == 0) {
-	  printk(KERN_INFO "\t *** RSCCTL_RSCEN=1, RSCCTL_MAXDESC=%d\n", (int)((rscctrl >> 2) & 0x3));
-	}
+	//if((int)reg_idx == 0) {
+	printk(KERN_INFO "\t *** RSCCTL_RSCEN=1, RSCCTL_MAXDESC=%d\n", (int)((rscctrl >> 2) & 0x3));
+	  //}
 }
 
 #define IXGBE_MAX_RX_DESC_POLL 10
@@ -5565,7 +5581,8 @@ static void ixgbe_configure_dfwd(struct ixgbe_adapter *adapter)
 static void ixgbe_configure(struct ixgbe_adapter *adapter)
 {
 	struct ixgbe_hw *hw = &adapter->hw;
-
+	u32 dtxmx;
+	
 	ixgbe_configure_pb(adapter);
 #ifdef CONFIG_IXGBE_DCB
 	ixgbe_configure_dcb(adapter);
@@ -5607,10 +5624,20 @@ static void ixgbe_configure(struct ixgbe_adapter *adapter)
 	}
 
 #ifdef CONFIG_IXGBE_DCA
-	printk(KERN_INFO "\t *** DCA=1\n");
+	printk(KERN_INFO "\t *** CONFIG_IXGBE_DCA\n");
+	
 	/* configure DCA */
-	if (adapter->flags & IXGBE_FLAG_DCA_CAPABLE)
-		ixgbe_setup_dca(adapter);
+	//if (adapter->flags & IXGBE_FLAG_DCA_CAPABLE)
+	if (adapter->dca_en) {
+	  printk(KERN_INFO "\t *** ixgbe_configure: DCA=%d\n", adapter->dca_en);
+	  ixgbe_setup_dca(adapter);
+	}
+	else {
+	  printk(KERN_INFO "\t *** ixgbe_configure: DCA=%d\n", adapter->dca_en);
+	  printk(KERN_INFO "\t *** ixgbe_configure: TXCTRL=0x%X \n", IXGBE_READ_REG(hw, IXGBE_DCA_TXCTRL_82599(1)));
+	  printk(KERN_INFO "\t *** ixgbe_configure: RXCTRL=0x%X \n", IXGBE_READ_REG(hw, IXGBE_DCA_RXCTRL(1)));
+	}
+	
 #endif /* CONFIG_IXGBE_DCA */
 
 #ifdef IXGBE_FCOE
@@ -5621,6 +5648,9 @@ static void ixgbe_configure(struct ixgbe_adapter *adapter)
 	ixgbe_configure_tx(adapter);
 	ixgbe_configure_rx(adapter);
 	ixgbe_configure_dfwd(adapter);
+
+	dtxmx = (u32)adapter->dtxmxszrq;
+	IXGBE_WRITE_REG(hw, IXGBE_DTXMXSZRQ, dtxmx);
 }
 
 /**
@@ -6442,7 +6472,7 @@ int ixgbe_setup_tx_resources(struct ixgbe_ring *tx_ring)
 	tx_ring->size = tx_ring->count * sizeof(union ixgbe_adv_tx_desc);
 	tx_ring->size = ALIGN(tx_ring->size, 4096);
 
-	tx_ring->wthresh = 2;
+	tx_ring->wthresh = 1;
 	tx_ring->hthresh = 1;
 	tx_ring->pthresh = 32;
 
@@ -6738,10 +6768,19 @@ int ixgbe_open(struct net_device *netdev)
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 	struct ixgbe_hw *hw = &adapter->hw;
 	int err, queues, i;
-
+	static int init = 0;
+	
 	/* default params */
-	adapter->dtxmxszrq = 16;
-	adapter->rsc_delay = 0x0;
+	if(init == 0) {
+	  adapter->dtxmxszrq = 16;
+	  adapter->rsc_delay = 0x0;
+	  adapter->dca_en = 0;
+	  init = 1;
+	  printk(KERN_INFO "\t *** ixgbe_open\n");
+	} else {
+	  printk(KERN_INFO "\t *** ixgbe_open: dtxmxszrq=%d rsc_delay=%d\n", adapter->dtxmxszrq, adapter->rsc_delay);
+	}
+	
 	adapter->log_itrs_cnt = 0;
 	adapter->log_cnt = 0;
 	adapter->totalrxbytes = 0;
@@ -10769,7 +10808,7 @@ skip_sriov:
 #ifdef CONFIG_IXGBE_DCA
 	printk(KERN_INFO "\t *** DCA=1\n");
 	if (dca_add_requester(&pdev->dev) == 0) {
-		adapter->flags |= IXGBE_FLAG_DCA_ENABLED;
+	        adapter->flags |= IXGBE_FLAG_DCA_ENABLED;
 		ixgbe_setup_dca(adapter);
 	}
 #endif
@@ -10857,7 +10896,8 @@ static void ixgbe_remove(struct pci_dev *pdev)
 
 
 #ifdef CONFIG_IXGBE_DCA
-	if (adapter->flags & IXGBE_FLAG_DCA_ENABLED) {
+	//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED) {
+	if (adapter->dca_en) {
 		adapter->flags &= ~IXGBE_FLAG_DCA_ENABLED;
 		dca_remove_requester(&pdev->dev);
 		IXGBE_WRITE_REG(&adapter->hw, IXGBE_DCA_CTRL,
