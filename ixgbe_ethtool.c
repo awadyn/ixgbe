@@ -2448,11 +2448,11 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 		ixgbe_do_reset(netdev);
 
 	if (ec->rx_max_coalesced_frames) {
+	  printk(KERN_INFO "\t *** PREV IXGBE_DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
 	  adapter->dtxmxszrq = ec->rx_max_coalesced_frames;	  
 	  dtxmx = (u32)adapter->dtxmxszrq;
 	  IXGBE_WRITE_REG(hw, IXGBE_DTXMXSZRQ, dtxmx);
-	  printk(KERN_INFO "\t *** Update DTXMXSZRQ = %d\n", (int)dtxmx);
-	  goto reset;
+	  printk(KERN_INFO "\t *** NEW IXGBE_DTXMXSZRQ = %d\n", (int)dtxmx);
 	}
 
 	if (ec->rx_coalesce_usecs_irq) {	  
@@ -2502,7 +2502,6 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	    adapter->rx_ring[i]->bsizepkt = ec->tx_max_coalesced_frames;
 	  }
 	  printk(KERN_INFO "\t *** Update BSIZEPACKET = %d\n", ec->tx_max_coalesced_frames);
-	  goto reset;
 	}
 
 	if (ec->tx_coalesce_usecs_irq) {
@@ -2510,7 +2509,6 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	    adapter->rx_ring[i]->bsizehdr = ec->tx_coalesce_usecs_irq;
 	  }
 	  printk(KERN_INFO "\t *** Update BSIZEHEADER = %d\n", ec->tx_coalesce_usecs_irq);
-	  goto reset;
 	}
 
 	if (ec->tx_max_coalesced_frames_irq) {
@@ -2518,13 +2516,11 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	    adapter->rx_ring[i]->maxdesc = ec->tx_max_coalesced_frames_irq;
 	  }
 	  printk(KERN_INFO "\t *** Update MAXDESC = %d\n", ec->tx_max_coalesced_frames_irq);
-	  goto reset;
 	}
 
 	if (ec->rx_coalesce_usecs_low) {
 	  adapter->rsc_delay = ec->rx_coalesce_usecs_low;
 	  printk(KERN_INFO "\t *** Update RSCDELAY = %d\n", ec->rx_coalesce_usecs_low);
-	  goto reset;
 	}
 
         if (ec->rx_max_coalesced_frames_low) {
@@ -2559,15 +2555,13 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);*/
 	}
 
+	// ec->tx_coalesce_usecs_low == 1, RX_DCA = OFF, TX_DCA = OFF
+	// ec->tx_coalesce_usecs_low == 2, RX_DCA = ON, TX_DCA = OFF
+	// ec->tx_coalesce_usecs_low == 3, RX_DCA = OFF, TX_DCA = ON
+	// ec->tx_coalesce_usecs_low == 4, RX_DCA = ON, TX_DCA = ON
 	if (ec->tx_coalesce_usecs_low) {
-	  int tmp = ec->tx_coalesce_usecs_low;
-	  if (tmp == 1) {
-	    adapter->dca_en = 0;
-	  } else {
-	    adapter->dca_en = 1;
-	  }
+	  adapter->dca_en = ec->tx_coalesce_usecs_low - 1;
 	  printk(KERN_INFO "\t *** Update DCA = %d\n", adapter->dca_en);
-	  //goto reset;
 	}
 	return 0;
 

@@ -1368,8 +1368,6 @@ static void ixgbe_update_tx_dca(struct ixgbe_adapter *adapter,
 		  IXGBE_DCA_TXCTRL_DESC_DCA_EN;
 
 	IXGBE_WRITE_REG(hw, reg_offset, txctrl);
-	if(tx_ring->reg_idx == 1)
-	  printk(KERN_INFO "\t *** ixgbe_update_tx_dca txctrl: 0x%X\n", txctrl);
 }
 
 static void ixgbe_update_rx_dca(struct ixgbe_adapter *adapter,
@@ -1403,8 +1401,6 @@ static void ixgbe_update_rx_dca(struct ixgbe_adapter *adapter,
 		  IXGBE_DCA_RXCTRL_DESC_DCA_EN;
 
 	IXGBE_WRITE_REG(hw, IXGBE_DCA_RXCTRL(reg_idx), rxctrl);
-	if(reg_idx == 1)
-	  printk(KERN_INFO "\t *** ixgbe_update_rx_dca rxctrl: 0x%X\n", rxctrl);
 }
 
 static void ixgbe_update_dca(struct ixgbe_q_vector *q_vector)
@@ -1416,12 +1412,21 @@ static void ixgbe_update_dca(struct ixgbe_q_vector *q_vector)
 	if (q_vector->cpu == cpu)
 		goto out_no_update;
 
-	ixgbe_for_each_ring(ring, q_vector->tx)
-		ixgbe_update_tx_dca(adapter, ring, cpu);
-
-	ixgbe_for_each_ring(ring, q_vector->rx)
-		ixgbe_update_rx_dca(adapter, ring, cpu);
-
+	if (adapter->dca_en == 3) {
+	  ixgbe_for_each_ring(ring, q_vector->tx)
+	    ixgbe_update_tx_dca(adapter, ring, cpu);
+	  
+	  ixgbe_for_each_ring(ring, q_vector->rx)
+	    ixgbe_update_rx_dca(adapter, ring, cpu);
+	}
+	else if(adapter->dca_en == 1) {
+	  ixgbe_for_each_ring(ring, q_vector->rx)
+	    ixgbe_update_rx_dca(adapter, ring, cpu);
+	}
+	else if(adapter->dca_en == 2) {
+	  ixgbe_for_each_ring(ring, q_vector->tx)
+	    ixgbe_update_tx_dca(adapter, ring, cpu);
+	}	
 	q_vector->cpu = cpu;
 out_no_update:
 	put_cpu();
@@ -3835,17 +3840,20 @@ static void ixgbe_configure_srrctl(struct ixgbe_adapter *adapter,
 	/* 	srrctl |= IXGBE_RXBUFFER_3K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT; */
 	/* else */
 	/* 	srrctl |= IXGBE_RXBUFFER_2K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT; */
-	srrctl = rx_ring->bsizehdr << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT;
-	srrctl |=  rx_ring->bsizepkt >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
 
+	// IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT == 2
+	srrctl = rx_ring->bsizehdr << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT;
+
+	//IXGBE_SRRCTL_BSIZEPKT_SHIFT == 10
+	srrctl |=  rx_ring->bsizepkt >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
+	
 	/* configure descriptor type */
 	srrctl |= IXGBE_SRRCTL_DESCTYPE_ADV_ONEBUF;
-
-	if((int)reg_idx == 0) {
-	  printk(KERN_INFO "\t *** BIZEPACKET=%d BSIZEHEADER=%d\n", (int)(srrctl & 0x1F), (int)((srrctl >> 8) & 0x3F));
-	}
 		
 	IXGBE_WRITE_REG(hw, IXGBE_SRRCTL(reg_idx), srrctl);
+	if(reg_idx == 1) {
+	  printk(KERN_INFO "\t *** BIZEPACKET=%d BSIZEHEADER=%d\n", (int)(srrctl & 0x1F), (int)((srrctl >> 8) & 0x3F));
+	}
 }
 
 /**
@@ -4112,13 +4120,13 @@ static void ixgbe_configure_rscctl(struct ixgbe_adapter *adapter,
 	 * than 65536
 	 */
 	//rscctrl |= IXGBE_RSCCTL_MAXDESC_16;
-	rscctrl |= ring->maxdesc;
+	rscctrl |= (ring->maxdesc << 2);
 	
 	IXGBE_WRITE_REG(hw, IXGBE_RSCCTL(reg_idx), rscctrl);
 
-	//if((int)reg_idx == 0) {
-	printk(KERN_INFO "\t *** RSCCTL_RSCEN=1, RSCCTL_MAXDESC=%d\n", (int)((rscctrl >> 2) & 0x3));
-	  //}
+	if(reg_idx == 1) {
+	  printk(KERN_INFO "\t *** RSCCTL_RSCEN=1, RSCCTL_MAXDESC=%d\n", (int)((rscctrl >> 2) & 0x3));
+	}
 }
 
 #define IXGBE_MAX_RX_DESC_POLL 10
@@ -5631,6 +5639,8 @@ static void ixgbe_configure(struct ixgbe_adapter *adapter)
 	if (adapter->dca_en) {
 	  printk(KERN_INFO "\t *** ixgbe_configure: DCA=%d\n", adapter->dca_en);
 	  ixgbe_setup_dca(adapter);
+	  printk(KERN_INFO "\t *** ixgbe_configure: TXCTRL=0x%X \n", IXGBE_READ_REG(hw, IXGBE_DCA_TXCTRL_82599(1)));
+	  printk(KERN_INFO "\t *** ixgbe_configure: RXCTRL=0x%X \n", IXGBE_READ_REG(hw, IXGBE_DCA_RXCTRL(1)));
 	}
 	else {
 	  printk(KERN_INFO "\t *** ixgbe_configure: DCA=%d\n", adapter->dca_en);
@@ -5784,9 +5794,8 @@ static void ixgbe_setup_gpie(struct ixgbe_adapter *adapter)
 
 	gpie &= ~(0x7 << 11);
 	gpie |= (adapter->rsc_delay << 11);
-	printk(KERN_INFO "\t *** RSC Delay=%d\n", (int)((gpie >> 11)&0x7));
-
 	IXGBE_WRITE_REG(hw, IXGBE_GPIE, gpie);
+	printk(KERN_INFO "\t *** RSC Delay=%d\n", (int)((gpie >> 11)&0x7));	
 }
 
 static void ixgbe_up_complete(struct ixgbe_adapter *adapter)
@@ -5873,6 +5882,7 @@ void ixgbe_reinit_locked(struct ixgbe_adapter *adapter)
 
 void ixgbe_up(struct ixgbe_adapter *adapter)
 {
+  printk(KERN_INFO "\t *** ixgbe_up()\n");
 	/* hardware has been reset, we need to reload some things */
 	ixgbe_configure(adapter);
 
@@ -6472,9 +6482,9 @@ int ixgbe_setup_tx_resources(struct ixgbe_ring *tx_ring)
 	tx_ring->size = tx_ring->count * sizeof(union ixgbe_adv_tx_desc);
 	tx_ring->size = ALIGN(tx_ring->size, 4096);
 
-	tx_ring->wthresh = 1;
-	tx_ring->hthresh = 1;
-	tx_ring->pthresh = 32;
+	//tx_ring->wthresh = 1;
+	//tx_ring->hthresh = 1;
+	//tx_ring->pthresh = 32;
 
 	set_dev_node(dev, ring_node);
 	tx_ring->desc = dma_alloc_coherent(dev,
@@ -6570,9 +6580,6 @@ int ixgbe_setup_rx_resources(struct ixgbe_adapter *adapter,
 	rx_ring->size = ALIGN(rx_ring->size, 4096);
 
 	// make it a variable
-	rx_ring->bsizepkt = IXGBE_RXBUFFER_3K;
-	rx_ring->bsizehdr = IXGBE_RXBUFFER_256;
-	rx_ring->maxdesc = IXGBE_RSCCTL_MAXDESC_16;	
 	rx_ring->num_dynamic_itrs_fired = 0;
 	
 	set_dev_node(dev, ring_node);
@@ -6775,6 +6782,19 @@ int ixgbe_open(struct net_device *netdev)
 	  adapter->dtxmxszrq = 16;
 	  adapter->rsc_delay = 0x0;
 	  adapter->dca_en = 0;
+
+	  for (i = 0; i < adapter->num_rx_queues; i++) {
+	    adapter->rx_ring[i]->bsizepkt = IXGBE_RXBUFFER_3K;
+	    adapter->rx_ring[i]->bsizehdr = IXGBE_RXBUFFER_256;
+	    adapter->rx_ring[i]->maxdesc = IXGBE_RSCCTL_MAXDESC_16;
+	    
+	  }
+	  for (i = 0; i < adapter->num_tx_queues; i++) {
+	    adapter->tx_ring[i]->wthresh = 1;
+	    adapter->tx_ring[i]->hthresh = 1;
+	    adapter->tx_ring[i]->pthresh = 32;
+	  }
+	  
 	  init = 1;
 	  printk(KERN_INFO "\t *** ixgbe_open\n");
 	} else {
