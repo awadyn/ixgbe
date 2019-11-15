@@ -43,6 +43,8 @@
 #include <linux/net_tstamp.h>
 #include <linux/ptp_clock_kernel.h>
 
+#undef CONFIG_PCI_IOV
+
 #include "ixgbe_type.h"
 #include "ixgbe_common.h"
 #include "ixgbe_dcb.h"
@@ -354,6 +356,7 @@ struct ixgbe_ring {
         u32 hthresh;
         u32 pthresh;
         u32 maxdesc;
+        u8 mac_addr5;
   
         /* special counters */
         u64 num_dynamic_itrs_fired;
@@ -431,13 +434,18 @@ struct ixgbe_ring_feature {
  */
 static inline unsigned int ixgbe_rx_bufsz(struct ixgbe_ring *ring)
 {
-  if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state))
+  if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state)) {
+    //printk(KERN_INFO "ixgbe_rx_bufsz = %d\n", ring->bsizepkt);
     return ring->bsizepkt;
     //return IXGBE_RXBUFFER_3K;
   //#if (PAGE_SIZE < 8192)
-  if (ring_uses_build_skb(ring))
+  }
+  if (ring_uses_build_skb(ring)) {
+    //printk(KERN_INFO "ixgbe_rx_bufsz = %d\n", IXGBE_MAX_2K_FRAME_BUILD_SKB);
     return IXGBE_MAX_2K_FRAME_BUILD_SKB;
+  }
   //#endif
+  //printk(KERN_INFO "ixgbe_rx_bufsz = %d\n", IXGBE_RXBUFFER_2K);
   return IXGBE_RXBUFFER_2K;
 }
 
@@ -446,7 +454,7 @@ static inline unsigned int ixgbe_rx_pg_order(struct ixgbe_ring *ring)
   //  #if (PAGE_SIZE < 8192)
   if (test_bit(__IXGBE_RX_3K_BUFFER, &ring->state))
     return 1;
-	//#endif
+  //#endif
   return 0;
 
 }
@@ -664,13 +672,14 @@ struct ixgbe_adapter {
         u32 dtxmxszrq;
         u32 rsc_delay;
         u32 totalrxbytes;
-        u32 log_work_done[50000];
+        u32 dca_en;
+  //    u32 log_work_done[50000];
   //  log_budget[50000];
-        u32 log_rxbytes[50000];
-        u32 log_rxpackets[50000];
-        u32 log_txbytes[50000];
-        u32 log_txpackets[50000];
-        u32 log_itrs[50000];
+  //u32 log_rxbytes[50000];
+  //     u32 log_rxpackets[50000];
+  //    u32 log_txbytes[50000];
+  //    u32 log_txpackets[50000];
+        u32 log_itrs[100000];
         u32 log_cnt;
         u32 log_itrs_cnt;
         
@@ -952,7 +961,7 @@ void ixgbe_set_rx_mode(struct net_device *netdev);
 void ixgbe_set_rx_drop_en(struct ixgbe_adapter *adapter);
 #endif
 int ixgbe_setup_tc(struct net_device *dev, u8 tc);
-void ixgbe_tx_ctxtdesc(struct ixgbe_ring *, u32, u32, u32, u32);
+void ixgbe_tx_ctxtdesc(struct ixgbe_ring *, u32, u32, u32, u32, u8);
 void ixgbe_do_reset(struct net_device *netdev);
 #ifdef CONFIG_IXGBE_HWMON
 void ixgbe_sysfs_exit(struct ixgbe_adapter *adapter);

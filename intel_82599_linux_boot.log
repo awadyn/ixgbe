@@ -1,0 +1,2452 @@
+[    0.000000] pcpu-alloc: s151552 r8192 d28672 u262144 alloc=1*2097152
+[    1.278197] ACPI: PCI Interrupt Link [LK00] (IRQs 3 4 5 6 7 11 14 *15)
+[    1.284081] ACPI: PCI Interrupt Link [LK01] (IRQs 3 4 5 6 7 11 *14 15)
+[    1.292081] ACPI: PCI Interrupt Link [LK02] (IRQs 3 4 5 6 7 11 14 15) *0, disabled.
+[    1.300079] ACPI: PCI Interrupt Link [LK03] (IRQs 3 4 5 6 7 *11 14 15)
+[    1.308078] ACPI: PCI Interrupt Link [LK04] (IRQs 3 4 *5 6 7 11 14 15)
+[    1.316080] ACPI: PCI Interrupt Link [LK05] (IRQs 3 4 5 6 7 11 14 15) *0, disabled.
+[    1.324078] ACPI: PCI Interrupt Link [LK06] (IRQs 3 4 5 *6 7 11 14 15)
+[    1.332078] ACPI: PCI Interrupt Link [LK07] (IRQs 3 4 5 6 7 11 *14 15)
+[   10.119819] *** ixgbe_probe
+[   10.120172] *** ixgbe_sw_init
+[   10.120172] *** hw->vendor_id 0x8086
+[   10.120173] *** hw->device_id 0x10FB
+[   10.120173] *** hw->revision_id 0x1
+[   10.120174] *** hw->subsystem_vendor_id 0x8086
+[   10.120174] *** hw->subsystem_device_id 0x7A12
+[   10.120177] *** CONFIG_IXGBE_DCA
+[   10.120182] 	 *** DITR=0
+[   10.120183] *** ixgbe_reset_hw_82599
+[   10.120184] *** ixgbe_stop_adapter_generic
+[   10.120186] *** ixgbe_disable_rx_generic
+[   10.120187] 	 *** IXGBE_RXCTRL=3000 0
+[   10.120188] 	 *** ixgbe_stop_adapter_generic IXGBE_EIMC=888 FFFFFFFF
+[   10.120190] 	 *** ixgbe_stop_adapter_generic i=0 IXGBE_TXDCTL(i)=6028 4000000
+[   10.120190] 	 *** ixgbe_stop_adapter_generic i=1 IXGBE_TXDCTL(i)=6068 4000000
+[   10.120191] 	 *** ixgbe_stop_adapter_generic i=2 IXGBE_TXDCTL(i)=60A8 4000000
+[   10.120192] 	 *** ixgbe_stop_adapter_generic i=3 IXGBE_TXDCTL(i)=60E8 4000000
+[   10.120193] 	 *** ixgbe_stop_adapter_generic i=4 IXGBE_TXDCTL(i)=6128 4000000
+[   10.120193] 	 *** ixgbe_stop_adapter_generic i=5 IXGBE_TXDCTL(i)=6168 4000000
+[   10.120194] 	 *** ixgbe_stop_adapter_generic i=6 IXGBE_TXDCTL(i)=61A8 4000000
+[   10.120195] 	 *** ixgbe_stop_adapter_generic i=7 IXGBE_TXDCTL(i)=61E8 4000000
+[   10.120195] 	 *** ixgbe_stop_adapter_generic i=8 IXGBE_TXDCTL(i)=6228 4000000
+[   10.120196] 	 *** ixgbe_stop_adapter_generic i=9 IXGBE_TXDCTL(i)=6268 4000000
+[   10.120197] 	 *** ixgbe_stop_adapter_generic i=10 IXGBE_TXDCTL(i)=62A8 4000000
+[   10.120197] 	 *** ixgbe_stop_adapter_generic i=11 IXGBE_TXDCTL(i)=62E8 4000000
+[   10.120198] 	 *** ixgbe_stop_adapter_generic i=12 IXGBE_TXDCTL(i)=6328 4000000
+[   10.120199] 	 *** ixgbe_stop_adapter_generic i=13 IXGBE_TXDCTL(i)=6368 4000000
+[   10.120200] 	 *** ixgbe_stop_adapter_generic i=14 IXGBE_TXDCTL(i)=63A8 4000000
+[   10.120201] 	 *** ixgbe_stop_adapter_generic i=15 IXGBE_TXDCTL(i)=63E8 4000000
+[   10.120201] 	 *** ixgbe_stop_adapter_generic i=16 IXGBE_TXDCTL(i)=6428 4000000
+[   10.120202] 	 *** ixgbe_stop_adapter_generic i=17 IXGBE_TXDCTL(i)=6468 4000000
+[   10.120203] 	 *** ixgbe_stop_adapter_generic i=18 IXGBE_TXDCTL(i)=64A8 4000000
+[   10.120204] 	 *** ixgbe_stop_adapter_generic i=19 IXGBE_TXDCTL(i)=64E8 4000000
+[   10.120204] 	 *** ixgbe_stop_adapter_generic i=20 IXGBE_TXDCTL(i)=6528 4000000
+[   10.120205] 	 *** ixgbe_stop_adapter_generic i=21 IXGBE_TXDCTL(i)=6568 4000000
+[   10.120206] 	 *** ixgbe_stop_adapter_generic i=22 IXGBE_TXDCTL(i)=65A8 4000000
+[   10.120206] 	 *** ixgbe_stop_adapter_generic i=23 IXGBE_TXDCTL(i)=65E8 4000000
+[   10.120207] 	 *** ixgbe_stop_adapter_generic i=24 IXGBE_TXDCTL(i)=6628 4000000
+[   10.120208] 	 *** ixgbe_stop_adapter_generic i=25 IXGBE_TXDCTL(i)=6668 4000000
+[   10.120208] 	 *** ixgbe_stop_adapter_generic i=26 IXGBE_TXDCTL(i)=66A8 4000000
+[   10.120209] 	 *** ixgbe_stop_adapter_generic i=27 IXGBE_TXDCTL(i)=66E8 4000000
+[   10.120210] 	 *** ixgbe_stop_adapter_generic i=28 IXGBE_TXDCTL(i)=6728 4000000
+[   10.120210] 	 *** ixgbe_stop_adapter_generic i=29 IXGBE_TXDCTL(i)=6768 4000000
+[   10.120211] 	 *** ixgbe_stop_adapter_generic i=30 IXGBE_TXDCTL(i)=67A8 4000000
+[   10.120212] 	 *** ixgbe_stop_adapter_generic i=31 IXGBE_TXDCTL(i)=67E8 4000000
+[   10.120212] 	 *** ixgbe_stop_adapter_generic i=32 IXGBE_TXDCTL(i)=6828 4000000
+[   10.120213] 	 *** ixgbe_stop_adapter_generic i=33 IXGBE_TXDCTL(i)=6868 4000000
+[   10.120214] 	 *** ixgbe_stop_adapter_generic i=34 IXGBE_TXDCTL(i)=68A8 4000000
+[   10.120215] 	 *** ixgbe_stop_adapter_generic i=35 IXGBE_TXDCTL(i)=68E8 4000000
+[   10.120215] 	 *** ixgbe_stop_adapter_generic i=36 IXGBE_TXDCTL(i)=6928 4000000
+[   10.120216] 	 *** ixgbe_stop_adapter_generic i=37 IXGBE_TXDCTL(i)=6968 4000000
+[   10.120217] 	 *** ixgbe_stop_adapter_generic i=38 IXGBE_TXDCTL(i)=69A8 4000000
+[   10.120217] 	 *** ixgbe_stop_adapter_generic i=39 IXGBE_TXDCTL(i)=69E8 4000000
+[   10.120218] 	 *** ixgbe_stop_adapter_generic i=40 IXGBE_TXDCTL(i)=6A28 4000000
+[   10.120219] 	 *** ixgbe_stop_adapter_generic i=41 IXGBE_TXDCTL(i)=6A68 4000000
+[   10.120219] 	 *** ixgbe_stop_adapter_generic i=42 IXGBE_TXDCTL(i)=6AA8 4000000
+[   10.120220] 	 *** ixgbe_stop_adapter_generic i=43 IXGBE_TXDCTL(i)=6AE8 4000000
+[   10.120221] 	 *** ixgbe_stop_adapter_generic i=44 IXGBE_TXDCTL(i)=6B28 4000000
+[   10.120221] 	 *** ixgbe_stop_adapter_generic i=45 IXGBE_TXDCTL(i)=6B68 4000000
+[   10.120222] 	 *** ixgbe_stop_adapter_generic i=46 IXGBE_TXDCTL(i)=6BA8 4000000
+[   10.120223] 	 *** ixgbe_stop_adapter_generic i=47 IXGBE_TXDCTL(i)=6BE8 4000000
+[   10.120223] 	 *** ixgbe_stop_adapter_generic i=48 IXGBE_TXDCTL(i)=6C28 4000000
+[   10.120224] 	 *** ixgbe_stop_adapter_generic i=49 IXGBE_TXDCTL(i)=6C68 4000000
+[   10.120225] 	 *** ixgbe_stop_adapter_generic i=50 IXGBE_TXDCTL(i)=6CA8 4000000
+[   10.120225] 	 *** ixgbe_stop_adapter_generic i=51 IXGBE_TXDCTL(i)=6CE8 4000000
+[   10.120226] 	 *** ixgbe_stop_adapter_generic i=52 IXGBE_TXDCTL(i)=6D28 4000000
+[   10.120227] 	 *** ixgbe_stop_adapter_generic i=53 IXGBE_TXDCTL(i)=6D68 4000000
+[   10.120228] 	 *** ixgbe_stop_adapter_generic i=54 IXGBE_TXDCTL(i)=6DA8 4000000
+[   10.120228] 	 *** ixgbe_stop_adapter_generic i=55 IXGBE_TXDCTL(i)=6DE8 4000000
+[   10.120229] 	 *** ixgbe_stop_adapter_generic i=56 IXGBE_TXDCTL(i)=6E28 4000000
+[   10.120230] 	 *** ixgbe_stop_adapter_generic i=57 IXGBE_TXDCTL(i)=6E68 4000000
+[   10.120230] 	 *** ixgbe_stop_adapter_generic i=58 IXGBE_TXDCTL(i)=6EA8 4000000
+[   10.120231] 	 *** ixgbe_stop_adapter_generic i=59 IXGBE_TXDCTL(i)=6EE8 4000000
+[   10.120232] 	 *** ixgbe_stop_adapter_generic i=60 IXGBE_TXDCTL(i)=6F28 4000000
+[   10.120233] 	 *** ixgbe_stop_adapter_generic i=61 IXGBE_TXDCTL(i)=6F68 4000000
+[   10.120233] 	 *** ixgbe_stop_adapter_generic i=62 IXGBE_TXDCTL(i)=6FA8 4000000
+[   10.120234] 	 *** ixgbe_stop_adapter_generic i=63 IXGBE_TXDCTL(i)=6FE8 4000000
+[   10.120235] 	 *** ixgbe_stop_adapter_generic i=64 IXGBE_TXDCTL(i)=7028 4000000
+[   10.120236] 	 *** ixgbe_stop_adapter_generic i=65 IXGBE_TXDCTL(i)=7068 4000000
+[   10.120237] 	 *** ixgbe_stop_adapter_generic i=66 IXGBE_TXDCTL(i)=70A8 4000000
+[   10.120237] 	 *** ixgbe_stop_adapter_generic i=67 IXGBE_TXDCTL(i)=70E8 4000000
+[   10.120238] 	 *** ixgbe_stop_adapter_generic i=68 IXGBE_TXDCTL(i)=7128 4000000
+[   10.120239] 	 *** ixgbe_stop_adapter_generic i=69 IXGBE_TXDCTL(i)=7168 4000000
+[   10.120240] 	 *** ixgbe_stop_adapter_generic i=70 IXGBE_TXDCTL(i)=71A8 4000000
+[   10.120240] 	 *** ixgbe_stop_adapter_generic i=71 IXGBE_TXDCTL(i)=71E8 4000000
+[   10.120241] 	 *** ixgbe_stop_adapter_generic i=72 IXGBE_TXDCTL(i)=7228 4000000
+[   10.120242] 	 *** ixgbe_stop_adapter_generic i=73 IXGBE_TXDCTL(i)=7268 4000000
+[   10.120242] 	 *** ixgbe_stop_adapter_generic i=74 IXGBE_TXDCTL(i)=72A8 4000000
+[   10.120243] 	 *** ixgbe_stop_adapter_generic i=75 IXGBE_TXDCTL(i)=72E8 4000000
+[   10.120244] 	 *** ixgbe_stop_adapter_generic i=76 IXGBE_TXDCTL(i)=7328 4000000
+[   10.120244] 	 *** ixgbe_stop_adapter_generic i=77 IXGBE_TXDCTL(i)=7368 4000000
+[   10.120245] 	 *** ixgbe_stop_adapter_generic i=78 IXGBE_TXDCTL(i)=73A8 4000000
+[   10.120246] 	 *** ixgbe_stop_adapter_generic i=79 IXGBE_TXDCTL(i)=73E8 4000000
+[   10.120246] 	 *** ixgbe_stop_adapter_generic i=80 IXGBE_TXDCTL(i)=7428 4000000
+[   10.120247] 	 *** ixgbe_stop_adapter_generic i=81 IXGBE_TXDCTL(i)=7468 4000000
+[   10.120248] 	 *** ixgbe_stop_adapter_generic i=82 IXGBE_TXDCTL(i)=74A8 4000000
+[   10.120248] 	 *** ixgbe_stop_adapter_generic i=83 IXGBE_TXDCTL(i)=74E8 4000000
+[   10.120249] 	 *** ixgbe_stop_adapter_generic i=84 IXGBE_TXDCTL(i)=7528 4000000
+[   10.120250] 	 *** ixgbe_stop_adapter_generic i=85 IXGBE_TXDCTL(i)=7568 4000000
+[   10.120251] 	 *** ixgbe_stop_adapter_generic i=86 IXGBE_TXDCTL(i)=75A8 4000000
+[   10.120251] 	 *** ixgbe_stop_adapter_generic i=87 IXGBE_TXDCTL(i)=75E8 4000000
+[   10.120252] 	 *** ixgbe_stop_adapter_generic i=88 IXGBE_TXDCTL(i)=7628 4000000
+[   10.120253] 	 *** ixgbe_stop_adapter_generic i=89 IXGBE_TXDCTL(i)=7668 4000000
+[   10.120253] 	 *** ixgbe_stop_adapter_generic i=90 IXGBE_TXDCTL(i)=76A8 4000000
+[   10.120254] 	 *** ixgbe_stop_adapter_generic i=91 IXGBE_TXDCTL(i)=76E8 4000000
+[   10.120255] 	 *** ixgbe_stop_adapter_generic i=92 IXGBE_TXDCTL(i)=7728 4000000
+[   10.120255] 	 *** ixgbe_stop_adapter_generic i=93 IXGBE_TXDCTL(i)=7768 4000000
+[   10.120256] 	 *** ixgbe_stop_adapter_generic i=94 IXGBE_TXDCTL(i)=77A8 4000000
+[   10.120257] 	 *** ixgbe_stop_adapter_generic i=95 IXGBE_TXDCTL(i)=77E8 4000000
+[   10.120257] 	 *** ixgbe_stop_adapter_generic i=96 IXGBE_TXDCTL(i)=7828 4000000
+[   10.120258] 	 *** ixgbe_stop_adapter_generic i=97 IXGBE_TXDCTL(i)=7868 4000000
+[   10.120259] 	 *** ixgbe_stop_adapter_generic i=98 IXGBE_TXDCTL(i)=78A8 4000000
+[   10.120259] 	 *** ixgbe_stop_adapter_generic i=99 IXGBE_TXDCTL(i)=78E8 4000000
+[   10.120260] 	 *** ixgbe_stop_adapter_generic i=100 IXGBE_TXDCTL(i)=7928 4000000
+[   10.120261] 	 *** ixgbe_stop_adapter_generic i=101 IXGBE_TXDCTL(i)=7968 4000000
+[   10.120262] 	 *** ixgbe_stop_adapter_generic i=102 IXGBE_TXDCTL(i)=79A8 4000000
+[   10.120262] 	 *** ixgbe_stop_adapter_generic i=103 IXGBE_TXDCTL(i)=79E8 4000000
+[   10.120263] 	 *** ixgbe_stop_adapter_generic i=104 IXGBE_TXDCTL(i)=7A28 4000000
+[   10.120264] 	 *** ixgbe_stop_adapter_generic i=105 IXGBE_TXDCTL(i)=7A68 4000000
+[   10.120264] 	 *** ixgbe_stop_adapter_generic i=106 IXGBE_TXDCTL(i)=7AA8 4000000
+[   10.120265] 	 *** ixgbe_stop_adapter_generic i=107 IXGBE_TXDCTL(i)=7AE8 4000000
+[   10.120266] 	 *** ixgbe_stop_adapter_generic i=108 IXGBE_TXDCTL(i)=7B28 4000000
+[   10.120266] 	 *** ixgbe_stop_adapter_generic i=109 IXGBE_TXDCTL(i)=7B68 4000000
+[   10.120267] 	 *** ixgbe_stop_adapter_generic i=110 IXGBE_TXDCTL(i)=7BA8 4000000
+[   10.120268] 	 *** ixgbe_stop_adapter_generic i=111 IXGBE_TXDCTL(i)=7BE8 4000000
+[   10.120269] 	 *** ixgbe_stop_adapter_generic i=112 IXGBE_TXDCTL(i)=7C28 4000000
+[   10.120270] 	 *** ixgbe_stop_adapter_generic i=113 IXGBE_TXDCTL(i)=7C68 4000000
+[   10.120270] 	 *** ixgbe_stop_adapter_generic i=114 IXGBE_TXDCTL(i)=7CA8 4000000
+[   10.120271] 	 *** ixgbe_stop_adapter_generic i=115 IXGBE_TXDCTL(i)=7CE8 4000000
+[   10.120272] 	 *** ixgbe_stop_adapter_generic i=116 IXGBE_TXDCTL(i)=7D28 4000000
+[   10.120273] 	 *** ixgbe_stop_adapter_generic i=117 IXGBE_TXDCTL(i)=7D68 4000000
+[   10.120274] 	 *** ixgbe_stop_adapter_generic i=118 IXGBE_TXDCTL(i)=7DA8 4000000
+[   10.120274] 	 *** ixgbe_stop_adapter_generic i=119 IXGBE_TXDCTL(i)=7DE8 4000000
+[   10.120275] 	 *** ixgbe_stop_adapter_generic i=120 IXGBE_TXDCTL(i)=7E28 4000000
+[   10.120276] 	 *** ixgbe_stop_adapter_generic i=121 IXGBE_TXDCTL(i)=7E68 4000000
+[   10.120276] 	 *** ixgbe_stop_adapter_generic i=122 IXGBE_TXDCTL(i)=7EA8 4000000
+[   10.120277] 	 *** ixgbe_stop_adapter_generic i=123 IXGBE_TXDCTL(i)=7EE8 4000000
+[   10.120278] 	 *** ixgbe_stop_adapter_generic i=124 IXGBE_TXDCTL(i)=7F28 4000000
+[   10.120278] 	 *** ixgbe_stop_adapter_generic i=125 IXGBE_TXDCTL(i)=7F68 4000000
+[   10.120279] 	 *** ixgbe_stop_adapter_generic i=126 IXGBE_TXDCTL(i)=7FA8 4000000
+[   10.120280] 	 *** ixgbe_stop_adapter_generic i=127 IXGBE_TXDCTL(i)=7FE8 4000000
+[   10.120281] 	 *** ixgbe_stop_adapter_generic i=0 IXGBE_RXDCTL(i)=1028 4000000
+[   10.120282] 	 *** ixgbe_stop_adapter_generic i=1 IXGBE_RXDCTL(i)=1068 4000000
+[   10.120283] 	 *** ixgbe_stop_adapter_generic i=2 IXGBE_RXDCTL(i)=10A8 4000000
+[   10.120285] 	 *** ixgbe_stop_adapter_generic i=3 IXGBE_RXDCTL(i)=10E8 4000000
+[   10.120286] 	 *** ixgbe_stop_adapter_generic i=4 IXGBE_RXDCTL(i)=1128 4000000
+[   10.120287] 	 *** ixgbe_stop_adapter_generic i=5 IXGBE_RXDCTL(i)=1168 4000000
+[   10.120288] 	 *** ixgbe_stop_adapter_generic i=6 IXGBE_RXDCTL(i)=11A8 4000000
+[   10.120289] 	 *** ixgbe_stop_adapter_generic i=7 IXGBE_RXDCTL(i)=11E8 4000000
+[   10.120290] 	 *** ixgbe_stop_adapter_generic i=8 IXGBE_RXDCTL(i)=1228 4000000
+[   10.120291] 	 *** ixgbe_stop_adapter_generic i=9 IXGBE_RXDCTL(i)=1268 4000000
+[   10.120293] 	 *** ixgbe_stop_adapter_generic i=10 IXGBE_RXDCTL(i)=12A8 4000000
+[   10.120294] 	 *** ixgbe_stop_adapter_generic i=11 IXGBE_RXDCTL(i)=12E8 4000000
+[   10.120295] 	 *** ixgbe_stop_adapter_generic i=12 IXGBE_RXDCTL(i)=1328 4000000
+[   10.120296] 	 *** ixgbe_stop_adapter_generic i=13 IXGBE_RXDCTL(i)=1368 4000000
+[   10.120297] 	 *** ixgbe_stop_adapter_generic i=14 IXGBE_RXDCTL(i)=13A8 4000000
+[   10.120298] 	 *** ixgbe_stop_adapter_generic i=15 IXGBE_RXDCTL(i)=13E8 4000000
+[   10.120300] 	 *** ixgbe_stop_adapter_generic i=16 IXGBE_RXDCTL(i)=1428 4000000
+[   10.120301] 	 *** ixgbe_stop_adapter_generic i=17 IXGBE_RXDCTL(i)=1468 4000000
+[   10.120302] 	 *** ixgbe_stop_adapter_generic i=18 IXGBE_RXDCTL(i)=14A8 4000000
+[   10.120303] 	 *** ixgbe_stop_adapter_generic i=19 IXGBE_RXDCTL(i)=14E8 4000000
+[   10.120304] 	 *** ixgbe_stop_adapter_generic i=20 IXGBE_RXDCTL(i)=1528 4000000
+[   10.120305] 	 *** ixgbe_stop_adapter_generic i=21 IXGBE_RXDCTL(i)=1568 4000000
+[   10.120306] 	 *** ixgbe_stop_adapter_generic i=22 IXGBE_RXDCTL(i)=15A8 4000000
+[   10.120307] 	 *** ixgbe_stop_adapter_generic i=23 IXGBE_RXDCTL(i)=15E8 4000000
+[   10.120309] 	 *** ixgbe_stop_adapter_generic i=24 IXGBE_RXDCTL(i)=1628 4000000
+[   10.120310] 	 *** ixgbe_stop_adapter_generic i=25 IXGBE_RXDCTL(i)=1668 4000000
+[   10.120311] 	 *** ixgbe_stop_adapter_generic i=26 IXGBE_RXDCTL(i)=16A8 4000000
+[   10.120312] 	 *** ixgbe_stop_adapter_generic i=27 IXGBE_RXDCTL(i)=16E8 4000000
+[   10.120313] 	 *** ixgbe_stop_adapter_generic i=28 IXGBE_RXDCTL(i)=1728 4000000
+[   10.120314] 	 *** ixgbe_stop_adapter_generic i=29 IXGBE_RXDCTL(i)=1768 4000000
+[   10.120315] 	 *** ixgbe_stop_adapter_generic i=30 IXGBE_RXDCTL(i)=17A8 4000000
+[   10.120317] 	 *** ixgbe_stop_adapter_generic i=31 IXGBE_RXDCTL(i)=17E8 4000000
+[   10.120318] 	 *** ixgbe_stop_adapter_generic i=32 IXGBE_RXDCTL(i)=1828 4000000
+[   10.120319] 	 *** ixgbe_stop_adapter_generic i=33 IXGBE_RXDCTL(i)=1868 4000000
+[   10.120321] 	 *** ixgbe_stop_adapter_generic i=34 IXGBE_RXDCTL(i)=18A8 4000000
+[   10.120322] 	 *** ixgbe_stop_adapter_generic i=35 IXGBE_RXDCTL(i)=18E8 4000000
+[   10.120323] 	 *** ixgbe_stop_adapter_generic i=36 IXGBE_RXDCTL(i)=1928 4000000
+[   10.120324] 	 *** ixgbe_stop_adapter_generic i=37 IXGBE_RXDCTL(i)=1968 4000000
+[   10.120326] 	 *** ixgbe_stop_adapter_generic i=38 IXGBE_RXDCTL(i)=19A8 4000000
+[   10.120327] 	 *** ixgbe_stop_adapter_generic i=39 IXGBE_RXDCTL(i)=19E8 4000000
+[   10.120328] 	 *** ixgbe_stop_adapter_generic i=40 IXGBE_RXDCTL(i)=1A28 4000000
+[   10.120329] 	 *** ixgbe_stop_adapter_generic i=41 IXGBE_RXDCTL(i)=1A68 4000000
+[   10.120330] 	 *** ixgbe_stop_adapter_generic i=42 IXGBE_RXDCTL(i)=1AA8 4000000
+[   10.120331] 	 *** ixgbe_stop_adapter_generic i=43 IXGBE_RXDCTL(i)=1AE8 4000000
+[   10.120333] 	 *** ixgbe_stop_adapter_generic i=44 IXGBE_RXDCTL(i)=1B28 4000000
+[   10.120334] 	 *** ixgbe_stop_adapter_generic i=45 IXGBE_RXDCTL(i)=1B68 4000000
+[   10.120335] 	 *** ixgbe_stop_adapter_generic i=46 IXGBE_RXDCTL(i)=1BA8 4000000
+[   10.120336] 	 *** ixgbe_stop_adapter_generic i=47 IXGBE_RXDCTL(i)=1BE8 4000000
+[   10.120337] 	 *** ixgbe_stop_adapter_generic i=48 IXGBE_RXDCTL(i)=1C28 4000000
+[   10.120338] 	 *** ixgbe_stop_adapter_generic i=49 IXGBE_RXDCTL(i)=1C68 4000000
+[   10.120339] 	 *** ixgbe_stop_adapter_generic i=50 IXGBE_RXDCTL(i)=1CA8 4000000
+[   10.120341] 	 *** ixgbe_stop_adapter_generic i=51 IXGBE_RXDCTL(i)=1CE8 4000000
+[   10.120342] 	 *** ixgbe_stop_adapter_generic i=52 IXGBE_RXDCTL(i)=1D28 4000000
+[   10.120343] 	 *** ixgbe_stop_adapter_generic i=53 IXGBE_RXDCTL(i)=1D68 4000000
+[   10.120344] 	 *** ixgbe_stop_adapter_generic i=54 IXGBE_RXDCTL(i)=1DA8 4000000
+[   10.120345] 	 *** ixgbe_stop_adapter_generic i=55 IXGBE_RXDCTL(i)=1DE8 4000000
+[   10.120346] 	 *** ixgbe_stop_adapter_generic i=56 IXGBE_RXDCTL(i)=1E28 4000000
+[   10.120347] 	 *** ixgbe_stop_adapter_generic i=57 IXGBE_RXDCTL(i)=1E68 4000000
+[   10.120348] 	 *** ixgbe_stop_adapter_generic i=58 IXGBE_RXDCTL(i)=1EA8 4000000
+[   10.120350] 	 *** ixgbe_stop_adapter_generic i=59 IXGBE_RXDCTL(i)=1EE8 4000000
+[   10.120351] 	 *** ixgbe_stop_adapter_generic i=60 IXGBE_RXDCTL(i)=1F28 4000000
+[   10.120352] 	 *** ixgbe_stop_adapter_generic i=61 IXGBE_RXDCTL(i)=1F68 4000000
+[   10.120353] 	 *** ixgbe_stop_adapter_generic i=62 IXGBE_RXDCTL(i)=1FA8 4000000
+[   10.120354] 	 *** ixgbe_stop_adapter_generic i=63 IXGBE_RXDCTL(i)=1FE8 4000000
+[   10.120355] 	 *** ixgbe_stop_adapter_generic i=64 IXGBE_RXDCTL(i)=D028 4000000
+[   10.120356] 	 *** ixgbe_stop_adapter_generic i=65 IXGBE_RXDCTL(i)=D068 4000000
+[   10.120358] 	 *** ixgbe_stop_adapter_generic i=66 IXGBE_RXDCTL(i)=D0A8 4000000
+[   10.120359] 	 *** ixgbe_stop_adapter_generic i=67 IXGBE_RXDCTL(i)=D0E8 4000000
+[   10.120360] 	 *** ixgbe_stop_adapter_generic i=68 IXGBE_RXDCTL(i)=D128 4000000
+[   10.120361] 	 *** ixgbe_stop_adapter_generic i=69 IXGBE_RXDCTL(i)=D168 4000000
+[   10.120362] 	 *** ixgbe_stop_adapter_generic i=70 IXGBE_RXDCTL(i)=D1A8 4000000
+[   10.120363] 	 *** ixgbe_stop_adapter_generic i=71 IXGBE_RXDCTL(i)=D1E8 4000000
+[   10.120364] 	 *** ixgbe_stop_adapter_generic i=72 IXGBE_RXDCTL(i)=D228 4000000
+[   10.120366] 	 *** ixgbe_stop_adapter_generic i=73 IXGBE_RXDCTL(i)=D268 4000000
+[   10.120367] 	 *** ixgbe_stop_adapter_generic i=74 IXGBE_RXDCTL(i)=D2A8 4000000
+[   10.120368] 	 *** ixgbe_stop_adapter_generic i=75 IXGBE_RXDCTL(i)=D2E8 4000000
+[   10.120369] 	 *** ixgbe_stop_adapter_generic i=76 IXGBE_RXDCTL(i)=D328 4000000
+[   10.120370] 	 *** ixgbe_stop_adapter_generic i=77 IXGBE_RXDCTL(i)=D368 4000000
+[   10.120371] 	 *** ixgbe_stop_adapter_generic i=78 IXGBE_RXDCTL(i)=D3A8 4000000
+[   10.120373] 	 *** ixgbe_stop_adapter_generic i=79 IXGBE_RXDCTL(i)=D3E8 4000000
+[   10.120374] 	 *** ixgbe_stop_adapter_generic i=80 IXGBE_RXDCTL(i)=D428 4000000
+[   10.120375] 	 *** ixgbe_stop_adapter_generic i=81 IXGBE_RXDCTL(i)=D468 4000000
+[   10.120376] 	 *** ixgbe_stop_adapter_generic i=82 IXGBE_RXDCTL(i)=D4A8 4000000
+[   10.120378] 	 *** ixgbe_stop_adapter_generic i=83 IXGBE_RXDCTL(i)=D4E8 4000000
+[   10.120379] 	 *** ixgbe_stop_adapter_generic i=84 IXGBE_RXDCTL(i)=D528 4000000
+[   10.120380] 	 *** ixgbe_stop_adapter_generic i=85 IXGBE_RXDCTL(i)=D568 4000000
+[   10.120381] 	 *** ixgbe_stop_adapter_generic i=86 IXGBE_RXDCTL(i)=D5A8 4000000
+[   10.120382] 	 *** ixgbe_stop_adapter_generic i=87 IXGBE_RXDCTL(i)=D5E8 4000000
+[   10.120384] 	 *** ixgbe_stop_adapter_generic i=88 IXGBE_RXDCTL(i)=D628 4000000
+[   10.120385] 	 *** ixgbe_stop_adapter_generic i=89 IXGBE_RXDCTL(i)=D668 4000000
+[   10.120386] 	 *** ixgbe_stop_adapter_generic i=90 IXGBE_RXDCTL(i)=D6A8 4000000
+[   10.120387] 	 *** ixgbe_stop_adapter_generic i=91 IXGBE_RXDCTL(i)=D6E8 4000000
+[   10.120388] 	 *** ixgbe_stop_adapter_generic i=92 IXGBE_RXDCTL(i)=D728 4000000
+[   10.120389] 	 *** ixgbe_stop_adapter_generic i=93 IXGBE_RXDCTL(i)=D768 4000000
+[   10.120391] 	 *** ixgbe_stop_adapter_generic i=94 IXGBE_RXDCTL(i)=D7A8 4000000
+[   10.120392] 	 *** ixgbe_stop_adapter_generic i=95 IXGBE_RXDCTL(i)=D7E8 4000000
+[   10.120393] 	 *** ixgbe_stop_adapter_generic i=96 IXGBE_RXDCTL(i)=D828 4000000
+[   10.120394] 	 *** ixgbe_stop_adapter_generic i=97 IXGBE_RXDCTL(i)=D868 4000000
+[   10.120395] 	 *** ixgbe_stop_adapter_generic i=98 IXGBE_RXDCTL(i)=D8A8 4000000
+[   10.120396] 	 *** ixgbe_stop_adapter_generic i=99 IXGBE_RXDCTL(i)=D8E8 4000000
+[   10.120398] 	 *** ixgbe_stop_adapter_generic i=100 IXGBE_RXDCTL(i)=D928 4000000
+[   10.120399] 	 *** ixgbe_stop_adapter_generic i=101 IXGBE_RXDCTL(i)=D968 4000000
+[   10.120400] 	 *** ixgbe_stop_adapter_generic i=102 IXGBE_RXDCTL(i)=D9A8 4000000
+[   10.120401] 	 *** ixgbe_stop_adapter_generic i=103 IXGBE_RXDCTL(i)=D9E8 4000000
+[   10.120402] 	 *** ixgbe_stop_adapter_generic i=104 IXGBE_RXDCTL(i)=DA28 4000000
+[   10.120403] 	 *** ixgbe_stop_adapter_generic i=105 IXGBE_RXDCTL(i)=DA68 4000000
+[   10.120404] 	 *** ixgbe_stop_adapter_generic i=106 IXGBE_RXDCTL(i)=DAA8 4000000
+[   10.120405] 	 *** ixgbe_stop_adapter_generic i=107 IXGBE_RXDCTL(i)=DAE8 4000000
+[   10.120407] 	 *** ixgbe_stop_adapter_generic i=108 IXGBE_RXDCTL(i)=DB28 4000000
+[   10.120408] 	 *** ixgbe_stop_adapter_generic i=109 IXGBE_RXDCTL(i)=DB68 4000000
+[   10.120409] 	 *** ixgbe_stop_adapter_generic i=110 IXGBE_RXDCTL(i)=DBA8 4000000
+[   10.120410] 	 *** ixgbe_stop_adapter_generic i=111 IXGBE_RXDCTL(i)=DBE8 4000000
+[   10.120411] 	 *** ixgbe_stop_adapter_generic i=112 IXGBE_RXDCTL(i)=DC28 4000000
+[   10.120412] 	 *** ixgbe_stop_adapter_generic i=113 IXGBE_RXDCTL(i)=DC68 4000000
+[   10.120414] 	 *** ixgbe_stop_adapter_generic i=114 IXGBE_RXDCTL(i)=DCA8 4000000
+[   10.120415] 	 *** ixgbe_stop_adapter_generic i=115 IXGBE_RXDCTL(i)=DCE8 4000000
+[   10.120416] 	 *** ixgbe_stop_adapter_generic i=116 IXGBE_RXDCTL(i)=DD28 4000000
+[   10.120417] 	 *** ixgbe_stop_adapter_generic i=117 IXGBE_RXDCTL(i)=DD68 4000000
+[   10.120418] 	 *** ixgbe_stop_adapter_generic i=118 IXGBE_RXDCTL(i)=DDA8 4000000
+[   10.120419] 	 *** ixgbe_stop_adapter_generic i=119 IXGBE_RXDCTL(i)=DDE8 4000000
+[   10.120420] 	 *** ixgbe_stop_adapter_generic i=120 IXGBE_RXDCTL(i)=DE28 4000000
+[   10.120422] 	 *** ixgbe_stop_adapter_generic i=121 IXGBE_RXDCTL(i)=DE68 4000000
+[   10.120423] 	 *** ixgbe_stop_adapter_generic i=122 IXGBE_RXDCTL(i)=DEA8 4000000
+[   10.120424] 	 *** ixgbe_stop_adapter_generic i=123 IXGBE_RXDCTL(i)=DEE8 4000000
+[   10.120425] 	 *** ixgbe_stop_adapter_generic i=124 IXGBE_RXDCTL(i)=DF28 4000000
+[   10.120426] 	 *** ixgbe_stop_adapter_generic i=125 IXGBE_RXDCTL(i)=DF68 4000000
+[   10.120427] 	 *** ixgbe_stop_adapter_generic i=126 IXGBE_RXDCTL(i)=DFA8 4000000
+[   10.120429] 	 *** ixgbe_stop_adapter_generic i=127 IXGBE_RXDCTL(i)=DFE8 4000000
+[   10.131631] *** ixgbe_disable_pcie_master
+[   10.131633] *** ixgbe_clear_tx_pending
+[   10.131634] *** ixgbe_init_phy_ops_82599
+[   10.148036] *** ixgbe_setup_sfp_modules_82599
+[   10.168006] *** prot_autoc_write_82599
+[   10.168097] *** ixgbe_reset_pipeline_82599
+[   10.268063] *** ixgbe_init_rx_addrs_generic
+[   10.268094] *** ixgbe_init_uta_tables_generic
+[   10.268273] *** ixgbe_set_rar_generic
+[   10.268273] *** ixgbe_set_vmdq_generic
+[   10.292041] *** ixgbe_set_rar_generic
+[   10.292041] *** ixgbe_set_vmdq_generic
+[   10.293068] *** ixgbe_start_hw_generic
+[   10.293068] *** ixgbe_clear_vfta_generic
+[   10.293183] 	 *** IXGBE_CTRL_EXT=18 10010000
+[   10.293183] *** ixgbe_setup_fc_generic
+[   10.293225] *** ixgbe_start_hw_gen2
+[   10.293226] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 0
+[   10.293227] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293227] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1
+[   10.293228] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293229] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2
+[   10.293229] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293230] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3
+[   10.293230] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293231] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4
+[   10.293231] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293232] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5
+[   10.293232] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293233] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6
+[   10.293234] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293234] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7
+[   10.293235] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293235] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 8
+[   10.293236] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293237] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 9
+[   10.293237] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293238] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 A
+[   10.293238] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293239] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 B
+[   10.293239] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293240] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 C
+[   10.293240] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293241] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 D
+[   10.293242] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293242] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 E
+[   10.293243] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293243] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 F
+[   10.293244] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293245] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 10
+[   10.293245] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293246] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 11
+[   10.293246] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293247] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 12
+[   10.293247] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293248] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 13
+[   10.293248] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293249] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 14
+[   10.293250] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293254] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 15
+[   10.293255] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293256] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 16
+[   10.293256] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293257] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 17
+[   10.293257] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293258] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 18
+[   10.293258] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293259] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 19
+[   10.293259] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293260] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1A
+[   10.293261] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293261] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1B
+[   10.293262] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293262] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1C
+[   10.293263] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293263] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1D
+[   10.293264] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293265] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1E
+[   10.293265] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293266] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1F
+[   10.293267] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293267] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 20
+[   10.293268] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293269] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 21
+[   10.293269] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293270] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 22
+[   10.293270] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293271] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 23
+[   10.293271] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293272] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 24
+[   10.293273] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293273] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 25
+[   10.293274] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293274] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 26
+[   10.293275] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293276] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 27
+[   10.293276] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293277] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 28
+[   10.293277] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293278] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 29
+[   10.293278] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293279] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2A
+[   10.293279] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293280] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2B
+[   10.293280] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293281] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2C
+[   10.293282] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293282] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2D
+[   10.293283] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293283] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2E
+[   10.293284] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293284] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2F
+[   10.293285] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293286] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 30
+[   10.293286] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293287] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 31
+[   10.293287] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293288] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 32
+[   10.293288] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293289] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 33
+[   10.293289] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293290] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 34
+[   10.293291] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293291] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 35
+[   10.293292] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293292] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 36
+[   10.293293] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293294] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 37
+[   10.293294] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293295] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 38
+[   10.293295] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293296] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 39
+[   10.293296] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293297] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3A
+[   10.293297] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293298] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3B
+[   10.293299] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293299] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3C
+[   10.293300] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293300] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3D
+[   10.293301] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293302] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3E
+[   10.293302] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293303] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3F
+[   10.293304] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293304] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 40
+[   10.293305] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293306] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 41
+[   10.293306] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293307] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 42
+[   10.293307] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293308] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 43
+[   10.293309] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293309] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 44
+[   10.293310] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293310] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 45
+[   10.293311] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293311] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 46
+[   10.293312] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293312] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 47
+[   10.293313] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293314] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 48
+[   10.293314] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293315] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 49
+[   10.293315] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293316] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4A
+[   10.293316] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293317] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4B
+[   10.293317] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293318] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4C
+[   10.293319] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293319] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4D
+[   10.293320] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293320] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4E
+[   10.293321] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293321] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4F
+[   10.293322] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293323] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 50
+[   10.293323] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293324] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 51
+[   10.293324] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293325] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 52
+[   10.293325] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293326] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 53
+[   10.293326] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293327] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 54
+[   10.293328] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293328] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 55
+[   10.293329] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293329] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 56
+[   10.293330] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293330] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 57
+[   10.293331] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293332] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 58
+[   10.293332] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293333] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 59
+[   10.293333] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293334] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5A
+[   10.293334] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293335] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5B
+[   10.293336] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293336] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5C
+[   10.293337] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293337] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5D
+[   10.293338] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293339] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5E
+[   10.293339] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293340] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5F
+[   10.293341] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293341] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 60
+[   10.293342] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293343] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 61
+[   10.293343] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293344] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 62
+[   10.293344] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293345] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 63
+[   10.293346] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293346] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 64
+[   10.293347] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293347] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 65
+[   10.293348] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293348] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 66
+[   10.293349] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293350] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 67
+[   10.293350] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293351] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 68
+[   10.293351] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293352] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 69
+[   10.293352] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293353] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6A
+[   10.293353] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293354] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6B
+[   10.293355] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293355] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6C
+[   10.293356] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293356] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6D
+[   10.293357] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293357] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6E
+[   10.293358] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293358] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6F
+[   10.293359] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293359] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 70
+[   10.293360] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293360] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 71
+[   10.293361] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293362] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 72
+[   10.293362] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293363] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 73
+[   10.293363] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293364] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 74
+[   10.293364] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293365] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 75
+[   10.293365] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293366] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 76
+[   10.293367] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293367] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 77
+[   10.293368] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293368] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 78
+[   10.293369] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293370] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 79
+[   10.293370] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293371] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7A
+[   10.293371] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293372] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7B
+[   10.293372] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293373] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7C
+[   10.293373] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293374] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7D
+[   10.293375] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293375] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7E
+[   10.293376] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.293377] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7F
+[   10.293378] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.294659] *** ixgbe_disable_tx_laser_multispeed_fiber
+[   10.294763] 	 *** DCA=1
+[   10.294768] *** ixgbe_hic_unlocked
+[   10.294776] *** ixgbe_hic_unlocked
+[   10.294785] *** ixgbe_hic_unlocked
+[   10.294793] *** ixgbe_hic_unlocked
+[   10.294816] *** ixgbe_set_vmdq_san_mac_generic
+[   10.294871] *** ixgbe_probe
+[   10.295165] *** ixgbe_sw_init
+[   10.295166] *** hw->vendor_id 0x8086
+[   10.295167] *** hw->device_id 0x10FB
+[   10.295167] *** hw->revision_id 0x1
+[   10.295168] *** hw->subsystem_vendor_id 0x8086
+[   10.295168] *** hw->subsystem_device_id 0x7A12
+[   10.295170] *** CONFIG_IXGBE_DCA
+[   10.295172] 	 *** DITR=0
+[   10.295173] *** ixgbe_reset_hw_82599
+[   10.295174] *** ixgbe_stop_adapter_generic
+[   10.295174] *** ixgbe_disable_rx_generic
+[   10.295176] 	 *** ixgbe_stop_adapter_generic IXGBE_EIMC=888 FFFFFFFF
+[   10.295177] 	 *** ixgbe_stop_adapter_generic i=0 IXGBE_TXDCTL(i)=6028 4000000
+[   10.295178] 	 *** ixgbe_stop_adapter_generic i=1 IXGBE_TXDCTL(i)=6068 4000000
+[   10.295178] 	 *** ixgbe_stop_adapter_generic i=2 IXGBE_TXDCTL(i)=60A8 4000000
+[   10.295179] 	 *** ixgbe_stop_adapter_generic i=3 IXGBE_TXDCTL(i)=60E8 4000000
+[   10.295180] 	 *** ixgbe_stop_adapter_generic i=4 IXGBE_TXDCTL(i)=6128 4000000
+[   10.295181] 	 *** ixgbe_stop_adapter_generic i=5 IXGBE_TXDCTL(i)=6168 4000000
+[   10.295181] 	 *** ixgbe_stop_adapter_generic i=6 IXGBE_TXDCTL(i)=61A8 4000000
+[   10.295182] 	 *** ixgbe_stop_adapter_generic i=7 IXGBE_TXDCTL(i)=61E8 4000000
+[   10.295183] 	 *** ixgbe_stop_adapter_generic i=8 IXGBE_TXDCTL(i)=6228 4000000
+[   10.295183] 	 *** ixgbe_stop_adapter_generic i=9 IXGBE_TXDCTL(i)=6268 4000000
+[   10.295184] 	 *** ixgbe_stop_adapter_generic i=10 IXGBE_TXDCTL(i)=62A8 4000000
+[   10.295185] 	 *** ixgbe_stop_adapter_generic i=11 IXGBE_TXDCTL(i)=62E8 4000000
+[   10.295186] 	 *** ixgbe_stop_adapter_generic i=12 IXGBE_TXDCTL(i)=6328 4000000
+[   10.295186] 	 *** ixgbe_stop_adapter_generic i=13 IXGBE_TXDCTL(i)=6368 4000000
+[   10.295187] 	 *** ixgbe_stop_adapter_generic i=14 IXGBE_TXDCTL(i)=63A8 4000000
+[   10.295188] 	 *** ixgbe_stop_adapter_generic i=15 IXGBE_TXDCTL(i)=63E8 4000000
+[   10.295188] 	 *** ixgbe_stop_adapter_generic i=16 IXGBE_TXDCTL(i)=6428 4000000
+[   10.295189] 	 *** ixgbe_stop_adapter_generic i=17 IXGBE_TXDCTL(i)=6468 4000000
+[   10.295190] 	 *** ixgbe_stop_adapter_generic i=18 IXGBE_TXDCTL(i)=64A8 4000000
+[   10.295190] 	 *** ixgbe_stop_adapter_generic i=19 IXGBE_TXDCTL(i)=64E8 4000000
+[   10.295191] 	 *** ixgbe_stop_adapter_generic i=20 IXGBE_TXDCTL(i)=6528 4000000
+[   10.295192] 	 *** ixgbe_stop_adapter_generic i=21 IXGBE_TXDCTL(i)=6568 4000000
+[   10.295193] 	 *** ixgbe_stop_adapter_generic i=22 IXGBE_TXDCTL(i)=65A8 4000000
+[   10.295193] 	 *** ixgbe_stop_adapter_generic i=23 IXGBE_TXDCTL(i)=65E8 4000000
+[   10.295194] 	 *** ixgbe_stop_adapter_generic i=24 IXGBE_TXDCTL(i)=6628 4000000
+[   10.295195] 	 *** ixgbe_stop_adapter_generic i=25 IXGBE_TXDCTL(i)=6668 4000000
+[   10.295195] 	 *** ixgbe_stop_adapter_generic i=26 IXGBE_TXDCTL(i)=66A8 4000000
+[   10.295196] 	 *** ixgbe_stop_adapter_generic i=27 IXGBE_TXDCTL(i)=66E8 4000000
+[   10.295197] 	 *** ixgbe_stop_adapter_generic i=28 IXGBE_TXDCTL(i)=6728 4000000
+[   10.295197] 	 *** ixgbe_stop_adapter_generic i=29 IXGBE_TXDCTL(i)=6768 4000000
+[   10.295198] 	 *** ixgbe_stop_adapter_generic i=30 IXGBE_TXDCTL(i)=67A8 4000000
+[   10.295199] 	 *** ixgbe_stop_adapter_generic i=31 IXGBE_TXDCTL(i)=67E8 4000000
+[   10.295199] 	 *** ixgbe_stop_adapter_generic i=32 IXGBE_TXDCTL(i)=6828 4000000
+[   10.295200] 	 *** ixgbe_stop_adapter_generic i=33 IXGBE_TXDCTL(i)=6868 4000000
+[   10.295201] 	 *** ixgbe_stop_adapter_generic i=34 IXGBE_TXDCTL(i)=68A8 4000000
+[   10.295202] 	 *** ixgbe_stop_adapter_generic i=35 IXGBE_TXDCTL(i)=68E8 4000000
+[   10.295202] 	 *** ixgbe_stop_adapter_generic i=36 IXGBE_TXDCTL(i)=6928 4000000
+[   10.295203] 	 *** ixgbe_stop_adapter_generic i=37 IXGBE_TXDCTL(i)=6968 4000000
+[   10.295204] 	 *** ixgbe_stop_adapter_generic i=38 IXGBE_TXDCTL(i)=69A8 4000000
+[   10.295205] 	 *** ixgbe_stop_adapter_generic i=39 IXGBE_TXDCTL(i)=69E8 4000000
+[   10.295206] 	 *** ixgbe_stop_adapter_generic i=40 IXGBE_TXDCTL(i)=6A28 4000000
+[   10.295206] 	 *** ixgbe_stop_adapter_generic i=41 IXGBE_TXDCTL(i)=6A68 4000000
+[   10.295207] 	 *** ixgbe_stop_adapter_generic i=42 IXGBE_TXDCTL(i)=6AA8 4000000
+[   10.295208] 	 *** ixgbe_stop_adapter_generic i=43 IXGBE_TXDCTL(i)=6AE8 4000000
+[   10.295208] 	 *** ixgbe_stop_adapter_generic i=44 IXGBE_TXDCTL(i)=6B28 4000000
+[   10.295209] 	 *** ixgbe_stop_adapter_generic i=45 IXGBE_TXDCTL(i)=6B68 4000000
+[   10.295210] 	 *** ixgbe_stop_adapter_generic i=46 IXGBE_TXDCTL(i)=6BA8 4000000
+[   10.295210] 	 *** ixgbe_stop_adapter_generic i=47 IXGBE_TXDCTL(i)=6BE8 4000000
+[   10.295211] 	 *** ixgbe_stop_adapter_generic i=48 IXGBE_TXDCTL(i)=6C28 4000000
+[   10.295212] 	 *** ixgbe_stop_adapter_generic i=49 IXGBE_TXDCTL(i)=6C68 4000000
+[   10.295212] 	 *** ixgbe_stop_adapter_generic i=50 IXGBE_TXDCTL(i)=6CA8 4000000
+[   10.295213] 	 *** ixgbe_stop_adapter_generic i=51 IXGBE_TXDCTL(i)=6CE8 4000000
+[   10.295214] 	 *** ixgbe_stop_adapter_generic i=52 IXGBE_TXDCTL(i)=6D28 4000000
+[   10.295214] 	 *** ixgbe_stop_adapter_generic i=53 IXGBE_TXDCTL(i)=6D68 4000000
+[   10.295215] 	 *** ixgbe_stop_adapter_generic i=54 IXGBE_TXDCTL(i)=6DA8 4000000
+[   10.295216] 	 *** ixgbe_stop_adapter_generic i=55 IXGBE_TXDCTL(i)=6DE8 4000000
+[   10.295216] 	 *** ixgbe_stop_adapter_generic i=56 IXGBE_TXDCTL(i)=6E28 4000000
+[   10.295217] 	 *** ixgbe_stop_adapter_generic i=57 IXGBE_TXDCTL(i)=6E68 4000000
+[   10.295218] 	 *** ixgbe_stop_adapter_generic i=58 IXGBE_TXDCTL(i)=6EA8 4000000
+[   10.295219] 	 *** ixgbe_stop_adapter_generic i=59 IXGBE_TXDCTL(i)=6EE8 4000000
+[   10.295219] 	 *** ixgbe_stop_adapter_generic i=60 IXGBE_TXDCTL(i)=6F28 4000000
+[   10.295220] 	 *** ixgbe_stop_adapter_generic i=61 IXGBE_TXDCTL(i)=6F68 4000000
+[   10.295221] 	 *** ixgbe_stop_adapter_generic i=62 IXGBE_TXDCTL(i)=6FA8 4000000
+[   10.295221] 	 *** ixgbe_stop_adapter_generic i=63 IXGBE_TXDCTL(i)=6FE8 4000000
+[   10.295222] 	 *** ixgbe_stop_adapter_generic i=64 IXGBE_TXDCTL(i)=7028 4000000
+[   10.295223] 	 *** ixgbe_stop_adapter_generic i=65 IXGBE_TXDCTL(i)=7068 4000000
+[   10.295223] 	 *** ixgbe_stop_adapter_generic i=66 IXGBE_TXDCTL(i)=70A8 4000000
+[   10.295224] 	 *** ixgbe_stop_adapter_generic i=67 IXGBE_TXDCTL(i)=70E8 4000000
+[   10.295225] 	 *** ixgbe_stop_adapter_generic i=68 IXGBE_TXDCTL(i)=7128 4000000
+[   10.295226] 	 *** ixgbe_stop_adapter_generic i=69 IXGBE_TXDCTL(i)=7168 4000000
+[   10.295226] 	 *** ixgbe_stop_adapter_generic i=70 IXGBE_TXDCTL(i)=71A8 4000000
+[   10.295227] 	 *** ixgbe_stop_adapter_generic i=71 IXGBE_TXDCTL(i)=71E8 4000000
+[   10.295228] 	 *** ixgbe_stop_adapter_generic i=72 IXGBE_TXDCTL(i)=7228 4000000
+[   10.295228] 	 *** ixgbe_stop_adapter_generic i=73 IXGBE_TXDCTL(i)=7268 4000000
+[   10.295229] 	 *** ixgbe_stop_adapter_generic i=74 IXGBE_TXDCTL(i)=72A8 4000000
+[   10.295230] 	 *** ixgbe_stop_adapter_generic i=75 IXGBE_TXDCTL(i)=72E8 4000000
+[   10.295230] 	 *** ixgbe_stop_adapter_generic i=76 IXGBE_TXDCTL(i)=7328 4000000
+[   10.295231] 	 *** ixgbe_stop_adapter_generic i=77 IXGBE_TXDCTL(i)=7368 4000000
+[   10.295232] 	 *** ixgbe_stop_adapter_generic i=78 IXGBE_TXDCTL(i)=73A8 4000000
+[   10.295232] 	 *** ixgbe_stop_adapter_generic i=79 IXGBE_TXDCTL(i)=73E8 4000000
+[   10.295233] 	 *** ixgbe_stop_adapter_generic i=80 IXGBE_TXDCTL(i)=7428 4000000
+[   10.295234] 	 *** ixgbe_stop_adapter_generic i=81 IXGBE_TXDCTL(i)=7468 4000000
+[   10.295235] 	 *** ixgbe_stop_adapter_generic i=82 IXGBE_TXDCTL(i)=74A8 4000000
+[   10.295235] 	 *** ixgbe_stop_adapter_generic i=83 IXGBE_TXDCTL(i)=74E8 4000000
+[   10.295236] 	 *** ixgbe_stop_adapter_generic i=84 IXGBE_TXDCTL(i)=7528 4000000
+[   10.295237] 	 *** ixgbe_stop_adapter_generic i=85 IXGBE_TXDCTL(i)=7568 4000000
+[   10.295238] 	 *** ixgbe_stop_adapter_generic i=86 IXGBE_TXDCTL(i)=75A8 4000000
+[   10.295239] 	 *** ixgbe_stop_adapter_generic i=87 IXGBE_TXDCTL(i)=75E8 4000000
+[   10.295239] 	 *** ixgbe_stop_adapter_generic i=88 IXGBE_TXDCTL(i)=7628 4000000
+[   10.295240] 	 *** ixgbe_stop_adapter_generic i=89 IXGBE_TXDCTL(i)=7668 4000000
+[   10.295241] 	 *** ixgbe_stop_adapter_generic i=90 IXGBE_TXDCTL(i)=76A8 4000000
+[   10.295241] 	 *** ixgbe_stop_adapter_generic i=91 IXGBE_TXDCTL(i)=76E8 4000000
+[   10.295242] 	 *** ixgbe_stop_adapter_generic i=92 IXGBE_TXDCTL(i)=7728 4000000
+[   10.295243] 	 *** ixgbe_stop_adapter_generic i=93 IXGBE_TXDCTL(i)=7768 4000000
+[   10.295244] 	 *** ixgbe_stop_adapter_generic i=94 IXGBE_TXDCTL(i)=77A8 4000000
+[   10.295244] 	 *** ixgbe_stop_adapter_generic i=95 IXGBE_TXDCTL(i)=77E8 4000000
+[   10.295245] 	 *** ixgbe_stop_adapter_generic i=96 IXGBE_TXDCTL(i)=7828 4000000
+[   10.295246] 	 *** ixgbe_stop_adapter_generic i=97 IXGBE_TXDCTL(i)=7868 4000000
+[   10.295246] 	 *** ixgbe_stop_adapter_generic i=98 IXGBE_TXDCTL(i)=78A8 4000000
+[   10.295247] 	 *** ixgbe_stop_adapter_generic i=99 IXGBE_TXDCTL(i)=78E8 4000000
+[   10.295248] 	 *** ixgbe_stop_adapter_generic i=100 IXGBE_TXDCTL(i)=7928 4000000
+[   10.295248] 	 *** ixgbe_stop_adapter_generic i=101 IXGBE_TXDCTL(i)=7968 4000000
+[   10.295249] 	 *** ixgbe_stop_adapter_generic i=102 IXGBE_TXDCTL(i)=79A8 4000000
+[   10.295250] 	 *** ixgbe_stop_adapter_generic i=103 IXGBE_TXDCTL(i)=79E8 4000000
+[   10.295250] 	 *** ixgbe_stop_adapter_generic i=104 IXGBE_TXDCTL(i)=7A28 4000000
+[   10.295251] 	 *** ixgbe_stop_adapter_generic i=105 IXGBE_TXDCTL(i)=7A68 4000000
+[   10.295252] 	 *** ixgbe_stop_adapter_generic i=106 IXGBE_TXDCTL(i)=7AA8 4000000
+[   10.295252] 	 *** ixgbe_stop_adapter_generic i=107 IXGBE_TXDCTL(i)=7AE8 4000000
+[   10.295253] 	 *** ixgbe_stop_adapter_generic i=108 IXGBE_TXDCTL(i)=7B28 4000000
+[   10.295254] 	 *** ixgbe_stop_adapter_generic i=109 IXGBE_TXDCTL(i)=7B68 4000000
+[   10.295255] 	 *** ixgbe_stop_adapter_generic i=110 IXGBE_TXDCTL(i)=7BA8 4000000
+[   10.295255] 	 *** ixgbe_stop_adapter_generic i=111 IXGBE_TXDCTL(i)=7BE8 4000000
+[   10.295256] 	 *** ixgbe_stop_adapter_generic i=112 IXGBE_TXDCTL(i)=7C28 4000000
+[   10.295257] 	 *** ixgbe_stop_adapter_generic i=113 IXGBE_TXDCTL(i)=7C68 4000000
+[   10.295257] 	 *** ixgbe_stop_adapter_generic i=114 IXGBE_TXDCTL(i)=7CA8 4000000
+[   10.295258] 	 *** ixgbe_stop_adapter_generic i=115 IXGBE_TXDCTL(i)=7CE8 4000000
+[   10.295259] 	 *** ixgbe_stop_adapter_generic i=116 IXGBE_TXDCTL(i)=7D28 4000000
+[   10.295259] 	 *** ixgbe_stop_adapter_generic i=117 IXGBE_TXDCTL(i)=7D68 4000000
+[   10.295260] 	 *** ixgbe_stop_adapter_generic i=118 IXGBE_TXDCTL(i)=7DA8 4000000
+[   10.295261] 	 *** ixgbe_stop_adapter_generic i=119 IXGBE_TXDCTL(i)=7DE8 4000000
+[   10.295262] 	 *** ixgbe_stop_adapter_generic i=120 IXGBE_TXDCTL(i)=7E28 4000000
+[   10.295262] 	 *** ixgbe_stop_adapter_generic i=121 IXGBE_TXDCTL(i)=7E68 4000000
+[   10.295263] 	 *** ixgbe_stop_adapter_generic i=122 IXGBE_TXDCTL(i)=7EA8 4000000
+[   10.295264] 	 *** ixgbe_stop_adapter_generic i=123 IXGBE_TXDCTL(i)=7EE8 4000000
+[   10.295264] 	 *** ixgbe_stop_adapter_generic i=124 IXGBE_TXDCTL(i)=7F28 4000000
+[   10.295265] 	 *** ixgbe_stop_adapter_generic i=125 IXGBE_TXDCTL(i)=7F68 4000000
+[   10.295266] 	 *** ixgbe_stop_adapter_generic i=126 IXGBE_TXDCTL(i)=7FA8 4000000
+[   10.295266] 	 *** ixgbe_stop_adapter_generic i=127 IXGBE_TXDCTL(i)=7FE8 4000000
+[   10.295268] 	 *** ixgbe_stop_adapter_generic i=0 IXGBE_RXDCTL(i)=1028 4000000
+[   10.295269] 	 *** ixgbe_stop_adapter_generic i=1 IXGBE_RXDCTL(i)=1068 4000000
+[   10.295270] 	 *** ixgbe_stop_adapter_generic i=2 IXGBE_RXDCTL(i)=10A8 4000000
+[   10.295271] 	 *** ixgbe_stop_adapter_generic i=3 IXGBE_RXDCTL(i)=10E8 4000000
+[   10.295273] 	 *** ixgbe_stop_adapter_generic i=4 IXGBE_RXDCTL(i)=1128 4000000
+[   10.295274] 	 *** ixgbe_stop_adapter_generic i=5 IXGBE_RXDCTL(i)=1168 4000000
+[   10.295275] 	 *** ixgbe_stop_adapter_generic i=6 IXGBE_RXDCTL(i)=11A8 4000000
+[   10.295276] 	 *** ixgbe_stop_adapter_generic i=7 IXGBE_RXDCTL(i)=11E8 4000000
+[   10.295278] 	 *** ixgbe_stop_adapter_generic i=8 IXGBE_RXDCTL(i)=1228 4000000
+[   10.295279] 	 *** ixgbe_stop_adapter_generic i=9 IXGBE_RXDCTL(i)=1268 4000000
+[   10.295280] 	 *** ixgbe_stop_adapter_generic i=10 IXGBE_RXDCTL(i)=12A8 4000000
+[   10.295281] 	 *** ixgbe_stop_adapter_generic i=11 IXGBE_RXDCTL(i)=12E8 4000000
+[   10.295282] 	 *** ixgbe_stop_adapter_generic i=12 IXGBE_RXDCTL(i)=1328 4000000
+[   10.295284] 	 *** ixgbe_stop_adapter_generic i=13 IXGBE_RXDCTL(i)=1368 4000000
+[   10.295285] 	 *** ixgbe_stop_adapter_generic i=14 IXGBE_RXDCTL(i)=13A8 4000000
+[   10.295286] 	 *** ixgbe_stop_adapter_generic i=15 IXGBE_RXDCTL(i)=13E8 4000000
+[   10.295287] 	 *** ixgbe_stop_adapter_generic i=16 IXGBE_RXDCTL(i)=1428 4000000
+[   10.295288] 	 *** ixgbe_stop_adapter_generic i=17 IXGBE_RXDCTL(i)=1468 4000000
+[   10.295289] 	 *** ixgbe_stop_adapter_generic i=18 IXGBE_RXDCTL(i)=14A8 4000000
+[   10.295290] 	 *** ixgbe_stop_adapter_generic i=19 IXGBE_RXDCTL(i)=14E8 4000000
+[   10.295292] 	 *** ixgbe_stop_adapter_generic i=20 IXGBE_RXDCTL(i)=1528 4000000
+[   10.295293] 	 *** ixgbe_stop_adapter_generic i=21 IXGBE_RXDCTL(i)=1568 4000000
+[   10.295294] 	 *** ixgbe_stop_adapter_generic i=22 IXGBE_RXDCTL(i)=15A8 4000000
+[   10.295295] 	 *** ixgbe_stop_adapter_generic i=23 IXGBE_RXDCTL(i)=15E8 4000000
+[   10.295296] 	 *** ixgbe_stop_adapter_generic i=24 IXGBE_RXDCTL(i)=1628 4000000
+[   10.295297] 	 *** ixgbe_stop_adapter_generic i=25 IXGBE_RXDCTL(i)=1668 4000000
+[   10.295298] 	 *** ixgbe_stop_adapter_generic i=26 IXGBE_RXDCTL(i)=16A8 4000000
+[   10.295299] 	 *** ixgbe_stop_adapter_generic i=27 IXGBE_RXDCTL(i)=16E8 4000000
+[   10.295301] 	 *** ixgbe_stop_adapter_generic i=28 IXGBE_RXDCTL(i)=1728 4000000
+[   10.295302] 	 *** ixgbe_stop_adapter_generic i=29 IXGBE_RXDCTL(i)=1768 4000000
+[   10.295303] 	 *** ixgbe_stop_adapter_generic i=30 IXGBE_RXDCTL(i)=17A8 4000000
+[   10.295304] 	 *** ixgbe_stop_adapter_generic i=31 IXGBE_RXDCTL(i)=17E8 4000000
+[   10.295305] 	 *** ixgbe_stop_adapter_generic i=32 IXGBE_RXDCTL(i)=1828 4000000
+[   10.295306] 	 *** ixgbe_stop_adapter_generic i=33 IXGBE_RXDCTL(i)=1868 4000000
+[   10.295307] 	 *** ixgbe_stop_adapter_generic i=34 IXGBE_RXDCTL(i)=18A8 4000000
+[   10.295309] 	 *** ixgbe_stop_adapter_generic i=35 IXGBE_RXDCTL(i)=18E8 4000000
+[   10.295310] 	 *** ixgbe_stop_adapter_generic i=36 IXGBE_RXDCTL(i)=1928 4000000
+[   10.295311] 	 *** ixgbe_stop_adapter_generic i=37 IXGBE_RXDCTL(i)=1968 4000000
+[   10.295312] 	 *** ixgbe_stop_adapter_generic i=38 IXGBE_RXDCTL(i)=19A8 4000000
+[   10.295313] 	 *** ixgbe_stop_adapter_generic i=39 IXGBE_RXDCTL(i)=19E8 4000000
+[   10.295314] 	 *** ixgbe_stop_adapter_generic i=40 IXGBE_RXDCTL(i)=1A28 4000000
+[   10.295316] 	 *** ixgbe_stop_adapter_generic i=41 IXGBE_RXDCTL(i)=1A68 4000000
+[   10.295317] 	 *** ixgbe_stop_adapter_generic i=42 IXGBE_RXDCTL(i)=1AA8 4000000
+[   10.295318] 	 *** ixgbe_stop_adapter_generic i=43 IXGBE_RXDCTL(i)=1AE8 4000000
+[   10.295319] 	 *** ixgbe_stop_adapter_generic i=44 IXGBE_RXDCTL(i)=1B28 4000000
+[   10.295320] 	 *** ixgbe_stop_adapter_generic i=45 IXGBE_RXDCTL(i)=1B68 4000000
+[   10.295321] 	 *** ixgbe_stop_adapter_generic i=46 IXGBE_RXDCTL(i)=1BA8 4000000
+[   10.295322] 	 *** ixgbe_stop_adapter_generic i=47 IXGBE_RXDCTL(i)=1BE8 4000000
+[   10.295323] 	 *** ixgbe_stop_adapter_generic i=48 IXGBE_RXDCTL(i)=1C28 4000000
+[   10.295325] 	 *** ixgbe_stop_adapter_generic i=49 IXGBE_RXDCTL(i)=1C68 4000000
+[   10.295326] 	 *** ixgbe_stop_adapter_generic i=50 IXGBE_RXDCTL(i)=1CA8 4000000
+[   10.295327] 	 *** ixgbe_stop_adapter_generic i=51 IXGBE_RXDCTL(i)=1CE8 4000000
+[   10.295328] 	 *** ixgbe_stop_adapter_generic i=52 IXGBE_RXDCTL(i)=1D28 4000000
+[   10.295330] 	 *** ixgbe_stop_adapter_generic i=53 IXGBE_RXDCTL(i)=1D68 4000000
+[   10.295331] 	 *** ixgbe_stop_adapter_generic i=54 IXGBE_RXDCTL(i)=1DA8 4000000
+[   10.295332] 	 *** ixgbe_stop_adapter_generic i=55 IXGBE_RXDCTL(i)=1DE8 4000000
+[   10.295334] 	 *** ixgbe_stop_adapter_generic i=56 IXGBE_RXDCTL(i)=1E28 4000000
+[   10.295335] 	 *** ixgbe_stop_adapter_generic i=57 IXGBE_RXDCTL(i)=1E68 4000000
+[   10.295336] 	 *** ixgbe_stop_adapter_generic i=58 IXGBE_RXDCTL(i)=1EA8 4000000
+[   10.295337] 	 *** ixgbe_stop_adapter_generic i=59 IXGBE_RXDCTL(i)=1EE8 4000000
+[   10.295338] 	 *** ixgbe_stop_adapter_generic i=60 IXGBE_RXDCTL(i)=1F28 4000000
+[   10.295340] 	 *** ixgbe_stop_adapter_generic i=61 IXGBE_RXDCTL(i)=1F68 4000000
+[   10.295341] 	 *** ixgbe_stop_adapter_generic i=62 IXGBE_RXDCTL(i)=1FA8 4000000
+[   10.295342] 	 *** ixgbe_stop_adapter_generic i=63 IXGBE_RXDCTL(i)=1FE8 4000000
+[   10.295343] 	 *** ixgbe_stop_adapter_generic i=64 IXGBE_RXDCTL(i)=D028 4000000
+[   10.295344] 	 *** ixgbe_stop_adapter_generic i=65 IXGBE_RXDCTL(i)=D068 4000000
+[   10.295345] 	 *** ixgbe_stop_adapter_generic i=66 IXGBE_RXDCTL(i)=D0A8 4000000
+[   10.295347] 	 *** ixgbe_stop_adapter_generic i=67 IXGBE_RXDCTL(i)=D0E8 4000000
+[   10.295348] 	 *** ixgbe_stop_adapter_generic i=68 IXGBE_RXDCTL(i)=D128 4000000
+[   10.295349] 	 *** ixgbe_stop_adapter_generic i=69 IXGBE_RXDCTL(i)=D168 4000000
+[   10.295350] 	 *** ixgbe_stop_adapter_generic i=70 IXGBE_RXDCTL(i)=D1A8 4000000
+[   10.295351] 	 *** ixgbe_stop_adapter_generic i=71 IXGBE_RXDCTL(i)=D1E8 4000000
+[   10.295352] 	 *** ixgbe_stop_adapter_generic i=72 IXGBE_RXDCTL(i)=D228 4000000
+[   10.295353] 	 *** ixgbe_stop_adapter_generic i=73 IXGBE_RXDCTL(i)=D268 4000000
+[   10.295355] 	 *** ixgbe_stop_adapter_generic i=74 IXGBE_RXDCTL(i)=D2A8 4000000
+[   10.295356] 	 *** ixgbe_stop_adapter_generic i=75 IXGBE_RXDCTL(i)=D2E8 4000000
+[   10.295357] 	 *** ixgbe_stop_adapter_generic i=76 IXGBE_RXDCTL(i)=D328 4000000
+[   10.295358] 	 *** ixgbe_stop_adapter_generic i=77 IXGBE_RXDCTL(i)=D368 4000000
+[   10.295359] 	 *** ixgbe_stop_adapter_generic i=78 IXGBE_RXDCTL(i)=D3A8 4000000
+[   10.295360] 	 *** ixgbe_stop_adapter_generic i=79 IXGBE_RXDCTL(i)=D3E8 4000000
+[   10.295362] 	 *** ixgbe_stop_adapter_generic i=80 IXGBE_RXDCTL(i)=D428 4000000
+[   10.295363] 	 *** ixgbe_stop_adapter_generic i=81 IXGBE_RXDCTL(i)=D468 4000000
+[   10.295364] 	 *** ixgbe_stop_adapter_generic i=82 IXGBE_RXDCTL(i)=D4A8 4000000
+[   10.295365] 	 *** ixgbe_stop_adapter_generic i=83 IXGBE_RXDCTL(i)=D4E8 4000000
+[   10.295366] 	 *** ixgbe_stop_adapter_generic i=84 IXGBE_RXDCTL(i)=D528 4000000
+[   10.295367] 	 *** ixgbe_stop_adapter_generic i=85 IXGBE_RXDCTL(i)=D568 4000000
+[   10.295368] 	 *** ixgbe_stop_adapter_generic i=86 IXGBE_RXDCTL(i)=D5A8 4000000
+[   10.295370] 	 *** ixgbe_stop_adapter_generic i=87 IXGBE_RXDCTL(i)=D5E8 4000000
+[   10.295371] 	 *** ixgbe_stop_adapter_generic i=88 IXGBE_RXDCTL(i)=D628 4000000
+[   10.295372] 	 *** ixgbe_stop_adapter_generic i=89 IXGBE_RXDCTL(i)=D668 4000000
+[   10.295373] 	 *** ixgbe_stop_adapter_generic i=90 IXGBE_RXDCTL(i)=D6A8 4000000
+[   10.295374] 	 *** ixgbe_stop_adapter_generic i=91 IXGBE_RXDCTL(i)=D6E8 4000000
+[   10.295375] 	 *** ixgbe_stop_adapter_generic i=92 IXGBE_RXDCTL(i)=D728 4000000
+[   10.295376] 	 *** ixgbe_stop_adapter_generic i=93 IXGBE_RXDCTL(i)=D768 4000000
+[   10.295378] 	 *** ixgbe_stop_adapter_generic i=94 IXGBE_RXDCTL(i)=D7A8 4000000
+[   10.295379] 	 *** ixgbe_stop_adapter_generic i=95 IXGBE_RXDCTL(i)=D7E8 4000000
+[   10.295380] 	 *** ixgbe_stop_adapter_generic i=96 IXGBE_RXDCTL(i)=D828 4000000
+[   10.295381] 	 *** ixgbe_stop_adapter_generic i=97 IXGBE_RXDCTL(i)=D868 4000000
+[   10.295382] 	 *** ixgbe_stop_adapter_generic i=98 IXGBE_RXDCTL(i)=D8A8 4000000
+[   10.295383] 	 *** ixgbe_stop_adapter_generic i=99 IXGBE_RXDCTL(i)=D8E8 4000000
+[   10.295385] 	 *** ixgbe_stop_adapter_generic i=100 IXGBE_RXDCTL(i)=D928 4000000
+[   10.295386] 	 *** ixgbe_stop_adapter_generic i=101 IXGBE_RXDCTL(i)=D968 4000000
+[   10.295387] 	 *** ixgbe_stop_adapter_generic i=102 IXGBE_RXDCTL(i)=D9A8 4000000
+[   10.295389] 	 *** ixgbe_stop_adapter_generic i=103 IXGBE_RXDCTL(i)=D9E8 4000000
+[   10.295390] 	 *** ixgbe_stop_adapter_generic i=104 IXGBE_RXDCTL(i)=DA28 4000000
+[   10.295391] 	 *** ixgbe_stop_adapter_generic i=105 IXGBE_RXDCTL(i)=DA68 4000000
+[   10.295393] 	 *** ixgbe_stop_adapter_generic i=106 IXGBE_RXDCTL(i)=DAA8 4000000
+[   10.295394] 	 *** ixgbe_stop_adapter_generic i=107 IXGBE_RXDCTL(i)=DAE8 4000000
+[   10.295395] 	 *** ixgbe_stop_adapter_generic i=108 IXGBE_RXDCTL(i)=DB28 4000000
+[   10.295396] 	 *** ixgbe_stop_adapter_generic i=109 IXGBE_RXDCTL(i)=DB68 4000000
+[   10.295397] 	 *** ixgbe_stop_adapter_generic i=110 IXGBE_RXDCTL(i)=DBA8 4000000
+[   10.295398] 	 *** ixgbe_stop_adapter_generic i=111 IXGBE_RXDCTL(i)=DBE8 4000000
+[   10.295399] 	 *** ixgbe_stop_adapter_generic i=112 IXGBE_RXDCTL(i)=DC28 4000000
+[   10.295400] 	 *** ixgbe_stop_adapter_generic i=113 IXGBE_RXDCTL(i)=DC68 4000000
+[   10.295402] 	 *** ixgbe_stop_adapter_generic i=114 IXGBE_RXDCTL(i)=DCA8 4000000
+[   10.295403] 	 *** ixgbe_stop_adapter_generic i=115 IXGBE_RXDCTL(i)=DCE8 4000000
+[   10.295404] 	 *** ixgbe_stop_adapter_generic i=116 IXGBE_RXDCTL(i)=DD28 4000000
+[   10.295405] 	 *** ixgbe_stop_adapter_generic i=117 IXGBE_RXDCTL(i)=DD68 4000000
+[   10.295406] 	 *** ixgbe_stop_adapter_generic i=118 IXGBE_RXDCTL(i)=DDA8 4000000
+[   10.295407] 	 *** ixgbe_stop_adapter_generic i=119 IXGBE_RXDCTL(i)=DDE8 4000000
+[   10.295408] 	 *** ixgbe_stop_adapter_generic i=120 IXGBE_RXDCTL(i)=DE28 4000000
+[   10.295410] 	 *** ixgbe_stop_adapter_generic i=121 IXGBE_RXDCTL(i)=DE68 4000000
+[   10.295411] 	 *** ixgbe_stop_adapter_generic i=122 IXGBE_RXDCTL(i)=DEA8 4000000
+[   10.295412] 	 *** ixgbe_stop_adapter_generic i=123 IXGBE_RXDCTL(i)=DEE8 4000000
+[   10.295413] 	 *** ixgbe_stop_adapter_generic i=124 IXGBE_RXDCTL(i)=DF28 4000000
+[   10.295414] 	 *** ixgbe_stop_adapter_generic i=125 IXGBE_RXDCTL(i)=DF68 4000000
+[   10.295415] 	 *** ixgbe_stop_adapter_generic i=126 IXGBE_RXDCTL(i)=DFA8 4000000
+[   10.295416] 	 *** ixgbe_stop_adapter_generic i=127 IXGBE_RXDCTL(i)=DFE8 4000000
+[   10.297424] *** ixgbe_disable_pcie_master
+[   10.297426] *** ixgbe_clear_tx_pending
+[   10.297426] *** ixgbe_init_phy_ops_82599
+[   10.313764] *** ixgbe_setup_sfp_modules_82599
+[   10.336004] *** prot_autoc_write_82599
+[   10.336086] *** ixgbe_reset_pipeline_82599
+[   10.440021] *** ixgbe_init_rx_addrs_generic
+[   10.440053] *** ixgbe_init_uta_tables_generic
+[   10.440237] *** ixgbe_set_rar_generic
+[   10.440237] *** ixgbe_set_vmdq_generic
+[   10.463941] *** ixgbe_set_rar_generic
+[   10.463942] *** ixgbe_set_vmdq_generic
+[   10.464874] *** ixgbe_start_hw_generic
+[   10.464875] *** ixgbe_clear_vfta_generic
+[   10.465008] 	 *** IXGBE_CTRL_EXT=18 10000
+[   10.465008] *** ixgbe_setup_fc_generic
+[   10.465048] *** ixgbe_start_hw_gen2
+[   10.465049] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 0
+[   10.465050] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465050] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1
+[   10.465051] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465052] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2
+[   10.465052] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465053] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3
+[   10.465053] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465054] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4
+[   10.465054] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465055] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5
+[   10.465055] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465056] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6
+[   10.465056] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465057] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7
+[   10.465063] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465063] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 8
+[   10.465063] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465064] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 9
+[   10.465065] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465065] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 A
+[   10.465066] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465066] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 B
+[   10.465067] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465067] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 C
+[   10.465068] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465068] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 D
+[   10.465069] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465069] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 E
+[   10.465070] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465070] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 F
+[   10.465071] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465071] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 10
+[   10.465072] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465072] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 11
+[   10.465073] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465073] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 12
+[   10.465074] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465074] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 13
+[   10.465075] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465076] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 14
+[   10.465076] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465077] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 15
+[   10.465077] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465078] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 16
+[   10.465078] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465079] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 17
+[   10.465079] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465080] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 18
+[   10.465080] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465081] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 19
+[   10.465081] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465082] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1A
+[   10.465082] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465083] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1B
+[   10.465083] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465084] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1C
+[   10.465084] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465085] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1D
+[   10.465085] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465086] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1E
+[   10.465087] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465087] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 1F
+[   10.465088] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465089] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 20
+[   10.465089] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465090] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 21
+[   10.465090] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465091] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 22
+[   10.465092] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465092] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 23
+[   10.465093] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465093] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 24
+[   10.465094] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465094] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 25
+[   10.465095] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465095] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 26
+[   10.465096] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465096] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 27
+[   10.465097] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465097] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 28
+[   10.465098] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465098] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 29
+[   10.465099] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465099] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2A
+[   10.465100] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465100] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2B
+[   10.465101] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465101] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2C
+[   10.465102] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465113] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2D
+[   10.465114] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465115] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2E
+[   10.465115] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465115] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 2F
+[   10.465116] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465116] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 30
+[   10.465117] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465117] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 31
+[   10.465118] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465118] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 32
+[   10.465119] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465119] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 33
+[   10.465120] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465120] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 34
+[   10.465121] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465121] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 35
+[   10.465122] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465122] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 36
+[   10.465123] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465123] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 37
+[   10.465124] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465124] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 38
+[   10.465125] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465125] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 39
+[   10.465126] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465126] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3A
+[   10.465127] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465127] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3B
+[   10.465128] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465128] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3C
+[   10.465129] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465129] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3D
+[   10.465130] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465130] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3E
+[   10.465131] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465132] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 3F
+[   10.465132] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465133] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 40
+[   10.465133] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465134] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 41
+[   10.465134] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465135] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 42
+[   10.465135] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465136] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 43
+[   10.465136] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465137] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 44
+[   10.465137] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465138] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 45
+[   10.465138] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465139] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 46
+[   10.465139] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465140] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 47
+[   10.465140] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465141] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 48
+[   10.465141] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465142] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 49
+[   10.465142] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465143] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4A
+[   10.465143] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465144] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4B
+[   10.465144] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465145] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4C
+[   10.465145] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465146] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4D
+[   10.465146] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465147] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4E
+[   10.465147] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465148] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 4F
+[   10.465148] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465149] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 50
+[   10.465149] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465150] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 51
+[   10.465150] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465151] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 52
+[   10.465151] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465152] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 53
+[   10.465152] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465153] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 54
+[   10.465153] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465154] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 55
+[   10.465154] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465155] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 56
+[   10.465155] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465156] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 57
+[   10.465156] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465157] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 58
+[   10.465157] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465158] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 59
+[   10.465158] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465158] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5A
+[   10.465159] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465160] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5B
+[   10.465160] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465160] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5C
+[   10.465161] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465161] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5D
+[   10.465162] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465163] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5E
+[   10.465163] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465164] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 5F
+[   10.465164] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465165] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 60
+[   10.465166] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465166] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 61
+[   10.465167] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465167] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 62
+[   10.465168] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465168] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 63
+[   10.465169] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465169] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 64
+[   10.465170] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465170] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 65
+[   10.465171] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465171] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 66
+[   10.465172] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465172] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 67
+[   10.465173] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465173] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 68
+[   10.465174] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465174] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 69
+[   10.465175] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465175] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6A
+[   10.465176] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465176] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6B
+[   10.465177] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465177] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6C
+[   10.465178] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465178] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6D
+[   10.465179] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465179] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6E
+[   10.465180] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465180] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 6F
+[   10.465181] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465181] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 70
+[   10.465182] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465182] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 71
+[   10.465183] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465183] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 72
+[   10.465184] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465184] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 73
+[   10.465185] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465185] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 74
+[   10.465186] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465186] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 75
+[   10.465187] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465187] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 76
+[   10.465188] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465188] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 77
+[   10.465188] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465189] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 78
+[   10.465190] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465190] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 79
+[   10.465190] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465191] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7A
+[   10.465191] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465192] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7B
+[   10.465192] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465193] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7C
+[   10.465193] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465194] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7D
+[   10.465195] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465195] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7E
+[   10.465196] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.465196] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=4904 7F
+[   10.465197] 	 *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=4984 0
+[   10.466296] *** ixgbe_disable_tx_laser_multispeed_fiber
+[   10.466398] 	 *** DCA=1
+[   10.466403] *** ixgbe_hic_unlocked
+[   10.466412] *** ixgbe_hic_unlocked
+[   10.466420] *** ixgbe_hic_unlocked
+[   10.466428] *** ixgbe_hic_unlocked
+[   10.466446] *** ixgbe_set_vmdq_san_mac_generic
+[   19.411734] *** ixgbe_open
+[   19.415573] 	 *** ixgbe_open
+[   19.420304] *** ixgbe_setup_all_tx_resources
+[   19.426556] *** ixgbe_setup_tx_resources
+[   19.431749] *** ixgbe_setup_tx_resources
+[   19.436768] *** ixgbe_setup_tx_resources
+[   19.441772] *** ixgbe_setup_tx_resources
+[   19.446768] *** ixgbe_setup_tx_resources
+[   19.451749] *** ixgbe_setup_tx_resources
+[   19.456724] *** ixgbe_setup_tx_resources
+[   19.461682] *** ixgbe_setup_tx_resources
+[   19.466629] *** ixgbe_setup_tx_resources
+[   19.471572] *** ixgbe_setup_tx_resources
+[   19.476511] *** ixgbe_setup_tx_resources
+[   19.481441] *** ixgbe_setup_tx_resources
+[   19.486364] *** ixgbe_setup_tx_resources
+[   19.491284] *** ixgbe_setup_tx_resources
+[   19.496189] *** ixgbe_setup_tx_resources
+[   19.501084] *** ixgbe_setup_tx_resources
+[   19.505976] *** ixgbe_setup_tx_resources
+[   19.510841] *** ixgbe_setup_tx_resources
+[   19.515684] *** ixgbe_setup_tx_resources
+[   19.520525] *** ixgbe_setup_tx_resources
+[   19.525346] *** ixgbe_setup_tx_resources
+[   19.530147] *** ixgbe_setup_tx_resources
+[   19.534924] *** ixgbe_setup_tx_resources
+[   19.539669] *** ixgbe_setup_tx_resources
+[   19.544398] *** ixgbe_setup_tx_resources
+[   19.549099] *** ixgbe_setup_tx_resources
+[   19.553778] *** ixgbe_setup_tx_resources
+[   19.558434] *** ixgbe_setup_tx_resources
+[   19.563063] *** ixgbe_setup_tx_resources
+[   19.567669] *** ixgbe_setup_tx_resources
+[   19.572261] *** ixgbe_setup_tx_resources
+[   19.576831] *** ixgbe_setup_tx_resources
+[   19.581387] *** ixgbe_setup_all_rx_resources
+[   19.586316] *** ixgbe_setup_rx_resources
+[   19.590875] *** ixgbe_setup_rx_resources
+[   19.595420] *** ixgbe_setup_rx_resources
+[   19.599966] *** ixgbe_setup_rx_resources
+[   19.604507] *** ixgbe_setup_rx_resources
+[   19.609047] *** ixgbe_setup_rx_resources
+[   19.613580] *** ixgbe_setup_rx_resources
+[   19.618104] *** ixgbe_setup_rx_resources
+[   19.622621] *** ixgbe_setup_rx_resources
+[   19.627126] *** ixgbe_setup_rx_resources
+[   19.631622] *** ixgbe_setup_rx_resources
+[   19.636134] *** ixgbe_setup_rx_resources
+[   19.640621] *** ixgbe_setup_rx_resources
+[   19.645101] *** ixgbe_setup_rx_resources
+[   19.649576] *** ixgbe_setup_rx_resources
+[   19.654047] *** ixgbe_setup_rx_resources
+[   19.658519] *** ixgbe_setup_rx_resources
+[   19.662992] *** ixgbe_setup_rx_resources
+[   19.667455] *** ixgbe_setup_rx_resources
+[   19.671926] *** ixgbe_setup_rx_resources
+[   19.676396] *** ixgbe_setup_rx_resources
+[   19.680865] *** ixgbe_setup_rx_resources
+[   19.685334] *** ixgbe_setup_rx_resources
+[   19.689804] *** ixgbe_setup_rx_resources
+[   19.694273] *** ixgbe_setup_rx_resources
+[   19.698744] *** ixgbe_setup_rx_resources
+[   19.703213] *** ixgbe_setup_rx_resources
+[   19.707684] *** ixgbe_setup_rx_resources
+[   19.712153] *** ixgbe_setup_rx_resources
+[   19.716624] *** ixgbe_setup_rx_resources
+[   19.721093] *** ixgbe_setup_rx_resources
+[   19.725563] *** ixgbe_setup_rx_resources
+[   19.730034] *** ixgbe_configure
+[   19.733628] *** ixgbe_configure_pb
+[   19.737514] *** ixgbe_set_rxpba_generic
+[   19.741889] 	 *** IXGBE_RXPBSIZE(0)=458752
+[   19.741891] 	 *** IXGBE_TXPBSIZE(0)=163840
+[   19.746557] 	 *** IXGBE_TXPBTHRESH(0)=150
+[   19.751234] *** ixgbe_configure_virtualization
+[   19.760887] *** ixgbe_set_rx_mode
+[   19.764711] *** ixgbe_vlan_strip_enable
+[   19.769132] *** ixgbe_vlan_promisc_disable
+[   19.773821] *** ixgbe_restore_vlan
+[   19.777743] *** ixgbe_set_vfta_generic
+[   19.782060] *** ixgbe_disable_rx_buff_generic
+[   19.788056] *** ixgbe_fdir_enable_82599
+[   19.794483] *** ixgbe_enable_rx_buff_generic
+[   19.799393] 	 *** ixgbe_enable_rx_buff_generic IXGBE_SECRXCTR=8D00 1
+[   19.806640] 	 *** CONFIG_IXGBE_DCA
+[   19.810596] 	 *** ixgbe_configure: DCA=0
+[   19.815139] 	 *** ixgbe_configure: TXCTRL=0x2A00 
+[   19.820558] 	 *** ixgbe_configure: RXCTRL=0xB200 
+[   19.825979] *** ixgbe_configure_tx
+[   19.829948] *** ixgbe_setup_mtqc
+[   19.833727] 	 *** disable arbiter IXGBE_RTTDCS=4900 C00040
+[   19.840041] 	 *** IXGBE_MTQC=8120 0
+[   19.844136] 	 *** enable arbiter IXGBE_RTTDCS=4900 C00000
+[   19.850369] 	 *** IXGBE_DMATXCTL=4A80 81000055
+[   19.855540] *** ixgbe_configure_tx_ring
+[   19.860051] 	 *** IXGBE_TXDCTL(0)=6028 2010120
+[   19.867248] *** ixgbe_configure_tx_ring
+[   19.871769] 	 *** IXGBE_TXDCTL(1)=6068 2010120
+[   19.878975] *** ixgbe_configure_tx_ring
+[   19.883514] 	 *** IXGBE_TXDCTL(2)=60A8 2010120
+[   19.890733] *** ixgbe_configure_tx_ring
+[   19.895284] 	 *** IXGBE_TXDCTL(3)=60E8 2010120
+[   19.902508] *** ixgbe_configure_tx_ring
+[   19.907072] 	 *** IXGBE_TXDCTL(4)=6128 2010120
+[   19.914320] *** ixgbe_configure_tx_ring
+[   19.918896] 	 *** IXGBE_TXDCTL(5)=6168 2010120
+[   19.926156] *** ixgbe_configure_tx_ring
+[   19.930748] 	 *** IXGBE_TXDCTL(6)=61A8 2010120
+[   19.938021] *** ixgbe_configure_tx_ring
+[   19.942627] 	 *** IXGBE_TXDCTL(7)=61E8 2010120
+[   19.949913] *** ixgbe_configure_tx_ring
+[   19.954534] 	 *** IXGBE_TXDCTL(8)=6228 2010120
+[   19.961833] *** ixgbe_configure_tx_ring
+[   19.966465] 	 *** IXGBE_TXDCTL(9)=6268 2010120
+[   19.973779] *** ixgbe_configure_tx_ring
+[   19.978427] 	 *** IXGBE_TXDCTL(10)=62A8 2010120
+[   19.985848] *** ixgbe_configure_tx_ring
+[   19.990502] 	 *** IXGBE_TXDCTL(11)=62E8 2010120
+[   19.997924] *** ixgbe_configure_tx_ring
+[   20.002587] 	 *** IXGBE_TXDCTL(12)=6328 2010120
+[   20.010015] *** ixgbe_configure_tx_ring
+[   20.014685] 	 *** IXGBE_TXDCTL(13)=6368 2010120
+[   20.022126] *** ixgbe_configure_tx_ring
+[   20.026800] 	 *** IXGBE_TXDCTL(14)=63A8 2010120
+[   20.034248] *** ixgbe_configure_tx_ring
+[   20.038937] 	 *** IXGBE_TXDCTL(15)=63E8 2010120
+[   20.046397] *** ixgbe_configure_tx_ring
+[   20.051095] 	 *** IXGBE_TXDCTL(16)=6428 2010120
+[   20.058559] *** ixgbe_configure_tx_ring
+[   20.063257] 	 *** IXGBE_TXDCTL(17)=6468 2010120
+[   20.070732] *** ixgbe_configure_tx_ring
+[   20.075430] 	 *** IXGBE_TXDCTL(18)=64A8 2010120
+[   20.082884] *** ixgbe_configure_tx_ring
+[   20.087578] 	 *** IXGBE_TXDCTL(19)=64E8 2010120
+[   20.095049] *** ixgbe_configure_tx_ring
+[   20.099759] 	 *** IXGBE_TXDCTL(20)=6528 2010120
+[   20.107237] *** ixgbe_configure_tx_ring
+[   20.111946] 	 *** IXGBE_TXDCTL(21)=6568 2010120
+[   20.119422] *** ixgbe_configure_tx_ring
+[   20.124133] 	 *** IXGBE_TXDCTL(22)=65A8 2010120
+[   20.131609] *** ixgbe_configure_tx_ring
+[   20.136315] 	 *** IXGBE_TXDCTL(23)=65E8 2010120
+[   20.143794] *** ixgbe_configure_tx_ring
+[   20.148500] 	 *** IXGBE_TXDCTL(24)=6628 2010120
+[   20.155974] *** ixgbe_configure_tx_ring
+[   20.160674] 	 *** IXGBE_TXDCTL(25)=6668 2010120
+[   20.168009] *** ixgbe_configure_tx_ring
+[   20.172719] 	 *** IXGBE_TXDCTL(26)=66A8 2010120
+[   20.180008] *** ixgbe_configure_tx_ring
+[   20.184715] 	 *** IXGBE_TXDCTL(27)=66E8 2010120
+[   20.192008] *** ixgbe_configure_tx_ring
+[   20.196718] 	 *** IXGBE_TXDCTL(28)=6728 2010120
+[   20.204008] *** ixgbe_configure_tx_ring
+[   20.208718] 	 *** IXGBE_TXDCTL(29)=6768 2010120
+[   20.216008] *** ixgbe_configure_tx_ring
+[   20.220717] 	 *** IXGBE_TXDCTL(30)=67A8 2010120
+[   20.228009] *** ixgbe_configure_tx_ring
+[   20.232718] 	 *** IXGBE_TXDCTL(31)=67E8 2010120
+[   20.240009] *** ixgbe_configure_rx
+[   20.244219] *** ixgbe_disable_rx_generic
+[   20.249009] *** ixgbe_setup_psrtype
+[   20.253305] 	 *** IXGBE_PSRTYPE(VMDQ_P(pool))=5480 40001330
+[   20.259935] *** ixgbe_setup_rdrxctl
+[   20.264235] 	 *** Disable RSC for ACK packets IXGBE_RSCDBU=3028 A0 
+[   20.271648] 	 *** IXGBE_RDRXCTL=2F00 600880A
+[   20.276828] 	 *** IXGBE_RFCTL=5008 E0
+[   20.281324] *** ixgbe_setup_mrqc
+[   20.285333] 	 *** IXGBE_RXCSUM=5000 2000
+[   20.290117] *** ixgbe_store_key
+[   20.294026] 	 *** IXGBE_RSSRK(0)=5C80 DE75C641
+[   20.299393] 	 *** IXGBE_RSSRK(1)=5C84 4C8698FA
+[   20.304754] 	 *** IXGBE_RSSRK(2)=5C88 A41B3F9D
+[   20.310111] 	 *** IXGBE_RSSRK(3)=5C8C 31E74028
+[   20.315464] 	 *** IXGBE_RSSRK(4)=5C90 BA968F81
+[   20.320812] 	 *** IXGBE_RSSRK(5)=5C94 7303A301
+[   20.326158] 	 *** IXGBE_RSSRK(6)=5C98 4A69C702
+[   20.331496] 	 *** IXGBE_RSSRK(7)=5C9C 56EE486F
+[   20.336818] 	 *** IXGBE_RSSRK(8)=5CA0 D8F3608
+[   20.342041] 	 *** IXGBE_RSSRK(9)=5CA4 E9A586F3
+[   20.347358] *** ixgbe_store_reta
+[   20.351313] 	 *** IXGBE_RETA(0)=5C00 3020100
+[   20.356413] 	 *** IXGBE_RETA(1)=5C04 7060504
+[   20.361508] 	 *** IXGBE_RETA(2)=5C08 B0A0908
+[   20.366598] 	 *** IXGBE_RETA(3)=5C0C F0E0D0C
+[   20.371684] 	 *** IXGBE_RETA(4)=5C10 3020100
+[   20.376765] 	 *** IXGBE_RETA(5)=5C14 7060504
+[   20.381825] 	 *** IXGBE_RETA(6)=5C18 B0A0908
+[   20.386881] 	 *** IXGBE_RETA(7)=5C1C F0E0D0C
+[   20.391935] 	 *** IXGBE_RETA(8)=5C20 3020100
+[   20.396985] 	 *** IXGBE_RETA(9)=5C24 7060504
+[   20.402032] 	 *** IXGBE_RETA(10)=5C28 B0A0908
+[   20.407170] 	 *** IXGBE_RETA(11)=5C2C F0E0D0C
+[   20.412317] 	 *** IXGBE_RETA(12)=5C30 3020100
+[   20.417450] 	 *** IXGBE_RETA(13)=5C34 7060504
+[   20.422577] 	 *** IXGBE_RETA(14)=5C38 B0A0908
+[   20.427700] 	 *** IXGBE_RETA(15)=5C3C F0E0D0C
+[   20.432811] 	 *** IXGBE_RETA(16)=5C40 3020100
+[   20.437925] 	 *** IXGBE_RETA(17)=5C44 7060504
+[   20.443036] 	 *** IXGBE_RETA(18)=5C48 B0A0908
+[   20.448143] 	 *** IXGBE_RETA(19)=5C4C F0E0D0C
+[   20.453247] 	 *** IXGBE_RETA(20)=5C50 3020100
+[   20.458348] 	 *** IXGBE_RETA(21)=5C54 7060504
+[   20.463441] 	 *** IXGBE_RETA(22)=5C58 B0A0908
+[   20.468532] 	 *** IXGBE_RETA(23)=5C5C F0E0D0C
+[   20.473619] 	 *** IXGBE_RETA(24)=5C60 3020100
+[   20.478700] 	 *** IXGBE_RETA(25)=5C64 7060504
+[   20.483776] 	 *** IXGBE_RETA(26)=5C68 B0A0908
+[   20.488852] 	 *** IXGBE_RETA(27)=5C6C F0E0D0C
+[   20.493926] 	 *** IXGBE_RETA(28)=5C70 3020100
+[   20.498996] 	 *** IXGBE_RETA(29)=5C74 7060504
+[   20.504059] 	 *** IXGBE_RETA(30)=5C78 B0A0908
+[   20.509116] 	 *** IXGBE_RETA(31)=5C7C F0E0D0C
+[   20.514165] 	 *** IXGBE_MRQC=5818 330001
+[   20.518729] *** ixgbe_set_rx_buffer_len
+[   20.523198] 	 *** IXGBE_HLREG0=4240 8002FFF
+[   20.528057] *** ixgbe_configure_rx_ring
+[   20.532525] *** ixgbe_disable_rx_queue
+[   20.536893] 	 *** ixgbe_disable_rx_queue
+[   20.541471] *** ixgbe_configure_srrctl
+[   20.545844] 	 *** IXGBE_SRRCTL(0)=2100 2000403
+[   20.550998] *** ixgbe_configure_rscctl
+[   20.555381] 	 *** IXGBE_RXDCTL(0)=1028 42008600
+[   20.562747] *** ixgbe_configure_rx_ring
+[   20.567243] *** ixgbe_disable_rx_queue
+[   20.571634] 	 *** ixgbe_disable_rx_queue
+[   20.576232] *** ixgbe_configure_srrctl
+[   20.580627] 	 *** IXGBE_SRRCTL(1)=2104 2000403
+[   20.585798] *** ixgbe_configure_rscctl
+[   20.590194] 	 *** IXGBE_RXDCTL(1)=1068 42008600
+[   20.597577] *** ixgbe_configure_rx_ring
+[   20.602085] *** ixgbe_disable_rx_queue
+[   20.606483] 	 *** ixgbe_disable_rx_queue
+[   20.611097] *** ixgbe_configure_srrctl
+[   20.615507] 	 *** IXGBE_SRRCTL(2)=2108 2000403
+[   20.620688] *** ixgbe_configure_rscctl
+[   20.625112] 	 *** IXGBE_RXDCTL(2)=10A8 42008600
+[   20.632511] *** ixgbe_configure_rx_ring
+[   20.637041] *** ixgbe_disable_rx_queue
+[   20.641469] 	 *** ixgbe_disable_rx_queue
+[   20.646094] *** ixgbe_configure_srrctl
+[   20.650526] 	 *** IXGBE_SRRCTL(3)=210C 2000403
+[   20.655740] *** ixgbe_configure_rscctl
+[   20.660183] 	 *** IXGBE_RXDCTL(3)=10E8 42008600
+[   20.667607] *** ixgbe_configure_rx_ring
+[   20.672160] *** ixgbe_disable_rx_queue
+[   20.676610] 	 *** ixgbe_disable_rx_queue
+[   20.681268] *** ixgbe_configure_srrctl
+[   20.685725] 	 *** IXGBE_SRRCTL(4)=2110 2000403
+[   20.690960] *** ixgbe_configure_rscctl
+[   20.695424] 	 *** IXGBE_RXDCTL(4)=1128 42008600
+[   20.702873] *** ixgbe_configure_rx_ring
+[   20.707440] *** ixgbe_disable_rx_queue
+[   20.711914] 	 *** ixgbe_disable_rx_queue
+[   20.716594] *** ixgbe_configure_srrctl
+[   20.721073] 	 *** IXGBE_SRRCTL(5)=2114 2000403
+[   20.726324] *** ixgbe_configure_rscctl
+[   20.730813] 	 *** IXGBE_RXDCTL(5)=1168 42008600
+[   20.738283] *** ixgbe_configure_rx_ring
+[   20.742880] *** ixgbe_disable_rx_queue
+[   20.747375] 	 *** ixgbe_disable_rx_queue
+[   20.752078] *** ixgbe_configure_srrctl
+[   20.756575] 	 *** IXGBE_SRRCTL(6)=2118 2000403
+[   20.761847] *** ixgbe_configure_rscctl
+[   20.766348] 	 *** IXGBE_RXDCTL(6)=11A8 42008600
+[   20.773828] *** ixgbe_configure_rx_ring
+[   20.778434] *** ixgbe_disable_rx_queue
+[   20.782934] 	 *** ixgbe_disable_rx_queue
+[   20.787638] *** ixgbe_configure_srrctl
+[   20.792135] 	 *** IXGBE_SRRCTL(7)=211C 2000403
+[   20.797398] *** ixgbe_configure_rscctl
+[   20.801889] 	 *** IXGBE_RXDCTL(7)=11E8 42008600
+[   20.809362] *** ixgbe_configure_rx_ring
+[   20.813967] *** ixgbe_disable_rx_queue
+[   20.818467] 	 *** ixgbe_disable_rx_queue
+[   20.823171] *** ixgbe_configure_srrctl
+[   20.827668] 	 *** IXGBE_SRRCTL(8)=2120 2000403
+[   20.832931] *** ixgbe_configure_rscctl
+[   20.837430] 	 *** IXGBE_RXDCTL(8)=1228 42008600
+[   20.844906] *** ixgbe_configure_rx_ring
+[   20.849511] *** ixgbe_disable_rx_queue
+[   20.854012] 	 *** ixgbe_disable_rx_queue
+[   20.858716] *** ixgbe_configure_srrctl
+[   20.863215] 	 *** IXGBE_SRRCTL(9)=2124 2000403
+[   20.868487] *** ixgbe_configure_rscctl
+[   20.872977] 	 *** IXGBE_RXDCTL(9)=1268 42008600
+[   20.880449] *** ixgbe_configure_rx_ring
+[   20.885055] *** ixgbe_disable_rx_queue
+[   20.889554] 	 *** ixgbe_disable_rx_queue
+[   20.894259] *** ixgbe_configure_srrctl
+[   20.898756] 	 *** IXGBE_SRRCTL(10)=2128 2000403
+[   20.904127] *** ixgbe_configure_rscctl
+[   20.908627] 	 *** IXGBE_RXDCTL(10)=12A8 42008600
+[   20.916198] *** ixgbe_configure_rx_ring
+[   20.920803] *** ixgbe_disable_rx_queue
+[   20.925303] 	 *** ixgbe_disable_rx_queue
+[   20.930007] *** ixgbe_configure_srrctl
+[   20.934506] 	 *** IXGBE_SRRCTL(11)=212C 2000403
+[   20.939875] *** ixgbe_configure_rscctl
+[   20.944374] 	 *** IXGBE_RXDCTL(11)=12E8 42008600
+[   20.951944] *** ixgbe_configure_rx_ring
+[   20.956550] *** ixgbe_disable_rx_queue
+[   20.961050] 	 *** ixgbe_disable_rx_queue
+[   20.965753] *** ixgbe_configure_srrctl
+[   20.970251] 	 *** IXGBE_SRRCTL(12)=2130 2000403
+[   20.975622] *** ixgbe_configure_rscctl
+[   20.980121] 	 *** IXGBE_RXDCTL(12)=1328 42008600
+[   20.987695] *** ixgbe_configure_rx_ring
+[   20.992301] *** ixgbe_disable_rx_queue
+[   20.996801] 	 *** ixgbe_disable_rx_queue
+[   21.001505] *** ixgbe_configure_srrctl
+[   21.006005] 	 *** IXGBE_SRRCTL(13)=2134 2000403
+[   21.011375] *** ixgbe_configure_rscctl
+[   21.015877] 	 *** IXGBE_RXDCTL(13)=1368 42008600
+[   21.023453] *** ixgbe_configure_rx_ring
+[   21.028058] *** ixgbe_disable_rx_queue
+[   21.032559] 	 *** ixgbe_disable_rx_queue
+[   21.037263] *** ixgbe_configure_srrctl
+[   21.041763] 	 *** IXGBE_SRRCTL(14)=2138 2000403
+[   21.047133] *** ixgbe_configure_rscctl
+[   21.051635] 	 *** IXGBE_RXDCTL(14)=13A8 42008600
+[   21.059205] *** ixgbe_configure_rx_ring
+[   21.063812] *** ixgbe_disable_rx_queue
+[   21.068314] 	 *** ixgbe_disable_rx_queue
+[   21.073020] *** ixgbe_configure_srrctl
+[   21.077518] 	 *** IXGBE_SRRCTL(15)=213C 2000403
+[   21.082889] *** ixgbe_configure_rscctl
+[   21.087391] 	 *** IXGBE_RXDCTL(15)=13E8 42008600
+[   21.094964] *** ixgbe_configure_rx_ring
+[   21.099572] *** ixgbe_disable_rx_queue
+[   21.104075] 	 *** ixgbe_disable_rx_queue
+[   21.108782] *** ixgbe_configure_srrctl
+[   21.113282] 	 *** IXGBE_SRRCTL(16)=1414 2000403
+[   21.118655] *** ixgbe_configure_rscctl
+[   21.123158] 	 *** IXGBE_RXDCTL(16)=1428 42008600
+[   21.130737] *** ixgbe_configure_rx_ring
+[   21.135346] *** ixgbe_disable_rx_queue
+[   21.139851] 	 *** ixgbe_disable_rx_queue
+[   21.144557] *** ixgbe_configure_srrctl
+[   21.149059] 	 *** IXGBE_SRRCTL(17)=1454 2000403
+[   21.154431] *** ixgbe_configure_rscctl
+[   21.158935] 	 *** IXGBE_RXDCTL(17)=1468 42008600
+[   21.166509] *** ixgbe_configure_rx_ring
+[   21.171119] *** ixgbe_disable_rx_queue
+[   21.175621] 	 *** ixgbe_disable_rx_queue
+[   21.180327] *** ixgbe_configure_srrctl
+[   21.184828] 	 *** IXGBE_SRRCTL(18)=1494 2000403
+[   21.190200] *** ixgbe_configure_rscctl
+[   21.194702] 	 *** IXGBE_RXDCTL(18)=14A8 42008600
+[   21.202277] *** ixgbe_configure_rx_ring
+[   21.206887] *** ixgbe_disable_rx_queue
+[   21.211391] 	 *** ixgbe_disable_rx_queue
+[   21.216100] *** ixgbe_configure_srrctl
+[   21.220600] 	 *** IXGBE_SRRCTL(19)=14D4 2000403
+[   21.225976] *** ixgbe_configure_rscctl
+[   21.230478] 	 *** IXGBE_RXDCTL(19)=14E8 42008600
+[   21.238051] *** ixgbe_configure_rx_ring
+[   21.242661] *** ixgbe_disable_rx_queue
+[   21.247163] 	 *** ixgbe_disable_rx_queue
+[   21.251871] *** ixgbe_configure_srrctl
+[   21.256372] 	 *** IXGBE_SRRCTL(20)=1514 2000403
+[   21.261748] *** ixgbe_configure_rscctl
+[   21.266253] 	 *** IXGBE_RXDCTL(20)=1528 42008600
+[   21.273828] *** ixgbe_configure_rx_ring
+[   21.278437] *** ixgbe_disable_rx_queue
+[   21.282939] 	 *** ixgbe_disable_rx_queue
+[   21.287647] *** ixgbe_configure_srrctl
+[   21.292149] 	 *** IXGBE_SRRCTL(21)=1554 2000403
+[   21.297524] *** ixgbe_configure_rscctl
+[   21.302028] 	 *** IXGBE_RXDCTL(21)=1568 42008600
+[   21.309609] *** ixgbe_configure_rx_ring
+[   21.314218] *** ixgbe_disable_rx_queue
+[   21.318723] 	 *** ixgbe_disable_rx_queue
+[   21.323431] *** ixgbe_configure_srrctl
+[   21.327933] 	 *** IXGBE_SRRCTL(22)=1594 2000403
+[   21.333307] *** ixgbe_configure_rscctl
+[   21.337813] 	 *** IXGBE_RXDCTL(22)=15A8 42008600
+[   21.345390] *** ixgbe_configure_rx_ring
+[   21.349998] *** ixgbe_disable_rx_queue
+[   21.354501] 	 *** ixgbe_disable_rx_queue
+[   21.359208] *** ixgbe_configure_srrctl
+[   21.363711] 	 *** IXGBE_SRRCTL(23)=15D4 2000403
+[   21.369086] *** ixgbe_configure_rscctl
+[   21.373591] 	 *** IXGBE_RXDCTL(23)=15E8 42008600
+[   21.381170] *** ixgbe_configure_rx_ring
+[   21.385781] *** ixgbe_disable_rx_queue
+[   21.390287] 	 *** ixgbe_disable_rx_queue
+[   21.394986] *** ixgbe_configure_srrctl
+[   21.399481] 	 *** IXGBE_SRRCTL(24)=1614 2000403
+[   21.404858] *** ixgbe_configure_rscctl
+[   21.409363] 	 *** IXGBE_RXDCTL(24)=1628 42008600
+[   21.416937] *** ixgbe_configure_rx_ring
+[   21.421548] *** ixgbe_disable_rx_queue
+[   21.426053] 	 *** ixgbe_disable_rx_queue
+[   21.430763] *** ixgbe_configure_srrctl
+[   21.435265] 	 *** IXGBE_SRRCTL(25)=1654 2000403
+[   21.440641] *** ixgbe_configure_rscctl
+[   21.445144] 	 *** IXGBE_RXDCTL(25)=1668 42008600
+[   21.452722] *** ixgbe_configure_rx_ring
+[   21.457332] *** ixgbe_disable_rx_queue
+[   21.461836] 	 *** ixgbe_disable_rx_queue
+[   21.466545] *** ixgbe_configure_srrctl
+[   21.471048] 	 *** IXGBE_SRRCTL(26)=1694 2000403
+[   21.476423] *** ixgbe_configure_rscctl
+[   21.480927] 	 *** IXGBE_RXDCTL(26)=16A8 42008600
+[   21.488502] *** ixgbe_configure_rx_ring
+[   21.493112] *** ixgbe_disable_rx_queue
+[   21.497618] 	 *** ixgbe_disable_rx_queue
+[   21.502326] *** ixgbe_configure_srrctl
+[   21.506820] 	 *** IXGBE_SRRCTL(27)=16D4 2000403
+[   21.512196] *** ixgbe_configure_rscctl
+[   21.516699] 	 *** IXGBE_RXDCTL(27)=16E8 42008600
+[   21.524274] *** ixgbe_configure_rx_ring
+[   21.528884] *** ixgbe_disable_rx_queue
+[   21.533390] 	 *** ixgbe_disable_rx_queue
+[   21.538099] *** ixgbe_configure_srrctl
+[   21.542601] 	 *** IXGBE_SRRCTL(28)=1714 2000403
+[   21.547978] *** ixgbe_configure_rscctl
+[   21.552481] 	 *** IXGBE_RXDCTL(28)=1728 42008600
+[   21.560063] *** ixgbe_configure_rx_ring
+[   21.564672] *** ixgbe_disable_rx_queue
+[   21.569176] 	 *** ixgbe_disable_rx_queue
+[   21.573885] *** ixgbe_configure_srrctl
+[   21.578386] 	 *** IXGBE_SRRCTL(29)=1754 2000403
+[   21.583763] *** ixgbe_configure_rscctl
+[   21.588266] 	 *** IXGBE_RXDCTL(29)=1768 42008600
+[   21.595843] *** ixgbe_configure_rx_ring
+[   21.600452] *** ixgbe_disable_rx_queue
+[   21.604958] 	 *** ixgbe_disable_rx_queue
+[   21.609657] *** ixgbe_configure_srrctl
+[   21.614150] 	 *** IXGBE_SRRCTL(30)=1794 2000403
+[   21.619525] *** ixgbe_configure_rscctl
+[   21.624031] 	 *** IXGBE_RXDCTL(30)=17A8 42008600
+[   21.631600] *** ixgbe_configure_rx_ring
+[   21.636211] *** ixgbe_disable_rx_queue
+[   21.640717] 	 *** ixgbe_disable_rx_queue
+[   21.645417] *** ixgbe_configure_srrctl
+[   21.649917] 	 *** IXGBE_SRRCTL(31)=17D4 2000403
+[   21.655291] *** ixgbe_configure_rscctl
+[   21.659794] 	 *** IXGBE_RXDCTL(31)=17E8 42008600
+[   21.667373] *** ixgbe_disable_rx_buff_generic
+[   21.673559] *** ixgbe_enable_rx_generic
+[   21.678164] 	 *** IXGBE_RXCTRL=3000 1
+[   21.682571] *** ixgbe_enable_rx_buff_generic
+[   21.687658] 	 *** ixgbe_enable_rx_buff_generic IXGBE_SECRXCTR=8D00 1
+[   21.695094] 	 *** vector=0 request_irq irq=54 devname=enp4s0f0-TxRx-0
+[   21.702628] 	 *** vector=1 request_irq irq=55 devname=enp4s0f0-TxRx-1
+[   21.710162] 	 *** vector=2 request_irq irq=56 devname=enp4s0f0-TxRx-2
+[   21.717692] 	 *** vector=3 request_irq irq=57 devname=enp4s0f0-TxRx-3
+[   21.725215] 	 *** vector=4 request_irq irq=58 devname=enp4s0f0-TxRx-4
+[   21.732733] 	 *** vector=5 request_irq irq=59 devname=enp4s0f0-TxRx-5
+[   21.740246] 	 *** vector=6 request_irq irq=60 devname=enp4s0f0-TxRx-6
+[   21.747755] 	 *** vector=7 request_irq irq=61 devname=enp4s0f0-TxRx-7
+[   21.755258] 	 *** vector=8 request_irq irq=62 devname=enp4s0f0-TxRx-8
+[   21.762760] 	 *** vector=9 request_irq irq=63 devname=enp4s0f0-TxRx-9
+[   21.770264] 	 *** vector=10 request_irq irq=64 devname=enp4s0f0-TxRx-10
+[   21.777959] 	 *** vector=11 request_irq irq=65 devname=enp4s0f0-TxRx-11
+[   21.785650] 	 *** vector=12 request_irq irq=66 devname=enp4s0f0-TxRx-12
+[   21.793336] 	 *** vector=13 request_irq irq=67 devname=enp4s0f0-TxRx-13
+[   21.801017] 	 *** vector=14 request_irq irq=68 devname=enp4s0f0-TxRx-14
+[   21.808695] 	 *** vector=15 request_irq irq=69 devname=enp4s0f0-TxRx-15
+[   21.816359] 	 *** vector=16 request_irq irq=70 devname=enp4s0f0-TxRx-16
+[   21.824028] 	 *** vector=17 request_irq irq=71 devname=enp4s0f0-TxRx-17
+[   21.831692] 	 *** vector=18 request_irq irq=72 devname=enp4s0f0-TxRx-18
+[   21.839356] 	 *** vector=19 request_irq irq=73 devname=enp4s0f0-TxRx-19
+[   21.847012] 	 *** vector=20 request_irq irq=74 devname=enp4s0f0-TxRx-20
+[   21.854663] 	 *** vector=21 request_irq irq=75 devname=enp4s0f0-TxRx-21
+[   21.862305] 	 *** vector=22 request_irq irq=76 devname=enp4s0f0-TxRx-22
+[   21.869948] 	 *** vector=23 request_irq irq=77 devname=enp4s0f0-TxRx-23
+[   21.877596] 	 *** vector=24 request_irq irq=78 devname=enp4s0f0-TxRx-24
+[   21.885229] 	 *** vector=25 request_irq irq=79 devname=enp4s0f0-TxRx-25
+[   21.892858] 	 *** vector=26 request_irq irq=80 devname=enp4s0f0-TxRx-26
+[   21.900484] 	 *** vector=27 request_irq irq=81 devname=enp4s0f0-TxRx-27
+[   21.908105] 	 *** vector=28 request_irq irq=82 devname=enp4s0f0-TxRx-28
+[   21.915723] 	 *** vector=29 request_irq irq=83 devname=enp4s0f0-TxRx-29
+[   21.923336] 	 *** vector=30 request_irq irq=84 devname=enp4s0f0-TxRx-30
+[   21.930946] 	 *** vector=31 request_irq irq=85 devname=enp4s0f0-TxRx-31
+[   21.938542] 	 *** IXGBE_FLAG_MSIX_ENABLED
+[   21.950724] *** ixgbe_up_complete
+[   21.954648] *** ixgbe_get_hw_control
+[   21.958860] 	 *** IXGBE_CTRL_EXT=18 10010000
+[   21.963837] *** ixgbe_setup_gpie
+[   21.967653] 	 *** IXGBE_EIAM_EX(0)=AD0 FFFFFFFF
+[   21.972926] 	 *** IXGBE_EIAM_EX(1)=AD4 FFFFFFFF
+[   21.978184] 	 *** IXGBE_GPIE=898 C0000036
+[   21.982865] *** ixgbe_configure_msix
+[   21.987062] 	 *** ixgbe_mac_82599EB direction=0 queue=0 msix_vector=128 IXGBE_IVAR(0)=900 80
+[   21.996707] 	 *** ixgbe_mac_82599EB direction=1 queue=0 msix_vector=128 IXGBE_IVAR(0)=900 8080
+[   22.006542] 	 *** ixgbe_mac_82599EB direction=0 queue=1 msix_vector=129 IXGBE_IVAR(0)=900 818080
+[   22.016569] 	 *** ixgbe_mac_82599EB direction=1 queue=1 msix_vector=129 IXGBE_IVAR(0)=900 81818080
+[   22.026784] 	 *** ixgbe_mac_82599EB direction=0 queue=2 msix_vector=130 IXGBE_IVAR(1)=904 82
+[   22.036412] 	 *** ixgbe_mac_82599EB direction=1 queue=2 msix_vector=130 IXGBE_IVAR(1)=904 8282
+[   22.046225] 	 *** ixgbe_mac_82599EB direction=0 queue=3 msix_vector=131 IXGBE_IVAR(1)=904 838282
+[   22.056244] 	 *** ixgbe_mac_82599EB direction=1 queue=3 msix_vector=131 IXGBE_IVAR(1)=904 83838282
+[   22.066448] 	 *** ixgbe_mac_82599EB direction=0 queue=4 msix_vector=132 IXGBE_IVAR(2)=908 84
+[   22.076095] 	 *** ixgbe_mac_82599EB direction=1 queue=4 msix_vector=132 IXGBE_IVAR(2)=908 8484
+[   22.085912] 	 *** ixgbe_mac_82599EB direction=0 queue=5 msix_vector=133 IXGBE_IVAR(2)=908 858484
+[   22.095924] 	 *** ixgbe_mac_82599EB direction=1 queue=5 msix_vector=133 IXGBE_IVAR(2)=908 85858484
+[   22.106129] 	 *** ixgbe_mac_82599EB direction=0 queue=6 msix_vector=134 IXGBE_IVAR(3)=90C 86
+[   22.115754] 	 *** ixgbe_mac_82599EB direction=1 queue=6 msix_vector=134 IXGBE_IVAR(3)=90C 8686
+[   22.125573] 	 *** ixgbe_mac_82599EB direction=0 queue=7 msix_vector=135 IXGBE_IVAR(3)=90C 878686
+[   22.135587] 	 *** ixgbe_mac_82599EB direction=1 queue=7 msix_vector=135 IXGBE_IVAR(3)=90C 87878686
+[   22.145788] 	 *** ixgbe_mac_82599EB direction=0 queue=8 msix_vector=136 IXGBE_IVAR(4)=910 88
+[   22.155410] 	 *** ixgbe_mac_82599EB direction=1 queue=8 msix_vector=136 IXGBE_IVAR(4)=910 8888
+[   22.165225] 	 *** ixgbe_mac_82599EB direction=0 queue=9 msix_vector=137 IXGBE_IVAR(4)=910 898888
+[   22.175234] 	 *** ixgbe_mac_82599EB direction=1 queue=9 msix_vector=137 IXGBE_IVAR(4)=910 89898888
+[   22.185440] 	 *** ixgbe_mac_82599EB direction=0 queue=10 msix_vector=138 IXGBE_IVAR(5)=914 8A
+[   22.195166] 	 *** ixgbe_mac_82599EB direction=1 queue=10 msix_vector=138 IXGBE_IVAR(5)=914 8A8A
+[   22.205077] 	 *** ixgbe_mac_82599EB direction=0 queue=11 msix_vector=139 IXGBE_IVAR(5)=914 8B8A8A
+[   22.215182] 	 *** ixgbe_mac_82599EB direction=1 queue=11 msix_vector=139 IXGBE_IVAR(5)=914 8B8B8A8A
+[   22.225492] 	 *** ixgbe_mac_82599EB direction=0 queue=12 msix_vector=140 IXGBE_IVAR(6)=918 8C
+[   22.235222] 	 *** ixgbe_mac_82599EB direction=1 queue=12 msix_vector=140 IXGBE_IVAR(6)=918 8C8C
+[   22.245143] 	 *** ixgbe_mac_82599EB direction=0 queue=13 msix_vector=141 IXGBE_IVAR(6)=918 8D8C8C
+[   22.255259] 	 *** ixgbe_mac_82599EB direction=1 queue=13 msix_vector=141 IXGBE_IVAR(6)=918 8D8D8C8C
+[   22.265570] 	 *** ixgbe_mac_82599EB direction=0 queue=14 msix_vector=142 IXGBE_IVAR(7)=91C 8E
+[   22.275302] 	 *** ixgbe_mac_82599EB direction=1 queue=14 msix_vector=142 IXGBE_IVAR(7)=91C 8E8E
+[   22.285228] 	 *** ixgbe_mac_82599EB direction=0 queue=15 msix_vector=143 IXGBE_IVAR(7)=91C 8F8E8E
+[   22.295349] 	 *** ixgbe_mac_82599EB direction=1 queue=15 msix_vector=143 IXGBE_IVAR(7)=91C 8F8F8E8E
+[   22.305663] 	 *** ixgbe_mac_82599EB direction=0 queue=16 msix_vector=144 IXGBE_IVAR(8)=920 90
+[   22.315396] 	 *** ixgbe_mac_82599EB direction=1 queue=16 msix_vector=144 IXGBE_IVAR(8)=920 9090
+[   22.325324] 	 *** ixgbe_mac_82599EB direction=0 queue=17 msix_vector=145 IXGBE_IVAR(8)=920 919090
+[   22.335436] 	 *** ixgbe_mac_82599EB direction=1 queue=17 msix_vector=145 IXGBE_IVAR(8)=920 91919090
+[   22.345753] 	 *** ixgbe_mac_82599EB direction=0 queue=18 msix_vector=146 IXGBE_IVAR(9)=924 92
+[   22.355489] 	 *** ixgbe_mac_82599EB direction=1 queue=18 msix_vector=146 IXGBE_IVAR(9)=924 9292
+[   22.365409] 	 *** ixgbe_mac_82599EB direction=0 queue=19 msix_vector=147 IXGBE_IVAR(9)=924 939292
+[   22.375517] 	 *** ixgbe_mac_82599EB direction=1 queue=19 msix_vector=147 IXGBE_IVAR(9)=924 93939292
+[   22.385812] 	 *** ixgbe_mac_82599EB direction=0 queue=20 msix_vector=148 IXGBE_IVAR(10)=928 94
+[   22.395622] 	 *** ixgbe_mac_82599EB direction=1 queue=20 msix_vector=148 IXGBE_IVAR(10)=928 9494
+[   22.405620] 	 *** ixgbe_mac_82599EB direction=0 queue=21 msix_vector=149 IXGBE_IVAR(10)=928 959494
+[   22.415809] 	 *** ixgbe_mac_82599EB direction=1 queue=21 msix_vector=149 IXGBE_IVAR(10)=928 95959494
+[   22.426187] 	 *** ixgbe_mac_82599EB direction=0 queue=22 msix_vector=150 IXGBE_IVAR(11)=92C 96
+[   22.435986] 	 *** ixgbe_mac_82599EB direction=1 queue=22 msix_vector=150 IXGBE_IVAR(11)=92C 9696
+[   22.445976] 	 *** ixgbe_mac_82599EB direction=0 queue=23 msix_vector=151 IXGBE_IVAR(11)=92C 979696
+[   22.456180] 	 *** ixgbe_mac_82599EB direction=1 queue=23 msix_vector=151 IXGBE_IVAR(11)=92C 97979696
+[   22.466540] 	 *** ixgbe_mac_82599EB direction=0 queue=24 msix_vector=152 IXGBE_IVAR(12)=930 98
+[   22.476321] 	 *** ixgbe_mac_82599EB direction=1 queue=24 msix_vector=152 IXGBE_IVAR(12)=930 9898
+[   22.486295] 	 *** ixgbe_mac_82599EB direction=0 queue=25 msix_vector=153 IXGBE_IVAR(12)=930 999898
+[   22.496464] 	 *** ixgbe_mac_82599EB direction=1 queue=25 msix_vector=153 IXGBE_IVAR(12)=930 99999898
+[   22.506825] 	 *** ixgbe_mac_82599EB direction=0 queue=26 msix_vector=154 IXGBE_IVAR(13)=934 9A
+[   22.516596] 	 *** ixgbe_mac_82599EB direction=1 queue=26 msix_vector=154 IXGBE_IVAR(13)=934 9A9A
+[   22.526569] 	 *** ixgbe_mac_82599EB direction=0 queue=27 msix_vector=155 IXGBE_IVAR(13)=934 9B9A9A
+[   22.536729] 	 *** ixgbe_mac_82599EB direction=1 queue=27 msix_vector=155 IXGBE_IVAR(13)=934 9B9B9A9A
+[   22.547088] 	 *** ixgbe_mac_82599EB direction=0 queue=28 msix_vector=156 IXGBE_IVAR(14)=938 9C
+[   22.556867] 	 *** ixgbe_mac_82599EB direction=1 queue=28 msix_vector=156 IXGBE_IVAR(14)=938 9C9C
+[   22.566840] 	 *** ixgbe_mac_82599EB direction=0 queue=29 msix_vector=157 IXGBE_IVAR(14)=938 9D9C9C
+[   22.577008] 	 *** ixgbe_mac_82599EB direction=1 queue=29 msix_vector=157 IXGBE_IVAR(14)=938 9D9D9C9C
+[   22.587367] 	 *** ixgbe_mac_82599EB direction=0 queue=30 msix_vector=158 IXGBE_IVAR(15)=93C 9E
+[   22.597147] 	 *** ixgbe_mac_82599EB direction=1 queue=30 msix_vector=158 IXGBE_IVAR(15)=93C 9E9E
+[   22.607120] 	 *** ixgbe_mac_82599EB direction=0 queue=31 msix_vector=159 IXGBE_IVAR(15)=93C 9F9E9E
+[   22.617278] 	 *** ixgbe_mac_82599EB direction=1 queue=31 msix_vector=159 IXGBE_IVAR(15)=93C 9F9F9E9E
+[   22.627631] 	 *** ixgbe_mac_82599EB IXGBE_IVAR_MISC=A00 A000
+[   22.634108] 	 *** IXGBE_EITR(32)=12320 79E
+[   22.638850] 	 *** IXGBE_EIAC=810 4000FFFF
+[   22.643498] *** ixgbe_enable_tx_laser_multispeed_fiber
+[   22.756058] *** ixgbe_irq_enable
+[   22.760347] 	 *** IXGBE_EIMS=0x880 0xD6190000
+[   22.765594] 	 *** IXGBE_CTRL_EXT=18 10014000 
+[   22.770708] *** mac_addr = 90 E2 BA AD 99 20
+[   22.775698] *** ixgbe_clear_udp_tunnel_port
+[   22.776013] *** ixgbe_setup_sfp_modules_82599
+[   22.785649] *** ixgbe_set_rx_mode
+[   22.789570] *** ixgbe_vlan_strip_enable
+[   22.794079] *** ixgbe_vlan_promisc_disable
+[   22.798932] *** ixgbe_set_rx_mode
+[   22.799503] *** prot_autoc_write_82599
+[   22.799586] *** ixgbe_reset_pipeline_82599
+[   22.812029] *** ixgbe_vlan_strip_enable
+[   22.816541] *** ixgbe_vlan_promisc_disable
+[   22.987682] *** ixgbe_msix_other
+[   22.991575] *** ixgbe_check_lsc
+[   22.995348] *** ixgbe_check_sfp_event
+[   22.999698] *** ixgbe_check_fan_failure
+[   23.004240] *** ixgbe_irq_enable
+[   23.008103] 	 *** IXGBE_EIMS=0x880 0xD6090000
+[   23.013234] *** ixgbe_msix_other
+[   23.017106] *** ixgbe_check_sfp_event
+[   23.021465] *** ixgbe_check_fan_failure
+[   23.026020] *** ixgbe_irq_enable
+[   23.029894] 	 *** IXGBE_EIMS=0x880 0xD6090000
+[   23.035042] *** ixgbe_fc_enable_generic
+[   23.039623] *** ixgbe_disable_rx_drop
+[   23.044001] *** ixgbe_disable_rx_drop
+[   23.048373] *** ixgbe_disable_rx_drop
+[   23.052745] *** ixgbe_disable_rx_drop
+[   23.057115] *** ixgbe_disable_rx_drop
+[   23.061484] *** ixgbe_disable_rx_drop
+[   23.065849] *** ixgbe_disable_rx_drop
+[   23.070214] *** ixgbe_disable_rx_drop
+[   23.074576] *** ixgbe_disable_rx_drop
+[   23.078938] *** ixgbe_disable_rx_drop
+[   23.083296] *** ixgbe_disable_rx_drop
+[   23.087653] *** ixgbe_disable_rx_drop
+[   23.092008] *** ixgbe_disable_rx_drop
+[   23.096361] *** ixgbe_disable_rx_drop
+[   23.100702] *** ixgbe_disable_rx_drop
+[   23.105034] *** ixgbe_disable_rx_drop
+[   23.109363] *** ixgbe_disable_rx_drop
+[   23.113684] *** ixgbe_disable_rx_drop
+[   23.117999] *** ixgbe_disable_rx_drop
+[   23.122306] *** ixgbe_disable_rx_drop
+[   23.126610] *** ixgbe_disable_rx_drop
+[   23.130908] *** ixgbe_disable_rx_drop
+[   23.135201] *** ixgbe_disable_rx_drop
+[   23.139489] *** ixgbe_disable_rx_drop
+[   23.143773] *** ixgbe_disable_rx_drop
+[   23.148054] *** ixgbe_disable_rx_drop
+[   23.152331] *** ixgbe_disable_rx_drop
+[   23.156605] *** ixgbe_disable_rx_drop
+[   23.160874] *** ixgbe_disable_rx_drop
+[   23.165139] *** ixgbe_disable_rx_drop
+[   23.169400] *** ixgbe_disable_rx_drop
+[   23.173650] *** ixgbe_disable_rx_drop
+[   23.194368] *** ixgbe_set_rx_mode
+[   23.198253] *** ixgbe_vlan_strip_enable
+[   23.202722] *** ixgbe_vlan_promisc_disable
+[   52.814283] *** ixgbe_set_rx_mode
+[   52.814302] *** ixgbe_vlan_strip_enable
+[   52.814333] *** ixgbe_vlan_promisc_disable
+[   52.814336] *** ixgbe_set_rx_mode
+[   52.814352] *** ixgbe_vlan_strip_enable
+[   52.814372] *** ixgbe_vlan_promisc_disable
+[   52.814375] *** ixgbe_set_rx_mode
+[   52.814391] *** ixgbe_vlan_strip_enable
+[   52.814411] *** ixgbe_vlan_promisc_disable
+[   58.759407] *** ixgbe_open
+[   58.759409] 	 *** ixgbe_open: dtxmxszrq=0 rsc_delay=0
+[   58.759465] *** ixgbe_setup_all_tx_resources
+[   58.759466] *** ixgbe_setup_tx_resources
+[   58.759487] *** ixgbe_setup_tx_resources
+[   58.759493] *** ixgbe_setup_tx_resources
+[   58.759501] *** ixgbe_setup_tx_resources
+[   58.759504] *** ixgbe_setup_tx_resources
+[   58.759514] *** ixgbe_setup_tx_resources
+[   58.759518] *** ixgbe_setup_tx_resources
+[   58.759532] *** ixgbe_setup_tx_resources
+[   58.759535] *** ixgbe_setup_tx_resources
+[   58.759540] *** ixgbe_setup_tx_resources
+[   58.759545] *** ixgbe_setup_tx_resources
+[   58.759550] *** ixgbe_setup_tx_resources
+[   58.759554] *** ixgbe_setup_tx_resources
+[   58.759558] *** ixgbe_setup_tx_resources
+[   58.759561] *** ixgbe_setup_tx_resources
+[   58.759565] *** ixgbe_setup_tx_resources
+[   58.759568] *** ixgbe_setup_tx_resources
+[   58.759572] *** ixgbe_setup_tx_resources
+[   58.759576] *** ixgbe_setup_tx_resources
+[   58.759580] *** ixgbe_setup_tx_resources
+[   58.759595] *** ixgbe_setup_tx_resources
+[   58.759600] *** ixgbe_setup_tx_resources
+[   58.759603] *** ixgbe_setup_tx_resources
+[   58.759608] *** ixgbe_setup_tx_resources
+[   58.759612] *** ixgbe_setup_tx_resources
+[   58.759620] *** ixgbe_setup_tx_resources
+[   58.759626] *** ixgbe_setup_tx_resources
+[   58.759631] *** ixgbe_setup_tx_resources
+[   58.759635] *** ixgbe_setup_tx_resources
+[   58.759641] *** ixgbe_setup_tx_resources
+[   58.759646] *** ixgbe_setup_tx_resources
+[   58.759651] *** ixgbe_setup_tx_resources
+[   58.759656] *** ixgbe_setup_all_rx_resources
+[   58.759656] *** ixgbe_setup_rx_resources
+[   58.759666] *** ixgbe_setup_rx_resources
+[   58.759675] *** ixgbe_setup_rx_resources
+[   58.759682] *** ixgbe_setup_rx_resources
+[   58.759687] *** ixgbe_setup_rx_resources
+[   58.759695] *** ixgbe_setup_rx_resources
+[   58.759700] *** ixgbe_setup_rx_resources
+[   58.759707] *** ixgbe_setup_rx_resources
+[   58.759712] *** ixgbe_setup_rx_resources
+[   58.759719] *** ixgbe_setup_rx_resources
+[   58.759725] *** ixgbe_setup_rx_resources
+[   58.759733] *** ixgbe_setup_rx_resources
+[   58.759737] *** ixgbe_setup_rx_resources
+[   58.759745] *** ixgbe_setup_rx_resources
+[   58.759749] *** ixgbe_setup_rx_resources
+[   58.759757] *** ixgbe_setup_rx_resources
+[   58.759761] *** ixgbe_setup_rx_resources
+[   58.759768] *** ixgbe_setup_rx_resources
+[   58.759773] *** ixgbe_setup_rx_resources
+[   58.759780] *** ixgbe_setup_rx_resources
+[   58.759784] *** ixgbe_setup_rx_resources
+[   58.759791] *** ixgbe_setup_rx_resources
+[   58.759795] *** ixgbe_setup_rx_resources
+[   58.759802] *** ixgbe_setup_rx_resources
+[   58.759806] *** ixgbe_setup_rx_resources
+[   58.759813] *** ixgbe_setup_rx_resources
+[   58.759819] *** ixgbe_setup_rx_resources
+[   58.759826] *** ixgbe_setup_rx_resources
+[   58.759831] *** ixgbe_setup_rx_resources
+[   58.759840] *** ixgbe_setup_rx_resources
+[   58.759845] *** ixgbe_setup_rx_resources
+[   58.759851] *** ixgbe_setup_rx_resources
+[   58.759856] *** ixgbe_configure
+[   58.759856] *** ixgbe_configure_pb
+[   58.759858] *** ixgbe_set_rxpba_generic
+[   58.759859] 	 *** IXGBE_RXPBSIZE(0)=458752
+[   58.759860] 	 *** IXGBE_TXPBSIZE(0)=163840
+[   58.759861] 	 *** IXGBE_TXPBTHRESH(0)=150
+[   58.759865] *** ixgbe_configure_virtualization
+[   58.759865] *** ixgbe_set_rx_mode
+[   58.759885] *** ixgbe_vlan_strip_enable
+[   58.759905] *** ixgbe_vlan_promisc_disable
+[   58.759906] *** ixgbe_restore_vlan
+[   58.759907] *** ixgbe_set_vfta_generic
+[   58.759909] *** ixgbe_disable_rx_buff_generic
+[   58.759912] *** ixgbe_fdir_enable_82599
+[   58.761927] *** ixgbe_enable_rx_buff_generic
+[   58.761931] 	 *** ixgbe_enable_rx_buff_generic IXGBE_SECRXCTR=8D00 1
+[   58.761932] 	 *** CONFIG_IXGBE_DCA
+[   58.761934] 	 *** ixgbe_configure: DCA=0
+[   58.761936] 	 *** ixgbe_configure: TXCTRL=0x2A00 
+[   58.761937] 	 *** ixgbe_configure: RXCTRL=0xB200 
+[   58.761939] *** ixgbe_configure_tx
+[   58.761940] *** ixgbe_setup_mtqc
+[   58.761942] 	 *** disable arbiter IXGBE_RTTDCS=4900 C00040
+[   58.761944] 	 *** IXGBE_MTQC=8120 0
+[   58.761946] 	 *** enable arbiter IXGBE_RTTDCS=4900 C00000
+[   58.761948] 	 *** IXGBE_DMATXCTL=4A80 81000055
+[   58.761949] *** ixgbe_configure_tx_ring
+[   58.761977] 	 *** IXGBE_TXDCTL(0)=6028 2000000
+[   58.763987] *** ixgbe_configure_tx_ring
+[   58.764013] 	 *** IXGBE_TXDCTL(1)=6068 2000000
+[   58.766023] *** ixgbe_configure_tx_ring
+[   58.766042] 	 *** IXGBE_TXDCTL(2)=60A8 2000000
+[   58.768012] *** ixgbe_configure_tx_ring
+[   58.768029] 	 *** IXGBE_TXDCTL(3)=60E8 2000000
+[   58.770035] *** ixgbe_configure_tx_ring
+[   58.770044] 	 *** IXGBE_TXDCTL(4)=6128 2000000
+[   58.772012] *** ixgbe_configure_tx_ring
+[   58.772029] 	 *** IXGBE_TXDCTL(5)=6168 2000000
+[   58.774033] *** ixgbe_configure_tx_ring
+[   58.774060] 	 *** IXGBE_TXDCTL(6)=61A8 2000000
+[   58.776012] *** ixgbe_configure_tx_ring
+[   58.776029] 	 *** IXGBE_TXDCTL(7)=61E8 2000000
+[   58.778048] *** ixgbe_configure_tx_ring
+[   58.778066] 	 *** IXGBE_TXDCTL(8)=6228 2000000
+[   58.780009] *** ixgbe_configure_tx_ring
+[   58.780024] 	 *** IXGBE_TXDCTL(9)=6268 2000000
+[   58.782033] *** ixgbe_configure_tx_ring
+[   58.782052] 	 *** IXGBE_TXDCTL(10)=62A8 2000000
+[   58.784039] *** ixgbe_configure_tx_ring
+[   58.784073] 	 *** IXGBE_TXDCTL(11)=62E8 2000000
+[   58.786083] *** ixgbe_configure_tx_ring
+[   58.786099] 	 *** IXGBE_TXDCTL(12)=6328 2000000
+[   58.788010] *** ixgbe_configure_tx_ring
+[   58.788024] 	 *** IXGBE_TXDCTL(13)=6368 2000000
+[   58.790034] *** ixgbe_configure_tx_ring
+[   58.790050] 	 *** IXGBE_TXDCTL(14)=63A8 2000000
+[   58.792009] *** ixgbe_configure_tx_ring
+[   58.792023] 	 *** IXGBE_TXDCTL(15)=63E8 2000000
+[   58.794033] *** ixgbe_configure_tx_ring
+[   58.794051] 	 *** IXGBE_TXDCTL(16)=6428 2000000
+[   58.796010] *** ixgbe_configure_tx_ring
+[   58.796024] 	 *** IXGBE_TXDCTL(17)=6468 2000000
+[   58.798033] *** ixgbe_configure_tx_ring
+[   58.798052] 	 *** IXGBE_TXDCTL(18)=64A8 2000000
+[   58.800010] *** ixgbe_configure_tx_ring
+[   58.800024] 	 *** IXGBE_TXDCTL(19)=64E8 2000000
+[   58.802034] *** ixgbe_configure_tx_ring
+[   58.802052] 	 *** IXGBE_TXDCTL(20)=6528 2000000
+[   58.804013] *** ixgbe_configure_tx_ring
+[   58.804028] 	 *** IXGBE_TXDCTL(21)=6568 2000000
+[   58.806037] *** ixgbe_configure_tx_ring
+[   58.806056] 	 *** IXGBE_TXDCTL(22)=65A8 2000000
+[   58.808011] *** ixgbe_configure_tx_ring
+[   58.808025] 	 *** IXGBE_TXDCTL(23)=65E8 2000000
+[   58.810036] *** ixgbe_configure_tx_ring
+[   58.810054] 	 *** IXGBE_TXDCTL(24)=6628 2000000
+[   58.812010] *** ixgbe_configure_tx_ring
+[   58.812026] 	 *** IXGBE_TXDCTL(25)=6668 2000000
+[   58.814035] *** ixgbe_configure_tx_ring
+[   58.814053] 	 *** IXGBE_TXDCTL(26)=66A8 2000000
+[   58.816013] *** ixgbe_configure_tx_ring
+[   58.816029] 	 *** IXGBE_TXDCTL(27)=66E8 2000000
+[   58.818038] *** ixgbe_configure_tx_ring
+[   58.818056] 	 *** IXGBE_TXDCTL(28)=6728 2000000
+[   58.820010] *** ixgbe_configure_tx_ring
+[   58.820024] 	 *** IXGBE_TXDCTL(29)=6768 2000000
+[   58.822034] *** ixgbe_configure_tx_ring
+[   58.822052] 	 *** IXGBE_TXDCTL(30)=67A8 2000000
+[   58.824010] *** ixgbe_configure_tx_ring
+[   58.824024] 	 *** IXGBE_TXDCTL(31)=67E8 2000000
+[   58.826033] *** ixgbe_configure_rx
+[   58.826035] *** ixgbe_disable_rx_generic
+[   58.826037] *** ixgbe_setup_psrtype
+[   58.826039] 	 *** IXGBE_PSRTYPE(VMDQ_P(pool))=5480 40001330
+[   58.826041] *** ixgbe_setup_rdrxctl
+[   58.826044] 	 *** Disable RSC for ACK packets IXGBE_RSCDBU=3028 A0 
+[   58.826046] 	 *** IXGBE_RDRXCTL=2F00 600880A
+[   58.826048] 	 *** IXGBE_RFCTL=5008 E0
+[   58.826049] *** ixgbe_setup_mrqc
+[   58.826051] 	 *** IXGBE_RXCSUM=5000 2000
+[   58.826053] *** ixgbe_store_key
+[   58.826055] 	 *** IXGBE_RSSRK(0)=5C80 DE75C641
+[   58.826057] 	 *** IXGBE_RSSRK(1)=5C84 4C8698FA
+[   58.826058] 	 *** IXGBE_RSSRK(2)=5C88 A41B3F9D
+[   58.826060] 	 *** IXGBE_RSSRK(3)=5C8C 31E74028
+[   58.826062] 	 *** IXGBE_RSSRK(4)=5C90 BA968F81
+[   58.826063] 	 *** IXGBE_RSSRK(5)=5C94 7303A301
+[   58.826065] 	 *** IXGBE_RSSRK(6)=5C98 4A69C702
+[   58.826079] 	 *** IXGBE_RSSRK(7)=5C9C 56EE486F
+[   58.826080] 	 *** IXGBE_RSSRK(8)=5CA0 D8F3608
+[   58.826080] 	 *** IXGBE_RSSRK(9)=5CA4 E9A586F3
+[   58.826081] *** ixgbe_store_reta
+[   58.826082] 	 *** IXGBE_RETA(0)=5C00 3020100
+[   58.826083] 	 *** IXGBE_RETA(1)=5C04 7060504
+[   58.826083] 	 *** IXGBE_RETA(2)=5C08 B0A0908
+[   58.826084] 	 *** IXGBE_RETA(3)=5C0C F0E0D0C
+[   58.826084] 	 *** IXGBE_RETA(4)=5C10 3020100
+[   58.826085] 	 *** IXGBE_RETA(5)=5C14 7060504
+[   58.826086] 	 *** IXGBE_RETA(6)=5C18 B0A0908
+[   58.826086] 	 *** IXGBE_RETA(7)=5C1C F0E0D0C
+[   58.826087] 	 *** IXGBE_RETA(8)=5C20 3020100
+[   58.826087] 	 *** IXGBE_RETA(9)=5C24 7060504
+[   58.826088] 	 *** IXGBE_RETA(10)=5C28 B0A0908
+[   58.826089] 	 *** IXGBE_RETA(11)=5C2C F0E0D0C
+[   58.826089] 	 *** IXGBE_RETA(12)=5C30 3020100
+[   58.826090] 	 *** IXGBE_RETA(13)=5C34 7060504
+[   58.826090] 	 *** IXGBE_RETA(14)=5C38 B0A0908
+[   58.826091] 	 *** IXGBE_RETA(15)=5C3C F0E0D0C
+[   58.826092] 	 *** IXGBE_RETA(16)=5C40 3020100
+[   58.826092] 	 *** IXGBE_RETA(17)=5C44 7060504
+[   58.826093] 	 *** IXGBE_RETA(18)=5C48 B0A0908
+[   58.826094] 	 *** IXGBE_RETA(19)=5C4C F0E0D0C
+[   58.826094] 	 *** IXGBE_RETA(20)=5C50 3020100
+[   58.826095] 	 *** IXGBE_RETA(21)=5C54 7060504
+[   58.826096] 	 *** IXGBE_RETA(22)=5C58 B0A0908
+[   58.826096] 	 *** IXGBE_RETA(23)=5C5C F0E0D0C
+[   58.826097] 	 *** IXGBE_RETA(24)=5C60 3020100
+[   58.826097] 	 *** IXGBE_RETA(25)=5C64 7060504
+[   58.826098] 	 *** IXGBE_RETA(26)=5C68 B0A0908
+[   58.826099] 	 *** IXGBE_RETA(27)=5C6C F0E0D0C
+[   58.826099] 	 *** IXGBE_RETA(28)=5C70 3020100
+[   58.826100] 	 *** IXGBE_RETA(29)=5C74 7060504
+[   58.826101] 	 *** IXGBE_RETA(30)=5C78 B0A0908
+[   58.826101] 	 *** IXGBE_RETA(31)=5C7C F0E0D0C
+[   58.826102] 	 *** IXGBE_MRQC=5818 330001
+[   58.826102] *** ixgbe_set_rx_buffer_len
+[   58.826105] 	 *** IXGBE_HLREG0=4240 8002FFF
+[   58.826106] *** ixgbe_configure_rx_ring
+[   58.826107] *** ixgbe_disable_rx_queue
+[   58.826108] 	 *** ixgbe_disable_rx_queue
+[   58.826120] *** ixgbe_configure_srrctl
+[   58.826121] 	 *** IXGBE_SRRCTL(0)=2100 2000000
+[   58.826121] *** ixgbe_configure_rscctl
+[   58.826125] 	 *** IXGBE_RXDCTL(0)=1028 42008600
+[   58.828112] *** ixgbe_configure_rx_ring
+[   58.828113] *** ixgbe_disable_rx_queue
+[   58.828113] 	 *** ixgbe_disable_rx_queue
+[   58.828125] *** ixgbe_configure_srrctl
+[   58.828126] 	 *** IXGBE_SRRCTL(1)=2104 2000000
+[   58.828126] *** ixgbe_configure_rscctl
+[   58.828128] 	 *** IXGBE_RXDCTL(1)=1068 42008600
+[   58.830246] *** ixgbe_configure_rx_ring
+[   58.830247] *** ixgbe_disable_rx_queue
+[   58.830247] 	 *** ixgbe_disable_rx_queue
+[   58.830259] *** ixgbe_configure_srrctl
+[   58.830260] 	 *** IXGBE_SRRCTL(2)=2108 2000000
+[   58.830260] *** ixgbe_configure_rscctl
+[   58.830264] 	 *** IXGBE_RXDCTL(2)=10A8 42008600
+[   58.832100] *** ixgbe_configure_rx_ring
+[   58.832101] *** ixgbe_disable_rx_queue
+[   58.832102] 	 *** ixgbe_disable_rx_queue
+[   58.832114] *** ixgbe_configure_srrctl
+[   58.832115] 	 *** IXGBE_SRRCTL(3)=210C 2000000
+[   58.832115] *** ixgbe_configure_rscctl
+[   58.832117] 	 *** IXGBE_RXDCTL(3)=10E8 42008600
+[   58.834222] *** ixgbe_configure_rx_ring
+[   58.834223] *** ixgbe_disable_rx_queue
+[   58.834223] 	 *** ixgbe_disable_rx_queue
+[   58.834235] *** ixgbe_configure_srrctl
+[   58.834236] 	 *** IXGBE_SRRCTL(4)=2110 2000000
+[   58.834237] *** ixgbe_configure_rscctl
+[   58.834240] 	 *** IXGBE_RXDCTL(4)=1128 42008600
+[   58.836112] *** ixgbe_configure_rx_ring
+[   58.836113] *** ixgbe_disable_rx_queue
+[   58.836113] 	 *** ixgbe_disable_rx_queue
+[   58.836125] *** ixgbe_configure_srrctl
+[   58.836126] 	 *** IXGBE_SRRCTL(5)=2114 2000000
+[   58.836126] *** ixgbe_configure_rscctl
+[   58.836128] 	 *** IXGBE_RXDCTL(5)=1168 42008600
+[   58.838228] *** ixgbe_configure_rx_ring
+[   58.838229] *** ixgbe_disable_rx_queue
+[   58.838230] 	 *** ixgbe_disable_rx_queue
+[   58.838242] *** ixgbe_configure_srrctl
+[   58.838242] 	 *** IXGBE_SRRCTL(6)=2118 2000000
+[   58.838243] *** ixgbe_configure_rscctl
+[   58.838246] 	 *** IXGBE_RXDCTL(6)=11A8 42008600
+[   58.840099] *** ixgbe_configure_rx_ring
+[   58.840100] *** ixgbe_disable_rx_queue
+[   58.840101] 	 *** ixgbe_disable_rx_queue
+[   58.840113] *** ixgbe_configure_srrctl
+[   58.840113] 	 *** IXGBE_SRRCTL(7)=211C 2000000
+[   58.840114] *** ixgbe_configure_rscctl
+[   58.840115] 	 *** IXGBE_RXDCTL(7)=11E8 42008600
+[   58.842210] *** ixgbe_configure_rx_ring
+[   58.842211] *** ixgbe_disable_rx_queue
+[   58.842212] 	 *** ixgbe_disable_rx_queue
+[   58.842224] *** ixgbe_configure_srrctl
+[   58.842224] 	 *** IXGBE_SRRCTL(8)=2120 2000000
+[   58.842225] *** ixgbe_configure_rscctl
+[   58.842228] 	 *** IXGBE_RXDCTL(8)=1228 42008600
+[   58.844094] *** ixgbe_configure_rx_ring
+[   58.844095] *** ixgbe_disable_rx_queue
+[   58.844096] 	 *** ixgbe_disable_rx_queue
+[   58.844108] *** ixgbe_configure_srrctl
+[   58.844108] 	 *** IXGBE_SRRCTL(9)=2124 2000000
+[   58.844109] *** ixgbe_configure_rscctl
+[   58.844110] 	 *** IXGBE_RXDCTL(9)=1268 42008600
+[   58.846203] *** ixgbe_configure_rx_ring
+[   58.846204] *** ixgbe_disable_rx_queue
+[   58.846205] 	 *** ixgbe_disable_rx_queue
+[   58.846216] *** ixgbe_configure_srrctl
+[   58.846217] 	 *** IXGBE_SRRCTL(10)=2128 2000000
+[   58.846217] *** ixgbe_configure_rscctl
+[   58.846221] 	 *** IXGBE_RXDCTL(10)=12A8 42008600
+[   58.848093] *** ixgbe_configure_rx_ring
+[   58.848094] *** ixgbe_disable_rx_queue
+[   58.848095] 	 *** ixgbe_disable_rx_queue
+[   58.848106] *** ixgbe_configure_srrctl
+[   58.848107] 	 *** IXGBE_SRRCTL(11)=212C 2000000
+[   58.848108] *** ixgbe_configure_rscctl
+[   58.848109] 	 *** IXGBE_RXDCTL(11)=12E8 42008600
+[   58.850205] *** ixgbe_configure_rx_ring
+[   58.850206] *** ixgbe_disable_rx_queue
+[   58.850207] 	 *** ixgbe_disable_rx_queue
+[   58.850219] *** ixgbe_configure_srrctl
+[   58.850219] 	 *** IXGBE_SRRCTL(12)=2130 2000000
+[   58.850220] *** ixgbe_configure_rscctl
+[   58.850223] 	 *** IXGBE_RXDCTL(12)=1328 42008600
+[   58.852092] *** ixgbe_configure_rx_ring
+[   58.852093] *** ixgbe_disable_rx_queue
+[   58.852094] 	 *** ixgbe_disable_rx_queue
+[   58.852106] *** ixgbe_configure_srrctl
+[   58.852107] 	 *** IXGBE_SRRCTL(13)=2134 2000000
+[   58.852107] *** ixgbe_configure_rscctl
+[   58.852109] 	 *** IXGBE_RXDCTL(13)=1368 42008600
+[   58.854204] *** ixgbe_configure_rx_ring
+[   58.854205] *** ixgbe_disable_rx_queue
+[   58.854206] 	 *** ixgbe_disable_rx_queue
+[   58.854218] *** ixgbe_configure_srrctl
+[   58.854219] 	 *** IXGBE_SRRCTL(14)=2138 2000000
+[   58.854219] *** ixgbe_configure_rscctl
+[   58.854223] 	 *** IXGBE_RXDCTL(14)=13A8 42008600
+[   58.856092] *** ixgbe_configure_rx_ring
+[   58.856093] *** ixgbe_disable_rx_queue
+[   58.856094] 	 *** ixgbe_disable_rx_queue
+[   58.856106] *** ixgbe_configure_srrctl
+[   58.856107] 	 *** IXGBE_SRRCTL(15)=213C 2000000
+[   58.856107] *** ixgbe_configure_rscctl
+[   58.856109] 	 *** IXGBE_RXDCTL(15)=13E8 42008600
+[   58.858204] *** ixgbe_configure_rx_ring
+[   58.858205] *** ixgbe_disable_rx_queue
+[   58.858206] 	 *** ixgbe_disable_rx_queue
+[   58.858218] *** ixgbe_configure_srrctl
+[   58.858219] 	 *** IXGBE_SRRCTL(16)=1414 2000000
+[   58.858219] *** ixgbe_configure_rscctl
+[   58.858223] 	 *** IXGBE_RXDCTL(16)=1428 42008600
+[   58.860090] *** ixgbe_configure_rx_ring
+[   58.860091] *** ixgbe_disable_rx_queue
+[   58.860092] 	 *** ixgbe_disable_rx_queue
+[   58.860104] *** ixgbe_configure_srrctl
+[   58.860105] 	 *** IXGBE_SRRCTL(17)=1454 2000000
+[   58.860105] *** ixgbe_configure_rscctl
+[   58.860108] 	 *** IXGBE_RXDCTL(17)=1468 42008600
+[   58.862204] *** ixgbe_configure_rx_ring
+[   58.862205] *** ixgbe_disable_rx_queue
+[   58.862206] 	 *** ixgbe_disable_rx_queue
+[   58.862217] *** ixgbe_configure_srrctl
+[   58.862218] 	 *** IXGBE_SRRCTL(18)=1494 2000000
+[   58.862219] *** ixgbe_configure_rscctl
+[   58.862222] 	 *** IXGBE_RXDCTL(18)=14A8 42008600
+[   58.864092] *** ixgbe_configure_rx_ring
+[   58.864093] *** ixgbe_disable_rx_queue
+[   58.864094] 	 *** ixgbe_disable_rx_queue
+[   58.864106] *** ixgbe_configure_srrctl
+[   58.864106] 	 *** IXGBE_SRRCTL(19)=14D4 2000000
+[   58.864107] *** ixgbe_configure_rscctl
+[   58.864109] 	 *** IXGBE_RXDCTL(19)=14E8 42008600
+[   58.866209] *** ixgbe_configure_rx_ring
+[   58.866210] *** ixgbe_disable_rx_queue
+[   58.866211] 	 *** ixgbe_disable_rx_queue
+[   58.866223] *** ixgbe_configure_srrctl
+[   58.866223] 	 *** IXGBE_SRRCTL(20)=1514 2000000
+[   58.866224] *** ixgbe_configure_rscctl
+[   58.866228] 	 *** IXGBE_RXDCTL(20)=1528 42008600
+[   58.868056] *** ixgbe_configure_rx_ring
+[   58.868057] *** ixgbe_disable_rx_queue
+[   58.868058] 	 *** ixgbe_disable_rx_queue
+[   58.868070] *** ixgbe_configure_srrctl
+[   58.868070] 	 *** IXGBE_SRRCTL(21)=1554 2000000
+[   58.868071] *** ixgbe_configure_rscctl
+[   58.868073] 	 *** IXGBE_RXDCTL(21)=1568 42008600
+[   58.870130] *** ixgbe_configure_rx_ring
+[   58.870131] *** ixgbe_disable_rx_queue
+[   58.870132] 	 *** ixgbe_disable_rx_queue
+[   58.870144] *** ixgbe_configure_srrctl
+[   58.870145] 	 *** IXGBE_SRRCTL(22)=1594 2000000
+[   58.870145] *** ixgbe_configure_rscctl
+[   58.870149] 	 *** IXGBE_RXDCTL(22)=15A8 42008600
+[   58.872055] *** ixgbe_configure_rx_ring
+[   58.872056] *** ixgbe_disable_rx_queue
+[   58.872056] 	 *** ixgbe_disable_rx_queue
+[   58.872068] *** ixgbe_configure_srrctl
+[   58.872069] 	 *** IXGBE_SRRCTL(23)=15D4 2000000
+[   58.872069] *** ixgbe_configure_rscctl
+[   58.872071] 	 *** IXGBE_RXDCTL(23)=15E8 42008600
+[   58.874131] *** ixgbe_configure_rx_ring
+[   58.874132] *** ixgbe_disable_rx_queue
+[   58.874133] 	 *** ixgbe_disable_rx_queue
+[   58.874145] *** ixgbe_configure_srrctl
+[   58.874145] 	 *** IXGBE_SRRCTL(24)=1614 2000000
+[   58.874146] *** ixgbe_configure_rscctl
+[   58.874149] 	 *** IXGBE_RXDCTL(24)=1628 42008600
+[   58.876053] *** ixgbe_configure_rx_ring
+[   58.876054] *** ixgbe_disable_rx_queue
+[   58.876055] 	 *** ixgbe_disable_rx_queue
+[   58.876067] *** ixgbe_configure_srrctl
+[   58.876068] 	 *** IXGBE_SRRCTL(25)=1654 2000000
+[   58.876068] *** ixgbe_configure_rscctl
+[   58.876070] 	 *** IXGBE_RXDCTL(25)=1668 42008600
+[   58.878128] *** ixgbe_configure_rx_ring
+[   58.878129] *** ixgbe_disable_rx_queue
+[   58.878130] 	 *** ixgbe_disable_rx_queue
+[   58.878142] *** ixgbe_configure_srrctl
+[   58.878142] 	 *** IXGBE_SRRCTL(26)=1694 2000000
+[   58.878143] *** ixgbe_configure_rscctl
+[   58.878146] 	 *** IXGBE_RXDCTL(26)=16A8 42008600
+[   58.880054] *** ixgbe_configure_rx_ring
+[   58.880055] *** ixgbe_disable_rx_queue
+[   58.880056] 	 *** ixgbe_disable_rx_queue
+[   58.880068] *** ixgbe_configure_srrctl
+[   58.880069] 	 *** IXGBE_SRRCTL(27)=16D4 2000000
+[   58.880069] *** ixgbe_configure_rscctl
+[   58.880072] 	 *** IXGBE_RXDCTL(27)=16E8 42008600
+[   58.882129] *** ixgbe_configure_rx_ring
+[   58.882130] *** ixgbe_disable_rx_queue
+[   58.882131] 	 *** ixgbe_disable_rx_queue
+[   58.882143] *** ixgbe_configure_srrctl
+[   58.882143] 	 *** IXGBE_SRRCTL(28)=1714 2000000
+[   58.882144] *** ixgbe_configure_rscctl
+[   58.882147] 	 *** IXGBE_RXDCTL(28)=1728 42008600
+[   58.884057] *** ixgbe_configure_rx_ring
+[   58.884058] *** ixgbe_disable_rx_queue
+[   58.884058] 	 *** ixgbe_disable_rx_queue
+[   58.884070] *** ixgbe_configure_srrctl
+[   58.884071] 	 *** IXGBE_SRRCTL(29)=1754 2000000
+[   58.884071] *** ixgbe_configure_rscctl
+[   58.884075] 	 *** IXGBE_RXDCTL(29)=1768 42008600
+[   58.886132] *** ixgbe_configure_rx_ring
+[   58.886133] *** ixgbe_disable_rx_queue
+[   58.886133] 	 *** ixgbe_disable_rx_queue
+[   58.886145] *** ixgbe_configure_srrctl
+[   58.886146] 	 *** IXGBE_SRRCTL(30)=1794 2000000
+[   58.886146] *** ixgbe_configure_rscctl
+[   58.886150] 	 *** IXGBE_RXDCTL(30)=17A8 42008600
+[   58.888054] *** ixgbe_configure_rx_ring
+[   58.888055] *** ixgbe_disable_rx_queue
+[   58.888056] 	 *** ixgbe_disable_rx_queue
+[   58.888068] *** ixgbe_configure_srrctl
+[   58.888069] 	 *** IXGBE_SRRCTL(31)=17D4 2000000
+[   58.888069] *** ixgbe_configure_rscctl
+[   58.888071] 	 *** IXGBE_RXDCTL(31)=17E8 42008600
+[   58.890128] *** ixgbe_disable_rx_buff_generic
+[   58.890130] *** ixgbe_enable_rx_generic
+[   58.890131] 	 *** IXGBE_RXCTRL=3000 1
+[   58.890131] *** ixgbe_enable_rx_buff_generic
+[   58.890132] 	 *** ixgbe_enable_rx_buff_generic IXGBE_SECRXCTR=8D00 1
+[   58.890154] 	 *** vector=0 request_irq irq=90 devname=enp4s0f1-TxRx-0
+[   58.890167] 	 *** vector=1 request_irq irq=91 devname=enp4s0f1-TxRx-1
+[   58.890183] 	 *** vector=2 request_irq irq=92 devname=enp4s0f1-TxRx-2
+[   58.890195] 	 *** vector=3 request_irq irq=93 devname=enp4s0f1-TxRx-3
+[   58.890207] 	 *** vector=4 request_irq irq=94 devname=enp4s0f1-TxRx-4
+[   58.890219] 	 *** vector=5 request_irq irq=95 devname=enp4s0f1-TxRx-5
+[   58.890230] 	 *** vector=6 request_irq irq=96 devname=enp4s0f1-TxRx-6
+[   58.890246] 	 *** vector=7 request_irq irq=97 devname=enp4s0f1-TxRx-7
+[   58.890260] 	 *** vector=8 request_irq irq=98 devname=enp4s0f1-TxRx-8
+[   58.890272] 	 *** vector=9 request_irq irq=99 devname=enp4s0f1-TxRx-9
+[   58.890283] 	 *** vector=10 request_irq irq=100 devname=enp4s0f1-TxRx-10
+[   58.890302] 	 *** vector=11 request_irq irq=101 devname=enp4s0f1-TxRx-11
+[   58.890314] 	 *** vector=12 request_irq irq=102 devname=enp4s0f1-TxRx-12
+[   58.890324] 	 *** vector=13 request_irq irq=103 devname=enp4s0f1-TxRx-13
+[   58.890335] 	 *** vector=14 request_irq irq=104 devname=enp4s0f1-TxRx-14
+[   58.890345] 	 *** vector=15 request_irq irq=105 devname=enp4s0f1-TxRx-15
+[   58.890361] 	 *** vector=16 request_irq irq=106 devname=enp4s0f1-TxRx-16
+[   58.890372] 	 *** vector=17 request_irq irq=107 devname=enp4s0f1-TxRx-17
+[   58.890383] 	 *** vector=18 request_irq irq=108 devname=enp4s0f1-TxRx-18
+[   58.890394] 	 *** vector=19 request_irq irq=109 devname=enp4s0f1-TxRx-19
+[   58.890405] 	 *** vector=20 request_irq irq=110 devname=enp4s0f1-TxRx-20
+[   58.890420] 	 *** vector=21 request_irq irq=111 devname=enp4s0f1-TxRx-21
+[   58.890432] 	 *** vector=22 request_irq irq=112 devname=enp4s0f1-TxRx-22
+[   58.890444] 	 *** vector=23 request_irq irq=113 devname=enp4s0f1-TxRx-23
+[   58.890455] 	 *** vector=24 request_irq irq=114 devname=enp4s0f1-TxRx-24
+[   58.890470] 	 *** vector=25 request_irq irq=115 devname=enp4s0f1-TxRx-25
+[   58.890490] 	 *** vector=26 request_irq irq=116 devname=enp4s0f1-TxRx-26
+[   58.890500] 	 *** vector=27 request_irq irq=117 devname=enp4s0f1-TxRx-27
+[   58.890510] 	 *** vector=28 request_irq irq=118 devname=enp4s0f1-TxRx-28
+[   58.890519] 	 *** vector=29 request_irq irq=119 devname=enp4s0f1-TxRx-29
+[   58.890532] 	 *** vector=30 request_irq irq=120 devname=enp4s0f1-TxRx-30
+[   58.890551] 	 *** vector=31 request_irq irq=121 devname=enp4s0f1-TxRx-31
+[   58.890560] 	 *** IXGBE_FLAG_MSIX_ENABLED
+[   58.891143] *** ixgbe_up_complete
+[   58.891143] *** ixgbe_get_hw_control
+[   58.891144] 	 *** IXGBE_CTRL_EXT=18 10010000
+[   58.891145] *** ixgbe_setup_gpie
+[   58.891146] 	 *** IXGBE_EIAM_EX(0)=AD0 FFFFFFFF
+[   58.891146] 	 *** IXGBE_EIAM_EX(1)=AD4 FFFFFFFF
+[   58.891147] 	 *** IXGBE_GPIE=898 C0000036
+[   58.891147] *** ixgbe_configure_msix
+[   58.891149] 	 *** ixgbe_mac_82599EB direction=0 queue=0 msix_vector=128 IXGBE_IVAR(0)=900 80
+[   58.891151] 	 *** ixgbe_mac_82599EB direction=1 queue=0 msix_vector=128 IXGBE_IVAR(0)=900 8080
+[   58.891152] 	 *** ixgbe_mac_82599EB direction=0 queue=1 msix_vector=129 IXGBE_IVAR(0)=900 818080
+[   58.891154] 	 *** ixgbe_mac_82599EB direction=1 queue=1 msix_vector=129 IXGBE_IVAR(0)=900 81818080
+[   58.891155] 	 *** ixgbe_mac_82599EB direction=0 queue=2 msix_vector=130 IXGBE_IVAR(1)=904 82
+[   58.891157] 	 *** ixgbe_mac_82599EB direction=1 queue=2 msix_vector=130 IXGBE_IVAR(1)=904 8282
+[   58.891158] 	 *** ixgbe_mac_82599EB direction=0 queue=3 msix_vector=131 IXGBE_IVAR(1)=904 838282
+[   58.891159] 	 *** ixgbe_mac_82599EB direction=1 queue=3 msix_vector=131 IXGBE_IVAR(1)=904 83838282
+[   58.891161] 	 *** ixgbe_mac_82599EB direction=0 queue=4 msix_vector=132 IXGBE_IVAR(2)=908 84
+[   58.891162] 	 *** ixgbe_mac_82599EB direction=1 queue=4 msix_vector=132 IXGBE_IVAR(2)=908 8484
+[   58.891164] 	 *** ixgbe_mac_82599EB direction=0 queue=5 msix_vector=133 IXGBE_IVAR(2)=908 858484
+[   58.891165] 	 *** ixgbe_mac_82599EB direction=1 queue=5 msix_vector=133 IXGBE_IVAR(2)=908 85858484
+[   58.891167] 	 *** ixgbe_mac_82599EB direction=0 queue=6 msix_vector=134 IXGBE_IVAR(3)=90C 86
+[   58.891168] 	 *** ixgbe_mac_82599EB direction=1 queue=6 msix_vector=134 IXGBE_IVAR(3)=90C 8686
+[   58.891170] 	 *** ixgbe_mac_82599EB direction=0 queue=7 msix_vector=135 IXGBE_IVAR(3)=90C 878686
+[   58.891171] 	 *** ixgbe_mac_82599EB direction=1 queue=7 msix_vector=135 IXGBE_IVAR(3)=90C 87878686
+[   58.891173] 	 *** ixgbe_mac_82599EB direction=0 queue=8 msix_vector=136 IXGBE_IVAR(4)=910 88
+[   58.891174] 	 *** ixgbe_mac_82599EB direction=1 queue=8 msix_vector=136 IXGBE_IVAR(4)=910 8888
+[   58.891176] 	 *** ixgbe_mac_82599EB direction=0 queue=9 msix_vector=137 IXGBE_IVAR(4)=910 898888
+[   58.891177] 	 *** ixgbe_mac_82599EB direction=1 queue=9 msix_vector=137 IXGBE_IVAR(4)=910 89898888
+[   58.891179] 	 *** ixgbe_mac_82599EB direction=0 queue=10 msix_vector=138 IXGBE_IVAR(5)=914 8A
+[   58.891180] 	 *** ixgbe_mac_82599EB direction=1 queue=10 msix_vector=138 IXGBE_IVAR(5)=914 8A8A
+[   58.891182] 	 *** ixgbe_mac_82599EB direction=0 queue=11 msix_vector=139 IXGBE_IVAR(5)=914 8B8A8A
+[   58.891183] 	 *** ixgbe_mac_82599EB direction=1 queue=11 msix_vector=139 IXGBE_IVAR(5)=914 8B8B8A8A
+[   58.891185] 	 *** ixgbe_mac_82599EB direction=0 queue=12 msix_vector=140 IXGBE_IVAR(6)=918 8C
+[   58.891186] 	 *** ixgbe_mac_82599EB direction=1 queue=12 msix_vector=140 IXGBE_IVAR(6)=918 8C8C
+[   58.891187] 	 *** ixgbe_mac_82599EB direction=0 queue=13 msix_vector=141 IXGBE_IVAR(6)=918 8D8C8C
+[   58.891189] 	 *** ixgbe_mac_82599EB direction=1 queue=13 msix_vector=141 IXGBE_IVAR(6)=918 8D8D8C8C
+[   58.891190] 	 *** ixgbe_mac_82599EB direction=0 queue=14 msix_vector=142 IXGBE_IVAR(7)=91C 8E
+[   58.891192] 	 *** ixgbe_mac_82599EB direction=1 queue=14 msix_vector=142 IXGBE_IVAR(7)=91C 8E8E
+[   58.891193] 	 *** ixgbe_mac_82599EB direction=0 queue=15 msix_vector=143 IXGBE_IVAR(7)=91C 8F8E8E
+[   58.891195] 	 *** ixgbe_mac_82599EB direction=1 queue=15 msix_vector=143 IXGBE_IVAR(7)=91C 8F8F8E8E
+[   58.891196] 	 *** ixgbe_mac_82599EB direction=0 queue=16 msix_vector=144 IXGBE_IVAR(8)=920 90
+[   58.891197] 	 *** ixgbe_mac_82599EB direction=1 queue=16 msix_vector=144 IXGBE_IVAR(8)=920 9090
+[   58.891199] 	 *** ixgbe_mac_82599EB direction=0 queue=17 msix_vector=145 IXGBE_IVAR(8)=920 919090
+[   58.891200] 	 *** ixgbe_mac_82599EB direction=1 queue=17 msix_vector=145 IXGBE_IVAR(8)=920 91919090
+[   58.891202] 	 *** ixgbe_mac_82599EB direction=0 queue=18 msix_vector=146 IXGBE_IVAR(9)=924 92
+[   58.891203] 	 *** ixgbe_mac_82599EB direction=1 queue=18 msix_vector=146 IXGBE_IVAR(9)=924 9292
+[   58.891205] 	 *** ixgbe_mac_82599EB direction=0 queue=19 msix_vector=147 IXGBE_IVAR(9)=924 939292
+[   58.891206] 	 *** ixgbe_mac_82599EB direction=1 queue=19 msix_vector=147 IXGBE_IVAR(9)=924 93939292
+[   58.891208] 	 *** ixgbe_mac_82599EB direction=0 queue=20 msix_vector=148 IXGBE_IVAR(10)=928 94
+[   58.891209] 	 *** ixgbe_mac_82599EB direction=1 queue=20 msix_vector=148 IXGBE_IVAR(10)=928 9494
+[   58.891211] 	 *** ixgbe_mac_82599EB direction=0 queue=21 msix_vector=149 IXGBE_IVAR(10)=928 959494
+[   58.891212] 	 *** ixgbe_mac_82599EB direction=1 queue=21 msix_vector=149 IXGBE_IVAR(10)=928 95959494
+[   58.891213] 	 *** ixgbe_mac_82599EB direction=0 queue=22 msix_vector=150 IXGBE_IVAR(11)=92C 96
+[   58.891215] 	 *** ixgbe_mac_82599EB direction=1 queue=22 msix_vector=150 IXGBE_IVAR(11)=92C 9696
+[   58.891216] 	 *** ixgbe_mac_82599EB direction=0 queue=23 msix_vector=151 IXGBE_IVAR(11)=92C 979696
+[   58.891218] 	 *** ixgbe_mac_82599EB direction=1 queue=23 msix_vector=151 IXGBE_IVAR(11)=92C 97979696
+[   58.891219] 	 *** ixgbe_mac_82599EB direction=0 queue=24 msix_vector=152 IXGBE_IVAR(12)=930 98
+[   58.891221] 	 *** ixgbe_mac_82599EB direction=1 queue=24 msix_vector=152 IXGBE_IVAR(12)=930 9898
+[   58.891222] 	 *** ixgbe_mac_82599EB direction=0 queue=25 msix_vector=153 IXGBE_IVAR(12)=930 999898
+[   58.891224] 	 *** ixgbe_mac_82599EB direction=1 queue=25 msix_vector=153 IXGBE_IVAR(12)=930 99999898
+[   58.891225] 	 *** ixgbe_mac_82599EB direction=0 queue=26 msix_vector=154 IXGBE_IVAR(13)=934 9A
+[   58.891227] 	 *** ixgbe_mac_82599EB direction=1 queue=26 msix_vector=154 IXGBE_IVAR(13)=934 9A9A
+[   58.891228] 	 *** ixgbe_mac_82599EB direction=0 queue=27 msix_vector=155 IXGBE_IVAR(13)=934 9B9A9A
+[   58.891229] 	 *** ixgbe_mac_82599EB direction=1 queue=27 msix_vector=155 IXGBE_IVAR(13)=934 9B9B9A9A
+[   58.891231] 	 *** ixgbe_mac_82599EB direction=0 queue=28 msix_vector=156 IXGBE_IVAR(14)=938 9C
+[   58.891232] 	 *** ixgbe_mac_82599EB direction=1 queue=28 msix_vector=156 IXGBE_IVAR(14)=938 9C9C
+[   58.891234] 	 *** ixgbe_mac_82599EB direction=0 queue=29 msix_vector=157 IXGBE_IVAR(14)=938 9D9C9C
+[   58.891235] 	 *** ixgbe_mac_82599EB direction=1 queue=29 msix_vector=157 IXGBE_IVAR(14)=938 9D9D9C9C
+[   58.891237] 	 *** ixgbe_mac_82599EB direction=0 queue=30 msix_vector=158 IXGBE_IVAR(15)=93C 9E
+[   58.891238] 	 *** ixgbe_mac_82599EB direction=1 queue=30 msix_vector=158 IXGBE_IVAR(15)=93C 9E9E
+[   58.891240] 	 *** ixgbe_mac_82599EB direction=0 queue=31 msix_vector=159 IXGBE_IVAR(15)=93C 9F9E9E
+[   58.891241] 	 *** ixgbe_mac_82599EB direction=1 queue=31 msix_vector=159 IXGBE_IVAR(15)=93C 9F9F9E9E
+[   58.891242] 	 *** ixgbe_mac_82599EB IXGBE_IVAR_MISC=A00 A000
+[   58.891243] 	 *** IXGBE_EITR(32)=12320 79E
+[   58.891244] 	 *** IXGBE_EIAC=810 4000FFFF
+[   58.891245] *** ixgbe_enable_tx_laser_multispeed_fiber
+[   59.000032] *** ixgbe_irq_enable
+[   59.000036] 	 *** IXGBE_EIMS=0x880 0xD6190000
+[   59.000040] 	 *** IXGBE_CTRL_EXT=18 10014000 
+[   59.000052] *** mac_addr = 90 E2 BA AD 99 21
+[   59.000066] *** ixgbe_clear_udp_tunnel_port
+[   59.000072] *** ixgbe_set_rx_mode
+[   59.000091] *** ixgbe_vlan_strip_enable
+[   59.000112] *** ixgbe_vlan_promisc_disable
+[   59.000865] *** ixgbe_set_rx_mode
+[   59.000883] *** ixgbe_vlan_strip_enable
+[   59.000904] *** ixgbe_vlan_promisc_disable
+[   59.009404] *** ixgbe_setup_sfp_modules_82599
+[   59.032037] *** prot_autoc_write_82599
+[   59.032130] *** ixgbe_reset_pipeline_82599
+[   59.393319] *** ixgbe_msix_other
+[   59.393323] *** ixgbe_check_lsc
+[   59.393332] *** ixgbe_check_sfp_event
+[   59.393334] *** ixgbe_check_fan_failure
+[   59.393335] *** ixgbe_irq_enable
+[   59.393338] 	 *** IXGBE_EIMS=0x880 0xD6090000
+[   59.393361] *** ixgbe_fc_enable_generic
+[   59.393369] *** ixgbe_disable_rx_drop
+[   59.393370] *** ixgbe_disable_rx_drop
+[   59.393371] *** ixgbe_disable_rx_drop
+[   59.393372] *** ixgbe_disable_rx_drop
+[   59.393373] *** ixgbe_disable_rx_drop
+[   59.393374] *** ixgbe_disable_rx_drop
+[   59.393375] *** ixgbe_disable_rx_drop
+[   59.393376] *** ixgbe_disable_rx_drop
+[   59.393377] *** ixgbe_disable_rx_drop
+[   59.393378] *** ixgbe_disable_rx_drop
+[   59.393379] *** ixgbe_disable_rx_drop
+[   59.393380] *** ixgbe_disable_rx_drop
+[   59.393381] *** ixgbe_disable_rx_drop
+[   59.393382] *** ixgbe_disable_rx_drop
+[   59.393382] *** ixgbe_disable_rx_drop
+[   59.393384] *** ixgbe_disable_rx_drop
+[   59.393384] *** ixgbe_disable_rx_drop
+[   59.393385] *** ixgbe_disable_rx_drop
+[   59.393386] *** ixgbe_disable_rx_drop
+[   59.393387] *** ixgbe_disable_rx_drop
+[   59.393388] *** ixgbe_disable_rx_drop
+[   59.393389] *** ixgbe_disable_rx_drop
+[   59.393390] *** ixgbe_disable_rx_drop
+[   59.393391] *** ixgbe_disable_rx_drop
+[   59.393391] *** ixgbe_disable_rx_drop
+[   59.393392] *** ixgbe_disable_rx_drop
+[   59.393393] *** ixgbe_disable_rx_drop
+[   59.393394] *** ixgbe_disable_rx_drop
+[   59.393395] *** ixgbe_disable_rx_drop
+[   59.393396] *** ixgbe_disable_rx_drop
+[   59.393397] *** ixgbe_disable_rx_drop
+[   59.393398] *** ixgbe_disable_rx_drop
+[   59.393531] *** ixgbe_set_rx_mode
+[   59.393543] *** ixgbe_vlan_strip_enable
+[   59.393573] *** ixgbe_vlan_promisc_disable
+[   59.397138] *** ixgbe_msix_other
+[   59.397142] *** ixgbe_check_lsc
+[   59.397150] *** ixgbe_check_sfp_event
+[   59.397151] *** ixgbe_check_fan_failure
+[   59.397152] *** ixgbe_irq_enable
+[   59.397155] 	 *** IXGBE_EIMS=0x880 0xD6090000
+[   59.524069] *** ixgbe_fc_enable_generic
+[   59.524079] *** ixgbe_disable_rx_drop
+[   59.524080] *** ixgbe_disable_rx_drop
+[   59.524081] *** ixgbe_disable_rx_drop
+[   59.524082] *** ixgbe_disable_rx_drop
+[   59.524083] *** ixgbe_disable_rx_drop
+[   59.524084] *** ixgbe_disable_rx_drop
+[   59.524085] *** ixgbe_disable_rx_drop
+[   59.524086] *** ixgbe_disable_rx_drop
+[   59.524087] *** ixgbe_disable_rx_drop
+[   59.524088] *** ixgbe_disable_rx_drop
+[   59.524089] *** ixgbe_disable_rx_drop
+[   59.524090] *** ixgbe_disable_rx_drop
+[   59.524091] *** ixgbe_disable_rx_drop
+[   59.524092] *** ixgbe_disable_rx_drop
+[   59.524093] *** ixgbe_disable_rx_drop
+[   59.524094] *** ixgbe_disable_rx_drop
+[   59.524095] *** ixgbe_disable_rx_drop
+[   59.524096] *** ixgbe_disable_rx_drop
+[   59.524097] *** ixgbe_disable_rx_drop
+[   59.524098] *** ixgbe_disable_rx_drop
+[   59.524099] *** ixgbe_disable_rx_drop
+[   59.524100] *** ixgbe_disable_rx_drop
+[   59.524101] *** ixgbe_disable_rx_drop
+[   59.524102] *** ixgbe_disable_rx_drop
+[   59.524114] *** ixgbe_disable_rx_drop
+[   59.524115] *** ixgbe_disable_rx_drop
+[   59.524116] *** ixgbe_disable_rx_drop
+[   59.524117] *** ixgbe_disable_rx_drop
+[   59.524118] *** ixgbe_disable_rx_drop
+[   59.524119] *** ixgbe_disable_rx_drop
+[   59.524120] *** ixgbe_disable_rx_drop
+[   59.524121] *** ixgbe_disable_rx_drop
+[   59.524160] *** ixgbe_msix_other
+[   59.524164] *** ixgbe_check_lsc
+[   59.524166] *** ixgbe_check_sfp_event
+[   59.524168] *** ixgbe_check_fan_failure
+[   59.524169] *** ixgbe_irq_enable
+[   59.524172] 	 *** IXGBE_EIMS=0x880 0xD6090000
+[   59.628137] *** ixgbe_fc_enable_generic
+[   59.628147] *** ixgbe_disable_rx_drop
+[   59.628148] *** ixgbe_disable_rx_drop
+[   59.628149] *** ixgbe_disable_rx_drop
+[   59.628150] *** ixgbe_disable_rx_drop
+[   59.628151] *** ixgbe_disable_rx_drop
+[   59.628152] *** ixgbe_disable_rx_drop
+[   59.628153] *** ixgbe_disable_rx_drop
+[   59.628154] *** ixgbe_disable_rx_drop
+[   59.628155] *** ixgbe_disable_rx_drop
+[   59.628156] *** ixgbe_disable_rx_drop
+[   59.628157] *** ixgbe_disable_rx_drop
+[   59.628158] *** ixgbe_disable_rx_drop
+[   59.628159] *** ixgbe_disable_rx_drop
+[   59.628160] *** ixgbe_disable_rx_drop
+[   59.628161] *** ixgbe_disable_rx_drop
+[   59.628162] *** ixgbe_disable_rx_drop
+[   59.628163] *** ixgbe_disable_rx_drop
+[   59.628164] *** ixgbe_disable_rx_drop
+[   59.628165] *** ixgbe_disable_rx_drop
+[   59.628166] *** ixgbe_disable_rx_drop
+[   59.628167] *** ixgbe_disable_rx_drop
+[   59.628168] *** ixgbe_disable_rx_drop
+[   59.628169] *** ixgbe_disable_rx_drop
+[   59.628170] *** ixgbe_disable_rx_drop
+[   59.628171] *** ixgbe_disable_rx_drop
+[   59.628171] *** ixgbe_disable_rx_drop
+[   59.628172] *** ixgbe_disable_rx_drop
+[   59.628173] *** ixgbe_disable_rx_drop
+[   59.628174] *** ixgbe_disable_rx_drop
+[   59.628175] *** ixgbe_disable_rx_drop
+[   59.628176] *** ixgbe_disable_rx_drop
+[   59.628177] *** ixgbe_disable_rx_drop
+[   76.982034] *** ixgbe_set_rx_mode
+[   76.982051] *** ixgbe_vlan_strip_enable
+[   76.982080] *** ixgbe_vlan_promisc_disable
+
+[  476.389851] *** ixgbe_xmit_frame_ring reg_idx=1 count=1 len=42
+[  476.389853] *** ixgbe_tso skb->ip_summed != CHECKSUM_PARTIAL
+[  476.389853]  *** ixgbe_tx_csum
+[  476.389854]  *** ixgbe_tx_csum csum_failed
+[  476.389855] *** ixgbe_tx_map tx_ring->next_to_use=0 skb->data_len=0 size=42
+[  476.389857] 	 *** c i=0 tx_desc->read.buffer_addr=0x1FC3248202
+[  476.389857] 	 *** tx_desc->read.cmd_type_len=0x2B30002A
+[  476.389858] 	 *** tx_desc->read.olinfo_status=0xA8000
+[  476.389858] *** tx_ring->tail=1
+[  476.389859] ***
+[  477.391016] *** ixgbe_xmit_frame_ring reg_idx=1 count=1 len=98
+[  477.391018] *** ixgbe_tso skb->ip_summed != CHECKSUM_PARTIAL
+[  477.391019]  *** ixgbe_tx_csum
+[  477.391020]  *** ixgbe_tx_csum csum_failed
+[  477.391023] *** ixgbe_tx_map tx_ring->next_to_use=1 skb->data_len=0 size=98
+[  477.391025] 	 *** c i=1 tx_desc->read.buffer_addr=0x1FC3248202
+[  477.391026] 	 *** tx_desc->read.cmd_type_len=0x2B300062
+[  477.391027] 	 *** tx_desc->read.olinfo_status=0x188000
+[  477.391029] *** tx_ring->tail=2
+[  477.391029] ***
+[  478.415024] *** ixgbe_xmit_frame_ring reg_idx=1 count=1 len=98
+[  478.415027] *** ixgbe_tso skb->ip_summed != CHECKSUM_PARTIAL
+[  478.415028]  *** ixgbe_tx_csum
+[  478.415029]  *** ixgbe_tx_csum csum_failed
+[  478.415031] *** ixgbe_tx_map tx_ring->next_to_use=2 skb->data_len=0 size=98
+[  478.415034] 	 *** c i=2 tx_desc->read.buffer_addr=0x1FC3248202
+[  478.415035] 	 *** tx_desc->read.cmd_type_len=0x2B300062
+[  478.415036] 	 *** tx_desc->read.olinfo_status=0x188000
+[  478.415037] *** tx_ring->tail=3
+[  478.415038] ***

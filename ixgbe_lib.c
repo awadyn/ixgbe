@@ -1268,13 +1268,14 @@ void ixgbe_clear_interrupt_scheme(struct ixgbe_adapter *adapter)
 }
 
 void ixgbe_tx_ctxtdesc(struct ixgbe_ring *tx_ring, u32 vlan_macip_lens,
-		       u32 fcoe_sof_eof, u32 type_tucmd, u32 mss_l4len_idx)
+		       u32 fcoe_sof_eof, u32 type_tucmd, u32 mss_l4len_idx,
+		       u8 reg_idx)
 {
 	struct ixgbe_adv_tx_context_desc *context_desc;
 	u16 i = tx_ring->next_to_use;
 
 	context_desc = IXGBE_TX_CTXTDESC(tx_ring, i);
-
+	
 	i++;
 	tx_ring->next_to_use = (i < tx_ring->count) ? i : 0;
 
@@ -1285,5 +1286,12 @@ void ixgbe_tx_ctxtdesc(struct ixgbe_ring *tx_ring, u32 vlan_macip_lens,
 	context_desc->seqnum_seed	= cpu_to_le32(fcoe_sof_eof);
 	context_desc->type_tucmd_mlhl	= cpu_to_le32(type_tucmd);
 	context_desc->mss_l4len_idx	= cpu_to_le32(mss_l4len_idx);
+
+	if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
+	  printk(KERN_INFO "*** ixgbe_tx_ctxtdesc i=%d context_desc->vlan_macip_lens = 0x%X\n", i-1, context_desc->vlan_macip_lens);
+	  printk(KERN_INFO "*** context_desc->seqnum_seed = 0x%X\n", context_desc->seqnum_seed);
+	  printk(KERN_INFO "*** context_desc->type_tucmd_mlhl = 0x%X\n", context_desc->type_tucmd_mlhl);
+	  printk(KERN_INFO "*** context_desc->mss_l4len_idx = 0x%X\n", context_desc->mss_l4len_idx);
+	}
 }
 

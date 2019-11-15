@@ -128,6 +128,8 @@ static s32 ixgbe_setup_sfp_modules_82599(struct ixgbe_hw *hw)
 	s32 ret_val;
 	u16 list_offset, data_offset, data_value;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (hw->phy.sfp_type != ixgbe_sfp_type_unknown) {
 		ixgbe_init_mac_link_ops_82599(hw);
 
@@ -232,6 +234,7 @@ static s32 prot_autoc_write_82599(struct ixgbe_hw *hw, u32 autoc, bool locked)
 {
 	s32 ret_val = 0;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/* Blocked by MNG FW so bail */
 	if (ixgbe_check_reset_blocked(hw))
 		goto out;
@@ -295,6 +298,7 @@ static s32 ixgbe_init_phy_ops_82599(struct ixgbe_hw *hw)
 	s32 ret_val;
 	u32 esdp;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	if (hw->device_id == IXGBE_DEV_ID_82599_QSFP_SF_QP) {
 		/* Store flag indicating I2C bus access control unit. */
 		hw->phy.qsfp_shared_i2c_bus = true;
@@ -507,6 +511,7 @@ static void ixgbe_stop_mac_link_on_d3_82599(struct ixgbe_hw *hw)
 	u32 autoc2_reg;
 	u16 ee_ctrl_2 = 0;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	hw->eeprom.ops.read(hw, IXGBE_EEPROM_CTRL_2, &ee_ctrl_2);
 
 	if (!ixgbe_mng_present(hw) && !hw->wol_enabled &&
@@ -590,6 +595,7 @@ static void ixgbe_disable_tx_laser_multispeed_fiber(struct ixgbe_hw *hw)
 {
 	u32 esdp_reg = IXGBE_READ_REG(hw, IXGBE_ESDP);
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/* Blocked by MNG FW so bail */
 	if (ixgbe_check_reset_blocked(hw))
 		return;
@@ -612,7 +618,8 @@ static void ixgbe_disable_tx_laser_multispeed_fiber(struct ixgbe_hw *hw)
 static void ixgbe_enable_tx_laser_multispeed_fiber(struct ixgbe_hw *hw)
 {
 	u32 esdp_reg = IXGBE_READ_REG(hw, IXGBE_ESDP);
-
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Enable tx laser; allow 100ms to light up */
 	esdp_reg &= ~IXGBE_ESDP_SDP3;
 	IXGBE_WRITE_REG(hw, IXGBE_ESDP, esdp_reg);
@@ -657,6 +664,7 @@ ixgbe_set_hard_rate_select_speed(struct ixgbe_hw *hw, ixgbe_link_speed speed)
 {
 	u32 esdp_reg = IXGBE_READ_REG(hw, IXGBE_ESDP);
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	switch (speed) {
 	case IXGBE_LINK_SPEED_10GB_FULL:
 		esdp_reg |= (IXGBE_ESDP_SDP5_DIR | IXGBE_ESDP_SDP5);
@@ -939,6 +947,7 @@ static s32 ixgbe_reset_hw_82599(struct ixgbe_hw *hw)
 	u32 curr_lms;
 	bool link_up = false;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/* Call adapter stop to disable tx/rx and clear interrupts */
 	status = hw->mac.ops.stop_adapter(hw);
 	if (status)
@@ -1134,6 +1143,7 @@ s32 ixgbe_reinit_fdir_tables_82599(struct ixgbe_hw *hw)
 
 	fdirctrl &= ~IXGBE_FDIRCTRL_INIT_DONE;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/*
 	 * Before starting reinitialization process,
 	 * FDIRCMD.CMD must be zero.
@@ -1202,6 +1212,7 @@ static void ixgbe_fdir_enable_82599(struct ixgbe_hw *hw, u32 fdirctrl)
 {
 	int i;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/* Prime the keys for hashing */
 	IXGBE_WRITE_REG(hw, IXGBE_FDIRHKEY, IXGBE_ATR_BUCKET_HASH_KEY);
 	IXGBE_WRITE_REG(hw, IXGBE_FDIRSKEY, IXGBE_ATR_SIGNATURE_HASH_KEY);
@@ -1394,6 +1405,8 @@ s32 ixgbe_fdir_add_signature_filter_82599(struct ixgbe_hw *hw,
 	bool tunnel;
 	u32 fdircmd;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/*
 	 * Get the flow_type in order to program FDIRCMD properly
 	 * lowest 2 bits are FDIRCMD.L4TYPE, third lowest bit is FDIRCMD.IPV6
@@ -1547,6 +1560,8 @@ s32 ixgbe_fdir_set_input_mask_82599(struct ixgbe_hw *hw,
 	u32 fdirm = IXGBE_FDIRM_DIPv6;
 	u32 fdirtcpm;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/*
 	 * Program the relevant mask registers.  If src/dst_port or src/dst_addr
 	 * are zero, then assume a full mask for that field.  Also assume that
@@ -1657,6 +1672,8 @@ s32 ixgbe_fdir_write_perfect_filter_82599(struct ixgbe_hw *hw,
 	u32 fdirport, fdirvlan, fdirhash, fdircmd;
 	s32 err;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* currently IPv6 is not supported, must be programmed with 0 */
 	IXGBE_WRITE_REG_BE32(hw, IXGBE_FDIRSIPv6(0),
 			     input->formatted.src_ip[0]);
@@ -1721,6 +1738,8 @@ s32 ixgbe_fdir_erase_perfect_filter_82599(struct ixgbe_hw *hw,
 	u32 fdircmd;
 	s32 err;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* configure FDIRHASH register */
 	fdirhash = input->formatted.bkt_hash;
 	fdirhash |= soft_id << IXGBE_FDIRHASH_SIG_SW_INDEX_SHIFT;
@@ -1761,6 +1780,7 @@ static s32 ixgbe_read_analog_reg8_82599(struct ixgbe_hw *hw, u32 reg, u8 *val)
 {
 	u32  core_ctl;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	IXGBE_WRITE_REG(hw, IXGBE_CORECTL, IXGBE_CORECTL_WRITE_CMD |
 			(reg << 8));
 	IXGBE_WRITE_FLUSH(hw);
@@ -1783,6 +1803,7 @@ static s32 ixgbe_write_analog_reg8_82599(struct ixgbe_hw *hw, u32 reg, u8 val)
 {
 	u32  core_ctl;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	core_ctl = (reg << 8) | val;
 	IXGBE_WRITE_REG(hw, IXGBE_CORECTL, core_ctl);
 	IXGBE_WRITE_FLUSH(hw);
@@ -2035,6 +2056,7 @@ static s32 ixgbe_reset_pipeline_82599(struct ixgbe_hw *hw)
 	u32 anlp1_reg = 0;
 	u32 i, autoc_reg, autoc2_reg;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/* Enable link if disabled in NVM */
 	autoc2_reg = IXGBE_READ_REG(hw, IXGBE_AUTOC2);
 	if (autoc2_reg & IXGBE_AUTOC2_LINK_DISABLE_MASK) {
@@ -2090,6 +2112,7 @@ static s32 ixgbe_read_i2c_byte_82599(struct ixgbe_hw *hw, u8 byte_offset,
 	s32 status;
 	s32 timeout = 200;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	if (hw->phy.qsfp_shared_i2c_bus == true) {
 		/* Acquire I2C bus ownership. */
 		esdp = IXGBE_READ_REG(hw, IXGBE_ESDP);
@@ -2143,6 +2166,8 @@ static s32 ixgbe_write_i2c_byte_82599(struct ixgbe_hw *hw, u8 byte_offset,
 	s32 status;
 	s32 timeout = 200;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (hw->phy.qsfp_shared_i2c_bus == true) {
 		/* Acquire I2C bus ownership. */
 		esdp = IXGBE_READ_REG(hw, IXGBE_ESDP);

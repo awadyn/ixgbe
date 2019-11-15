@@ -143,6 +143,8 @@ s32 ixgbe_setup_fc_generic(struct ixgbe_hw *hw)
 	u16 reg_cu = 0;
 	bool locked = false;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/*
 	 * Validate the requested mode.  Strict IEEE mode does not allow
 	 * ixgbe_fc_rx_pause because it will cause us to fail at UNH.
@@ -298,6 +300,8 @@ s32 ixgbe_start_hw_generic(struct ixgbe_hw *hw)
 	u32 ctrl_ext;
 	u16 device_caps;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Set the media type */
 	hw->phy.media_type = hw->mac.ops.get_media_type(hw);
 
@@ -314,6 +318,7 @@ s32 ixgbe_start_hw_generic(struct ixgbe_hw *hw)
 	ctrl_ext = IXGBE_READ_REG(hw, IXGBE_CTRL_EXT);
 	ctrl_ext |= IXGBE_CTRL_EXT_NS_DIS;
 	IXGBE_WRITE_REG(hw, IXGBE_CTRL_EXT, ctrl_ext);
+	printk(KERN_INFO "\t *** IXGBE_CTRL_EXT=%X %X\n", IXGBE_CTRL_EXT, ctrl_ext);
 	IXGBE_WRITE_FLUSH(hw);
 
 	/* Setup flow control if method for doing so */
@@ -359,10 +364,14 @@ s32 ixgbe_start_hw_gen2(struct ixgbe_hw *hw)
 {
 	u32 i;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Clear the rate limiters */
 	for (i = 0; i < hw->mac.max_tx_queues; i++) {
 		IXGBE_WRITE_REG(hw, IXGBE_RTTDQSEL, i);
 		IXGBE_WRITE_REG(hw, IXGBE_RTTBCNRC, 0);
+		printk(KERN_INFO "\t *** ixgbe_start_hw_gen2 IXGBE_RTTDQSEL=%X %X\n", IXGBE_RTTDQSEL, i);
+		printk(KERN_INFO "\t *** ixgbe_start_hw_gen2 IXGBE_RTTBCNRC=%X %X\n", IXGBE_RTTBCNRC, 0);
 	}
 	IXGBE_WRITE_FLUSH(hw);
 
@@ -739,6 +748,8 @@ s32 ixgbe_stop_adapter_generic(struct ixgbe_hw *hw)
 	u32 reg_val;
 	u16 i;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/*
 	 * Set the adapter_stopped flag so other driver functions stop touching
 	 * the hardware
@@ -750,20 +761,23 @@ s32 ixgbe_stop_adapter_generic(struct ixgbe_hw *hw)
 
 	/* Clear interrupt mask to stop interrupts from being generated */
 	IXGBE_WRITE_REG(hw, IXGBE_EIMC, IXGBE_IRQ_CLEAR_MASK);
-
+	printk(KERN_INFO "\t *** ixgbe_stop_adapter_generic IXGBE_EIMC=%X %X\n", IXGBE_EIMC, IXGBE_IRQ_CLEAR_MASK);
+	
 	/* Clear any pending interrupts, flush previous writes */
 	IXGBE_READ_REG(hw, IXGBE_EICR);
 
 	/* Disable the transmit unit.  Each queue must be disabled. */
-	for (i = 0; i < hw->mac.max_tx_queues; i++)
+	for (i = 0; i < hw->mac.max_tx_queues; i++) {
 		IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(i), IXGBE_TXDCTL_SWFLSH);
-
+		printk(KERN_INFO "\t *** ixgbe_stop_adapter_generic i=%d IXGBE_TXDCTL(i)=%X %X\n", i, IXGBE_TXDCTL(i), IXGBE_TXDCTL_SWFLSH);
+	}
 	/* Disable the receive unit by stopping each queue */
 	for (i = 0; i < hw->mac.max_rx_queues; i++) {
 		reg_val = IXGBE_READ_REG(hw, IXGBE_RXDCTL(i));
 		reg_val &= ~IXGBE_RXDCTL_ENABLE;
 		reg_val |= IXGBE_RXDCTL_SWFLSH;
 		IXGBE_WRITE_REG(hw, IXGBE_RXDCTL(i), reg_val);
+		printk(KERN_INFO "\t *** ixgbe_stop_adapter_generic i=%d IXGBE_RXDCTL(i)=%X %X\n", i, IXGBE_RXDCTL(i), reg_val);
 	}
 
 	/* flush all queues disables */
@@ -829,6 +843,8 @@ s32 ixgbe_led_on_generic(struct ixgbe_hw *hw, u32 index)
 {
 	u32 led_reg = IXGBE_READ_REG(hw, IXGBE_LEDCTL);
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (index > 3)
 		return IXGBE_ERR_PARAM;
 
@@ -850,6 +866,8 @@ s32 ixgbe_led_off_generic(struct ixgbe_hw *hw, u32 index)
 {
 	u32 led_reg = IXGBE_READ_REG(hw, IXGBE_LEDCTL);
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (index > 3)
 		return IXGBE_ERR_PARAM;
 
@@ -1188,6 +1206,7 @@ s32 ixgbe_read_eerd_buffer_generic(struct ixgbe_hw *hw, u16 offset,
 	s32 status;
 	u32 i;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	hw->eeprom.ops.init_params(hw);
 
 	if (words == 0)
@@ -1285,6 +1304,7 @@ s32 ixgbe_write_eewr_buffer_generic(struct ixgbe_hw *hw, u16 offset,
 	s32 status;
 	u16 i;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	hw->eeprom.ops.init_params(hw);
 
 	if (words == 0)
@@ -1368,6 +1388,8 @@ static s32 ixgbe_acquire_eeprom(struct ixgbe_hw *hw)
 	u32 eec;
 	u32 i;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (hw->mac.ops.acquire_swfw_sync(hw, IXGBE_GSSR_EEP_SM) != 0)
 		return IXGBE_ERR_SWFW_SYNC;
 
@@ -1415,6 +1437,8 @@ static s32 ixgbe_get_eeprom_semaphore(struct ixgbe_hw *hw)
 	u32 i;
 	u32 swsm;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+ 
 	/* Get SMBI software semaphore between device drivers first */
 	for (i = 0; i < timeout; i++) {
 		/*
@@ -1488,6 +1512,7 @@ static void ixgbe_release_eeprom_semaphore(struct ixgbe_hw *hw)
 {
 	u32 swsm;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	swsm = IXGBE_READ_REG(hw, IXGBE_SWSM(hw));
 
 	/* Release both semaphores by writing 0 to the bits SWESMBI and SMBI */
@@ -1542,6 +1567,7 @@ static void ixgbe_standby_eeprom(struct ixgbe_hw *hw)
 {
 	u32 eec;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	eec = IXGBE_READ_REG(hw, IXGBE_EEC(hw));
 
 	/* Toggle CS to flush commands */
@@ -1568,6 +1594,8 @@ static void ixgbe_shift_out_eeprom_bits(struct ixgbe_hw *hw, u16 data,
 	u32 mask;
 	u32 i;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	eec = IXGBE_READ_REG(hw, IXGBE_EEC(hw));
 
 	/*
@@ -1866,6 +1894,7 @@ s32 ixgbe_set_rar_generic(struct ixgbe_hw *hw, u32 index, u8 *addr, u32 vmdq,
 	u32 rar_low, rar_high;
 	u32 rar_entries = hw->mac.num_rar_entries;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/* Make sure we are using a valid rar index range */
 	if (index >= rar_entries) {
 		hw_dbg(hw, "RAR index %d is out of range.\n", index);
@@ -1913,6 +1942,8 @@ s32 ixgbe_clear_rar_generic(struct ixgbe_hw *hw, u32 index)
 	u32 rar_high;
 	u32 rar_entries = hw->mac.num_rar_entries;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Make sure we are using a valid rar index range */
 	if (index >= rar_entries) {
 		hw_dbg(hw, "RAR index %d is out of range.\n", index);
@@ -1949,6 +1980,8 @@ s32 ixgbe_init_rx_addrs_generic(struct ixgbe_hw *hw)
 	u32 i;
 	u32 rar_entries = hw->mac.num_rar_entries;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/*
 	 * If the current mac address is valid, assume it is a software override
 	 * to the permanent address.
@@ -2082,6 +2115,8 @@ s32 ixgbe_update_mc_addr_list_generic(struct ixgbe_hw *hw,
 	struct netdev_hw_addr *ha;
 	u32 i;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/*
 	 * Set the new number of MC addresses that we are being requested to
 	 * use.
@@ -2121,7 +2156,8 @@ s32 ixgbe_update_mc_addr_list_generic(struct ixgbe_hw *hw,
 s32 ixgbe_enable_mc_generic(struct ixgbe_hw *hw)
 {
 	struct ixgbe_addr_filter_info *a = &hw->addr_ctrl;
-
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+ 
 	if (a->mta_in_use > 0)
 		IXGBE_WRITE_REG(hw, IXGBE_MCSTCTRL, IXGBE_MCSTCTRL_MFE |
 				hw->mac.mc_filter_type);
@@ -2139,6 +2175,7 @@ s32 ixgbe_disable_mc_generic(struct ixgbe_hw *hw)
 {
 	struct ixgbe_addr_filter_info *a = &hw->addr_ctrl;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	if (a->mta_in_use > 0)
 		IXGBE_WRITE_REG(hw, IXGBE_MCSTCTRL, hw->mac.mc_filter_type);
 
@@ -2158,6 +2195,8 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
 	u32 fcrtl, fcrth;
 	int i;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Validate the water mark configuration. */
 	if (!hw->fc.pause_time)
 		return IXGBE_ERR_INVALID_LINK_SETTINGS;
@@ -2533,6 +2572,8 @@ static s32 ixgbe_disable_pcie_master(struct ixgbe_hw *hw)
 	u32 i, poll;
 	u16 value;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Always set this bit to ensure any future transactions are blocked */
 	IXGBE_WRITE_REG(hw, IXGBE_CTRL, IXGBE_CTRL_GIO_DIS);
 
@@ -2701,6 +2742,8 @@ s32 ixgbe_disable_rx_buff_generic(struct ixgbe_hw *hw)
 	int i;
 	int secrxreg;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	secrxreg = IXGBE_READ_REG(hw, IXGBE_SECRXCTRL);
 	secrxreg |= IXGBE_SECRXCTRL_RX_DIS;
 	IXGBE_WRITE_REG(hw, IXGBE_SECRXCTRL, secrxreg);
@@ -2731,9 +2774,12 @@ s32 ixgbe_enable_rx_buff_generic(struct ixgbe_hw *hw)
 {
 	u32 secrxreg;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	secrxreg = IXGBE_READ_REG(hw, IXGBE_SECRXCTRL);
 	secrxreg &= ~IXGBE_SECRXCTRL_RX_DIS;
 	IXGBE_WRITE_REG(hw, IXGBE_SECRXCTRL, secrxreg);
+	printk(KERN_INFO "\t *** ixgbe_enable_rx_buff_generic IXGBE_SECRXCTR=%X %X\n", IXGBE_SECRXCTRL, secrxreg);
 	IXGBE_WRITE_FLUSH(hw);
 
 	return 0;
@@ -2974,6 +3020,8 @@ s32 ixgbe_clear_vmdq_generic(struct ixgbe_hw *hw, u32 rar, u32 vmdq)
 	u32 mpsar_lo, mpsar_hi;
 	u32 rar_entries = hw->mac.num_rar_entries;
 
+	//printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Make sure we are using a valid rar index range */
 	if (rar >= rar_entries) {
 		hw_dbg(hw, "RAR index %d is out of range.\n", rar);
@@ -3025,6 +3073,8 @@ s32 ixgbe_set_vmdq_generic(struct ixgbe_hw *hw, u32 rar, u32 vmdq)
 	u32 mpsar;
 	u32 rar_entries = hw->mac.num_rar_entries;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/* Make sure we are using a valid rar index range */
 	if (rar >= rar_entries) {
 		hw_dbg(hw, "RAR index %d is out of range.\n", rar);
@@ -3056,7 +3106,8 @@ s32 ixgbe_set_vmdq_generic(struct ixgbe_hw *hw, u32 rar, u32 vmdq)
 s32 ixgbe_set_vmdq_san_mac_generic(struct ixgbe_hw *hw, u32 vmdq)
 {
 	u32 rar = hw->mac.san_mac_rar_index;
-
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+ 
 	if (vmdq < 32) {
 		IXGBE_WRITE_REG(hw, IXGBE_MPSAR_LO(rar), BIT(vmdq));
 		IXGBE_WRITE_REG(hw, IXGBE_MPSAR_HI(rar), 0);
@@ -3075,7 +3126,8 @@ s32 ixgbe_set_vmdq_san_mac_generic(struct ixgbe_hw *hw, u32 vmdq)
 s32 ixgbe_init_uta_tables_generic(struct ixgbe_hw *hw)
 {
 	int i;
-
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	for (i = 0; i < 128; i++)
 		IXGBE_WRITE_REG(hw, IXGBE_UTA(i), 0);
 
@@ -3146,6 +3198,8 @@ s32 ixgbe_set_vfta_generic(struct ixgbe_hw *hw, u32 vlan, u32 vind,
 	u32 regidx, vfta_delta, vfta, bits;
 	s32 vlvf_index;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if ((vlan > 4095) || (vind > 63))
 		return IXGBE_ERR_PARAM;
 
@@ -3255,6 +3309,8 @@ s32 ixgbe_clear_vfta_generic(struct ixgbe_hw *hw)
 {
 	u32 offset;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	for (offset = 0; offset < hw->mac.vft_size; offset++)
 		IXGBE_WRITE_REG(hw, IXGBE_VFTA(offset), 0);
 
@@ -3461,6 +3517,8 @@ void ixgbe_set_mac_anti_spoofing(struct ixgbe_hw *hw, bool enable, int vf)
 	int vf_target_shift = vf % 8;
 	u32 pfvfspoof;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (hw->mac.type == ixgbe_mac_82598EB)
 		return;
 
@@ -3485,6 +3543,8 @@ void ixgbe_set_vlan_anti_spoofing(struct ixgbe_hw *hw, bool enable, int vf)
 	int vf_target_shift = vf % 8 + IXGBE_SPOOF_VLANAS_SHIFT;
 	u32 pfvfspoof;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (hw->mac.type == ixgbe_mac_82598EB)
 		return;
 
@@ -3527,6 +3587,7 @@ void ixgbe_set_rxpba_generic(struct ixgbe_hw *hw,
 	int i = 0;
 	u32 rxpktsize, txpktsize, txpbthresh;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	/* Reserve headroom */
 	pbsize -= headroom;
 
@@ -3580,7 +3641,7 @@ void ixgbe_set_rxpba_generic(struct ixgbe_hw *hw,
 		IXGBE_WRITE_REG(hw, IXGBE_TXPBTHRESH(i), 0);
 	}
 
-	printk(KERN_INFO "\t *** IXGBE_DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
+	//printk(KERN_INFO "\t *** IXGBE_DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
 }
 
 /**
@@ -3625,6 +3686,8 @@ s32 ixgbe_hic_unlocked(struct ixgbe_hw *hw, u32 *buffer, u32 length,
 	u32 hicr, i, fwsts;
 	u16 dword_len;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	if (!length || length > IXGBE_HI_MAX_BLOCK_BYTE_LENGTH) {
 		hw_dbg(hw, "Buffer length failure buffersize-%d.\n", length);
 		return IXGBE_ERR_HOST_INTERFACE_COMMAND;
@@ -3825,6 +3888,8 @@ void ixgbe_clear_tx_pending(struct ixgbe_hw *hw)
 	u32 gcr_ext, hlreg0, i, poll;
 	u16 value;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	/*
 	 * If double reset is not requested then all transactions should
 	 * already be clear and as such there is no work to do
@@ -4038,6 +4103,8 @@ void ixgbe_disable_rx_generic(struct ixgbe_hw *hw)
 {
 	u32 rxctrl;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
+	
 	rxctrl = IXGBE_READ_REG(hw, IXGBE_RXCTRL);
 	if (rxctrl & IXGBE_RXCTRL_RXEN) {
 		if (hw->mac.type != ixgbe_mac_82598EB) {
@@ -4047,6 +4114,7 @@ void ixgbe_disable_rx_generic(struct ixgbe_hw *hw)
 			if (pfdtxgswc & IXGBE_PFDTXGSWC_VT_LBEN) {
 				pfdtxgswc &= ~IXGBE_PFDTXGSWC_VT_LBEN;
 				IXGBE_WRITE_REG(hw, IXGBE_PFDTXGSWC, pfdtxgswc);
+				printk(KERN_INFO "\t *** IXGBE_PFDTXGSWC=%X %X\n", IXGBE_PFDTXGSWC, pfdtxgswc);
 				hw->mac.set_lben = true;
 			} else {
 				hw->mac.set_lben = false;
@@ -4054,6 +4122,7 @@ void ixgbe_disable_rx_generic(struct ixgbe_hw *hw)
 		}
 		rxctrl &= ~IXGBE_RXCTRL_RXEN;
 		IXGBE_WRITE_REG(hw, IXGBE_RXCTRL, rxctrl);
+		printk(KERN_INFO "\t *** IXGBE_RXCTRL=%X %X\n", IXGBE_RXCTRL, rxctrl);
 	}
 }
 
@@ -4061,9 +4130,11 @@ void ixgbe_enable_rx_generic(struct ixgbe_hw *hw)
 {
 	u32 rxctrl;
 
+	printk(KERN_INFO "*** %s\n", __FUNCTION__);
 	rxctrl = IXGBE_READ_REG(hw, IXGBE_RXCTRL);
 	IXGBE_WRITE_REG(hw, IXGBE_RXCTRL, (rxctrl | IXGBE_RXCTRL_RXEN));
-
+	printk(KERN_INFO "\t *** IXGBE_RXCTRL=%X %X\n", IXGBE_RXCTRL, (rxctrl | IXGBE_RXCTRL_RXEN));
+	
 	if (hw->mac.type != ixgbe_mac_82598EB) {
 		if (hw->mac.set_lben) {
 			u32 pfdtxgswc;
@@ -4071,6 +4142,7 @@ void ixgbe_enable_rx_generic(struct ixgbe_hw *hw)
 			pfdtxgswc = IXGBE_READ_REG(hw, IXGBE_PFDTXGSWC);
 			pfdtxgswc |= IXGBE_PFDTXGSWC_VT_LBEN;
 			IXGBE_WRITE_REG(hw, IXGBE_PFDTXGSWC, pfdtxgswc);
+			printk(KERN_INFO "\t *** IXGBE_PFDTXGSWC=%X %X\n", IXGBE_PFDTXGSWC, pfdtxgswc);
 			hw->mac.set_lben = false;
 		}
 	}

@@ -2519,7 +2519,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	}
 
 	if (ec->rx_coalesce_usecs_low) {
-	  adapter->rsc_delay = ec->rx_coalesce_usecs_low;
+	  adapter->rsc_delay = ec->rx_coalesce_usecs_low-1;
 	  printk(KERN_INFO "\t *** Update RSCDELAY = %d\n", ec->rx_coalesce_usecs_low);
 	}
 
@@ -2530,6 +2530,14 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  printk(KERN_INFO "\t XXX PTHRESH=%d\n", txdctl & 0x7F);
 	  printk(KERN_INFO "\t XXX HTHRESH=%d\n", (txdctl >> 8) & 0x7F);
 	  printk(KERN_INFO "\t XXX WTHRESH=%d\n", (txdctl >> 16) & 0x7F);
+	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d END\n", adapter->log_itrs_cnt);
+	  for (i = 0; i < adapter->log_itrs_cnt; i++) {
+	    printk(KERN_INFO "\t xxx %d itr:%d\n", i, adapter->log_itrs[i]);
+	    adapter->log_itrs[i] = 0;
+	  }
+	  adapter->log_itrs_cnt = 0;
+	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);
+	  
 	  
 	  /*printk(KERN_INFO "\n\t xxx log_cnt = %d START\n", adapter->log_cnt);
 	  printk(KERN_INFO "\t xxx totalrxbytes = %d\n", adapter->totalrxbytes);
