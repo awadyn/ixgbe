@@ -1281,17 +1281,17 @@ void ixgbe_tx_ctxtdesc(struct ixgbe_ring *tx_ring, u32 vlan_macip_lens,
 
 	/* set bits to identify this as an advanced context descriptor */
 	type_tucmd |= IXGBE_TXD_CMD_DEXT | IXGBE_ADVTXD_DTYP_CTXT;
-
+	
 	context_desc->vlan_macip_lens	= cpu_to_le32(vlan_macip_lens);
 	context_desc->seqnum_seed	= cpu_to_le32(fcoe_sof_eof);
 	context_desc->type_tucmd_mlhl	= cpu_to_le32(type_tucmd);
 	context_desc->mss_l4len_idx	= cpu_to_le32(mss_l4len_idx);
 
 	if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
-	  printk(KERN_INFO "*** ixgbe_tx_ctxtdesc i=%d context_desc->vlan_macip_lens = 0x%X\n", i-1, context_desc->vlan_macip_lens);
-	  printk(KERN_INFO "*** context_desc->seqnum_seed = 0x%X\n", context_desc->seqnum_seed);
-	  printk(KERN_INFO "*** context_desc->type_tucmd_mlhl = 0x%X\n", context_desc->type_tucmd_mlhl);
-	  printk(KERN_INFO "*** context_desc->mss_l4len_idx = 0x%X\n", context_desc->mss_l4len_idx);
+	  printk(KERN_INFO "*** ixgbe_tx_ctxtdesc i=%d vlan_macip_lens = 0x%X\n", i-1, vlan_macip_lens);
+	  printk(KERN_INFO "*** fcoe_sof_eof = 0x%X\n", fcoe_sof_eof);
+	  printk(KERN_INFO "*** type_tucmd = 0x%X\n", type_tucmd);
+	  printk(KERN_INFO "*** mss_l4len_idx = 0x%X\n", mss_l4len_idx);
 	}
 }
 

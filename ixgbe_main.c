@@ -8287,6 +8287,10 @@ static int ixgbe_tso(struct ixgbe_ring *tx_ring,
 	vlan_macip_lens |= (ip.hdr - skb->data) << IXGBE_ADVTXD_MACLEN_SHIFT;
 	vlan_macip_lens |= first->tx_flags & IXGBE_TX_FLAGS_VLAN_MASK;
 
+	if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
+	  printk(KERN_INFO "*** ixgbe_tso ip.v4->check=0x%X l4.tcp->check=0x%X\n", ip.v4->check, l4.tcp->check);
+	}
+	
 	ixgbe_tx_ctxtdesc(tx_ring, vlan_macip_lens, 0, type_tucmd,
 			  mss_l4len_idx, reg_idx);
 
@@ -8311,7 +8315,7 @@ static void ixgbe_tx_csum(struct ixgbe_ring *tx_ring,
 	u8 reg_idx = tx_ring->reg_idx;
 
 	if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
-	  printk(KERN_INFO " *** ixgbe_tx_csum\n");
+	  printk(KERN_INFO " *** ixgbe_tx_csum skb->ip_summed=0x%X skb->csum=0x%X\n", skb->ip_summed, skb->csum);
 	}
 	
 	if (skb->ip_summed != CHECKSUM_PARTIAL) {
@@ -8319,7 +8323,7 @@ csum_failed:
 		if (!(first->tx_flags & (IXGBE_TX_FLAGS_HW_VLAN |
 					 IXGBE_TX_FLAGS_CC))) {
 		  if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
-		    printk(KERN_INFO " *** ixgbe_tx_csum csum_failed\n");
+		    printk(KERN_INFO " *** ixgbe_tx_csum skb->ip_summed != CHECKSUM_PARTIAL\n");
 		  }
 			return;
 		}
@@ -8355,6 +8359,9 @@ csum_failed:
 	vlan_macip_lens = skb_checksum_start_offset(skb) -
 			  skb_network_offset(skb);
 no_csum:
+	if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
+	  printk(KERN_INFO "\t *** no_csum\n");
+	}
 	/* vlan_macip_lens: MACLEN, VLAN tag */
 	vlan_macip_lens |= skb_network_offset(skb) << IXGBE_ADVTXD_MACLEN_SHIFT;
 	vlan_macip_lens |= first->tx_flags & IXGBE_TX_FLAGS_VLAN_MASK;
@@ -8465,7 +8472,7 @@ static int ixgbe_tx_map(struct ixgbe_ring *tx_ring,
 	u32 cmd_type = ixgbe_tx_cmd_type(skb, tx_flags);
 	u16 i = tx_ring->next_to_use;
 	u8 reg_idx = tx_ring->reg_idx;
-
+	
 	tx_desc = IXGBE_TX_DESC(tx_ring, i);
 
 	ixgbe_tx_olinfo_status(tx_desc, tx_flags, skb->len - hdr_len);
@@ -8487,7 +8494,7 @@ static int ixgbe_tx_map(struct ixgbe_ring *tx_ring,
 	dma = dma_map_single(tx_ring->dev, skb->data, size, DMA_TO_DEVICE);
 
 	if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
-	  printk(KERN_INFO "*** ixgbe_tx_map tx_ring->next_to_use=%d skb->data_len=%d size=%d\n", i, skb->data_len, size);
+	  printk(KERN_INFO "*** ixgbe_tx_map tx_ring->next_to_use=%d skb->data_len=%d size=%d paylen=%d\n", i, skb->data_len, size, skb->len - hdr_len);
 	}
 	
 	tx_buffer = first;
@@ -8501,9 +8508,10 @@ static int ixgbe_tx_map(struct ixgbe_ring *tx_ring,
 		dma_unmap_addr_set(tx_buffer, dma, dma);
 
 		tx_desc->read.buffer_addr = cpu_to_le64(dma);
-		
-		if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21 && size > IXGBE_MAX_DATA_PER_TXD) {
-		  printk(KERN_INFO "*** size:%d > IXGBE_MAX_DATA_PER_TXD:%d\n", size, IXGBE_MAX_DATA_PER_TXD);
+
+		// IXGBE_MAX_DATA_PER_TXD == 16384
+		if(reg_idx == 1 && tx_ring->mac_addr5 == 0x21) {
+		  printk(KERN_INFO "*** size:%d, IXGBE_MAX_DATA_PER_TXD:%d\n", size, IXGBE_MAX_DATA_PER_TXD);
 		}
 
 		// IXGBE_MAX_DATA_PER_TXD == 16KB
@@ -8540,6 +8548,7 @@ static int ixgbe_tx_map(struct ixgbe_ring *tx_ring,
 		  printk(KERN_INFO "\t *** b i=%d tx_desc->read.buffer_addr=0x%llX\n", i, tx_desc->read.buffer_addr);
 		  printk(KERN_INFO "\t *** tx_desc->read.cmd_type_len=0x%X\n", tx_desc->read.cmd_type_len);
 		  printk(KERN_INFO "\t *** tx_desc->read.olinfo_status=0x%X\n", tx_desc->read.olinfo_status);
+		  
 		}
 		
 		i++;
@@ -8571,6 +8580,7 @@ static int ixgbe_tx_map(struct ixgbe_ring *tx_ring,
 	  printk(KERN_INFO "\t *** c i=%d tx_desc->read.buffer_addr=0x%llX\n", i, tx_desc->read.buffer_addr);
 	  printk(KERN_INFO "\t *** tx_desc->read.cmd_type_len=0x%X\n", tx_desc->read.cmd_type_len);
 	  printk(KERN_INFO "\t *** tx_desc->read.olinfo_status=0x%X\n", tx_desc->read.olinfo_status);
+	  printk(KERN_INFO "\t *** first->bytecount=%d size=%d\n", first->bytecount, size);
 	}
 	
 	netdev_tx_sent_queue(txring_txq(tx_ring), first->bytecount);
@@ -8842,9 +8852,14 @@ static int ixgbe_xmit_xdp_ring(struct ixgbe_adapter *adapter,
 	u32 len, cmd_type;
 	dma_addr_t dma;
 	u16 i;
-
+	u8 reg_idx = ring->reg_idx;
+	
 	len = xdp->data_end - xdp->data;
 
+	if(reg_idx == 1 && ring->mac_addr5 == 0x21) {
+	  printk(KERN_INFO "*** ixgbe_xmit_xdp_ring reg_idx=%d len=%d\n", reg_idx, len);
+	}
+	
 	if (unlikely(!ixgbe_desc_unused(ring)))
 		return IXGBE_XDP_CONSUMED;
 
