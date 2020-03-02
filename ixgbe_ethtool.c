@@ -2360,11 +2360,13 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 	struct ixgbe_q_vector *q_vector;
 	struct ixgbe_hw *hw = &adapter->hw;
-	int i;
-        u32 dtxmx, txdctl;
+	int i, core;
+        //u32 dtxmx, txdctl;
+	u32 dtxmx;
 	//u32 dtxmx, txdctl, srrctl;
 	//u16 tx_itr_param, rx_itr_param, tx_itr_prev;
 	bool need_reset = false;
+	u64 totalc = 0;
 	
 	/* if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) { */
 	/* 	/\* reject Tx specific changes in case of mixed RxTx vectors *\/ */
@@ -2519,25 +2521,79 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	}
 
 	if (ec->rx_coalesce_usecs_low) {
-	  adapter->rsc_delay = ec->rx_coalesce_usecs_low-1;
+	  adapter->rsc_delay = ec->rx_coalesce_usecs_low;
 	  printk(KERN_INFO "\t *** Update RSCDELAY = %d\n", ec->rx_coalesce_usecs_low);
 	}
 
         if (ec->rx_max_coalesced_frames_low) {
-	  printk(KERN_INFO "\t XXX DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
-	  printk(KERN_INFO "\t XXX RSC_Delay=%d\n", (int)((IXGBE_READ_REG(hw, IXGBE_EITR(1)) >> 3)&0x1FF));
-	  txdctl = (u32)IXGBE_READ_REG(hw, IXGBE_TXDCTL(1));
-	  printk(KERN_INFO "\t XXX PTHRESH=%d\n", txdctl & 0x7F);
-	  printk(KERN_INFO "\t XXX HTHRESH=%d\n", (txdctl >> 8) & 0x7F);
-	  printk(KERN_INFO "\t XXX WTHRESH=%d\n", (txdctl >> 16) & 0x7F);
-	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d END\n", adapter->log_itrs_cnt);
-	  for (i = 0; i < adapter->log_itrs_cnt; i++) {
-	    printk(KERN_INFO "\t xxx %d itr:%d\n", i, adapter->log_itrs[i]);
-	    adapter->log_itrs[i] = 0;
-	  }
-	  adapter->log_itrs_cnt = 0;
-	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);
+	  core = ec->rx_max_coalesced_frames_low - 1;
 	  
+	  if(core >= 0 && core < 16) {
+	    printk(KERN_INFO "\t xxx Core=%d rx_time_cnt=%u rx_desc_cnt=%u\n", core,
+		   adapter->rx_time_cnt[core], adapter->rx_desc_cnt[core]);
+	    
+	    totalc = adapter->rx_time_cnt[core] > adapter->rx_desc_cnt[core] ?
+	      adapter->rx_desc_cnt[core] : adapter->rx_time_cnt[core];
+	    
+	    for (i = 0; i < totalc; i++) {
+	      if(core == 0 || core == 1) {
+		printk(KERN_INFO "\t xxx log_rx_time_us %lld log_rx_desc %lld log_joules %lld\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i], adapter->log_joules[core][i]);
+	      } else {
+		printk(KERN_INFO "\t xxx log_rx_time_us %lld log_rx_desc %lld\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i]);
+	      }
+	      
+	      adapter->log_rx_time_us[core][i] = 0;
+	      adapter->log_rx_desc[core][i] = 0;
+	      adapter->log_joules[core][i] = 0;
+	    }
+	    
+	    adapter->rx_time_cnt[core] = 0;
+	    adapter->rx_desc_cnt[core] = 0;
+	  } else if(core >=16 && core < 32) {	    
+	    core = core % 16;
+	    printk(KERN_INFO "\t xxx Core=%d tx_cnt=%u\n", core,
+		   adapter->tx_cnt[core]);
+	    
+	    for(i=0; i<adapter->tx_cnt[core]; i++) {
+	      printk(KERN_INFO "\t xxx log_tx_time_us %lld log_tx_desc %lld\n", adapter->log_tx_time_us[core][i],
+		     adapter->log_tx_desc[core][i]);
+
+	      adapter->log_tx_time_us[core][i] = 0;
+	      adapter->log_tx_desc[core][i] = 0;	      
+	    }
+	    
+	    adapter->tx_cnt[core] = 0;	    	    
+	  } else {
+	    printk(KERN_INFO "\t xxx core %d error\n", core);
+	  }
+	  
+	  
+	  /*printk(KERN_INFO "\n\t xxx poll_cnt1 = %lld rxdesc_cnt1 = %lld\n", adapter->poll_cnt1, adapter->rxdesc_cnt1);	  	  
+	  totalc = adapter->poll_cnt1 > adapter->rxdesc_cnt1 ? adapter->poll_cnt1 : adapter->rxdesc_cnt1;
+	  for (i = 0; i < totalc; i++) {
+	    printk(KERN_INFO "\n\t xxx log_time_ns1 %lld log_rx_desc1 %lld\n", adapter->log_time_ns1[i], adapter->log_rx_desc1[i]);
+	    adapter->log_time_ns1[i] = 0;
+	    adapter->log_rx_desc1[i] = 0;
+	  }
+	  adapter->rxdesc_cnt1 = 0;
+	  adapter->poll_cnt1 = 0;
+	  */
+	  /*printk(KERN_INFO "\n\t xxx poll_cnt14 = %lld rxdesc_cnt14 = %lld\n", adapter->poll_cnt14, adapter->rxdesc_cnt14);
+	  totalc = adapter->poll_cnt14 > adapter->rxdesc_cnt14 ? adapter->poll_cnt14 : adapter->rxdesc_cnt14;
+	  for (i = 0; i < totalc; i++) {
+	    printk(KERN_INFO "\n\t xxx log_time_ns14 %lld log_rx_desc14 %lld\n", adapter->log_time_ns14[i], adapter->log_rx_desc14[i]);
+	    adapter->log_time_ns14[i] = 0;
+	    adapter->log_rx_desc14[i] = 0;
+	  }
+	  adapter->rxdesc_cnt14 = 0;
+	  adapter->poll_cnt14 = 0;
+	  */
+	  //printk(KERN_INFO "\t XXX DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
+	  //printk(KERN_INFO "\t XXX RSC_Delay=%d\n", (int)((IXGBE_READ_REG(hw, IXGBE_EITR(1)) >> 3)&0x1FF));
+	  //txdctl = (u32)IXGBE_READ_REG(hw, IXGBE_TXDCTL(1));
+	  //printk(KERN_INFO "\t XXX PTHRESH=%d\n", txdctl & 0x7F);
+	  //printk(KERN_INFO "\t XXX HTHRESH=%d\n", (txdctl >> 8) & 0x7F);
+	  //printk(KERN_INFO "\t XXX WTHRESH=%d\n", (txdctl >> 16) & 0x7F);
 	  
 	  /*printk(KERN_INFO "\n\t xxx log_cnt = %d START\n", adapter->log_cnt);
 	  printk(KERN_INFO "\t xxx totalrxbytes = %d\n", adapter->totalrxbytes);
