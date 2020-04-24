@@ -1176,7 +1176,10 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	unsigned int total_bytes = 0, total_packets = 0;
 	unsigned int budget = q_vector->tx.work_limit;
 	unsigned int i = tx_ring->next_to_clean;
-	//int v_idx = q_vector->v_idx;
+	struct timeval tv;
+	u32 tcnt = 0;
+	int v_idx = q_vector->v_idx;
+	int tx_desc_cnt = 0;
 	  
 	if (test_bit(__IXGBE_DOWN, &adapter->state))
 		return true;
@@ -1225,6 +1228,7 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 		while (tx_desc != eop_desc) {
 			tx_buffer++;
 			tx_desc++;
+			tx_desc_cnt ++;
 			i++;
 			if (unlikely(!i)) {
 				i -= tx_ring->count;
@@ -1245,6 +1249,7 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 		/* move us one more past the eop_desc for start of next pkt */
 		tx_buffer++;
 		tx_desc++;
+		tx_desc_cnt++;
 		i++;
 		if (unlikely(!i)) {
 			i -= tx_ring->count;
@@ -1264,6 +1269,16 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	u64_stats_update_begin(&tx_ring->syncp);
 	tx_ring->stats.bytes += total_bytes;
 	tx_ring->stats.packets += total_packets;
+
+	// actually sending
+	do_gettimeofday(&tv);
+	tcnt = adapter->tx_cnt[v_idx];
+	if(tcnt < 800000) {
+	  adapter->log_tx_time_us[v_idx][tcnt] = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);
+	  adapter->log_tx_desc[v_idx][tcnt] = tx_desc_cnt;
+	  adapter->tx_cnt[v_idx] += 1;
+	}
+	
 /*	if(v_idx == 1) {
 	  adapter->log_txbytes[adapter->log_cnt] = total_bytes;
 	  adapter->log_txpackets[adapter->log_cnt] = total_packets;
@@ -1651,7 +1666,7 @@ static bool ixgbe_alloc_mapped_page(struct ixgbe_ring *rx_ring,
  * @rx_ring: ring to place buffers on
  * @cleaned_count: number of buffers to replace
  **/
-void ixgbe_alloc_rx_buffers(struct ixgbe_ring *rx_ring, u16 cleaned_count)
+void ixgbe_alloc_rx_buffers(struct ixgbe_ring *rx_ring, u16 cleaned_count, u8 maddr)
 {
 	union ixgbe_adv_rx_desc *rx_desc;
 	struct ixgbe_rx_buffer *bi;
@@ -1713,6 +1728,9 @@ void ixgbe_alloc_rx_buffers(struct ixgbe_ring *rx_ring, u16 cleaned_count)
 		 */
 		wmb();
 		writel(i, rx_ring->tail);
+		if(maddr == 0x21) {
+		  printk(KERN_INFO "XXX ixgbe_alloc_rx_buffers writel i=%d next_to_use=%d\n", i, i);
+		}
 	}
 }
 
@@ -1801,8 +1819,8 @@ static bool ixgbe_is_non_eop(struct ixgbe_ring *rx_ring,
 			     union ixgbe_adv_rx_desc *rx_desc,
 			     struct sk_buff *skb)
 {
-	u32 ntc = rx_ring->next_to_clean + 1;
-	//int v_idx = rx_ring->q_vector->v_idx;
+        u32 ntc = rx_ring->next_to_clean + 1;
+	int v_idx = rx_ring->q_vector->v_idx;
 	
 	/* fetch, update, and store next to clean */
 	ntc = (ntc < rx_ring->count) ? ntc : 0;
@@ -1826,9 +1844,9 @@ static bool ixgbe_is_non_eop(struct ixgbe_ring *rx_ring,
 			ntc &= IXGBE_RXDADV_NEXTP_MASK;
 			ntc >>= IXGBE_RXDADV_NEXTP_SHIFT;
 
-			//if(v_idx == 1) {
-	                //       printk(KERN_INFO "\t *** RSC ixgbe_is_non_eop\n");
-	                //}
+			/*if(v_idx == 1) {
+			  printk(KERN_INFO "xxx RSC ixgbe_is_non_eop v_idx=%d rsc_enabled=0x%X rsc_cnt=0x%X\n", v_idx, rsc_enabled, rsc_cnt);
+			  }*/
 	        }
 	}
 
@@ -2351,6 +2369,7 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 {
 	unsigned int total_rx_bytes = 0, total_rx_packets = 0;
 	struct ixgbe_adapter *adapter = q_vector->adapter;
+	struct ixgbe_hw *hw = &adapter->hw;
 #ifdef IXGBE_FCOE
 	int ddp_bytes;
 	unsigned int mss = 0;
@@ -2360,7 +2379,10 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 	int v_idx = q_vector->v_idx;
 	int rx_processed = 0;
 	u32 rcnt = 0;
-	
+
+	if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+	  printk(KERN_INFO "XXX START\n");
+	}
 	while (likely(total_rx_packets < budget)) {
 		union ixgbe_adv_rx_desc *rx_desc;
 		struct ixgbe_rx_buffer *rx_buffer;
@@ -2370,14 +2392,18 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 
 		/* return some buffers to hardware, one at a time is too slow */
 		if (cleaned_count >= IXGBE_RX_BUFFER_WRITE) {
-			ixgbe_alloc_rx_buffers(rx_ring, cleaned_count);
+		  ixgbe_alloc_rx_buffers(rx_ring, cleaned_count, hw->mac.addr[ETH_ALEN-1]);
 			cleaned_count = 0;
 		}
 
 		rx_desc = IXGBE_RX_DESC(rx_ring, rx_ring->next_to_clean);
 		size = le16_to_cpu(rx_desc->wb.upper.length);
-		if (!size)
+		if (!size) {
+		  if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+		    printk(KERN_INFO "    !size break exit\n");
+		  }
 			break;
+		}
 
 		/* This memory barrier is needed to keep us from reading
 		 * any other fields out of the rx_desc until we know the
@@ -2385,6 +2411,11 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		 */
 		dma_rmb();
 
+		if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+		  //printk(KERN_INFO "    core=%d next_to_use=%u next_to_clean=%u rx_desc->wb.upper.vlan=0x%X rx_desc->wb.upper.length=%u, wb.upper.status_error=0x%X wb.lower.hi_dword.rss=0x%X rx_desc->wb.lo_dword.data=0x%X\n", v_idx, rx_ring->next_to_use, rx_ring->next_to_clean, rx_desc->wb.upper.vlan, rx_desc->wb.upper.length, rx_desc->wb.upper.status_error, rx_desc->wb.lower.hi_dword.rss, rx_desc->wb.lower.lo_dword.data);
+		  printk(KERN_INFO "    core=%d next_to_use=%u next_to_clean=%u size=%u RSCCNT=%u EOP=%u NEXTP=%u\n", v_idx, rx_ring->next_to_use, rx_ring->next_to_clean, size, (rx_desc->wb.lower.lo_dword.data >> IXGBE_RXDADV_RSCCNT_SHIFT)&0xF, (rx_desc->wb.upper.status_error>>1)&0x1, (rx_desc->wb.upper.status_error>>4)&0xFFFF);
+		}
+		
 		rx_buffer = ixgbe_get_rx_buffer(rx_ring, rx_desc, &skb, size);
 
 		/* retrieve a buffer from the ring */
@@ -2422,6 +2453,9 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		if (!skb) {
 			rx_ring->rx_stats.alloc_rx_buff_failed++;
 			rx_buffer->pagecnt_bias++;
+			if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+			  printk(KERN_INFO "    !skb break\n");
+			}
 			break;
 		}
 
@@ -2473,7 +2507,7 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		total_rx_packets++;
 		rx_processed ++;
 	}
-
+	
 	rcnt = adapter->rx_desc_cnt[v_idx];
 	if (rcnt < 800000) {
 	    adapter->log_rx_desc[v_idx][rcnt] = rx_processed;
@@ -2481,20 +2515,31 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 	}
  
 	if (xdp_xmit) {
-		struct ixgbe_ring *ring = adapter->xdp_ring[smp_processor_id()];
-
+		struct ixgbe_ring *ring = adapter->xdp_ring[smp_processor_id()];				
+		
 		/* Force memory writes to complete before letting h/w
 		 * know there are new descriptors to fetch.
 		 */
 		wmb();
 		writel(ring->next_to_use, ring->tail);
-
+		
+		if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+		  printk(KERN_INFO "XXX XDP_XMIT writel %d\n", ring->next_to_use);
+		}
+		
 		xdp_do_flush_map();
 	}
 		
 	u64_stats_update_begin(&rx_ring->syncp);
 	rx_ring->stats.packets += total_rx_packets;
 	rx_ring->stats.bytes += total_rx_bytes;
+
+	//if(total_rx_bytes > 5000 && total_rx_bytes < 9800) {
+	if(hw->mac.addr[ETH_ALEN-1] == 0x21 && total_rx_bytes > 64) {
+	  printk(KERN_INFO "    ixgbe_clean_rx_irq v_idx=%d total_rx_bytes=%u total_rx_packets=%u\n", v_idx, total_rx_bytes, total_rx_packets);
+	  printk(KERN_INFO "xxx END\n\n");
+	}
+
 /*	if(v_idx == 1) {
 	  adapter->totalrxbytes += total_rx_bytes;
 	  adapter->log_rxbytes[adapter->log_cnt] = total_rx_bytes;
@@ -3234,6 +3279,18 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 {
 	struct ixgbe_q_vector *q_vector = data;
 
+	/** 
+	 * irq
+	 * v_idx
+	 * timestamp in usecs
+	 * rx_processed
+	 * tx_processed
+	 * bytes_tx
+	 * bytes_rx
+	 * packets_tx
+	 * packets_tx
+	 **/
+	
 	/* EIAM disabled interrupts (on this vector) for us */
 
 	if (q_vector->rx.ring || q_vector->tx.ring)
@@ -3257,12 +3314,16 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	struct ixgbe_ring *ring;
 	int per_ring_budget, work_done = 0;
 	bool clean_complete = true;
-      	struct timespec tv;
+      	struct timeval tv;
 	int v_idx = q_vector->v_idx;
 	u32 pcnt = 0;
 	unsigned long msrl = 0, msrh = 0;
 	unsigned long long res = 0;
-		  
+
+	/*	if(v_idx == 1) {
+	  printk(KERN_INFO "ixgbe_poll START\n");
+	  }*/
+	
 #ifdef CONFIG_IXGBE_DCA
 	//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
 	if (adapter->dca_en)
@@ -3294,10 +3355,10 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 		  }*/
 	}
 
-	getnstimeofday(&tv);
+	do_gettimeofday(&tv);
 	pcnt = adapter->rx_time_cnt[v_idx];
 	if (pcnt < 800000) {
-	  adapter->log_rx_time_us[v_idx][pcnt] = (tv.tv_sec * 1000000000 + tv.tv_nsec) /1000;
+	  adapter->log_rx_time_us[v_idx][pcnt] = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);
 	  
 	  if(v_idx == 0 || v_idx == 1) {
 	    asm volatile ("rdmsr" : "=a"(msrl), "=d"(msrh) : "c"(0x611));
@@ -3321,7 +3382,6 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	if (!clean_complete) {
 	  return budget;
 	}
-
 	
 	/* all work done, exit the polling mode */
 	napi_complete_done(napi, work_done);
@@ -3642,27 +3702,27 @@ void ixgbe_configure_tx_ring(struct ixgbe_adapter *adapter,
 	/* else */
 	/* 	txdctl |= 2u << 16;	/\* WTHRESH = 8 *\/ */
 
+	txdctl |= 1u << 16;
 	//if (!ring->q_vector || (ring->q_vector->itr < IXGBE_100K_ITR)) {
 	//  txdctl |= 1u << 16;	/* WTHRESH = 1 */
 	//}
 	//else {
-	txdctl |= (ring->wthresh) << 16;	/* WTHRESH = 2 */
+	//txdctl |= (ring->wthresh) << 16;	/* WTHRESH = 2 */
 	  //}
 	
 	/*
 	 * Setting PTHRESH to 32 both improves performance
 	 * and avoids a TX hang with DFP enabled
 	 */
-	//txdctl |= (1u << 8) |	/* HTHRESH = 1 */
-	//	   32;		/* PTHRESH = 32 */
-	txdctl |= ((ring->hthresh) << 8) |	/* HTHRESH = 1 */
-	  (ring->pthresh);		/* PTHRESH = 32 */
+	txdctl |= (1u << 8) |	/* HTHRESH = 1 */
+	  32;		/* PTHRESH = 32 */
+	//txdctl |= ((ring->hthresh) << 8) |	/* HTHRESH = 1 */
+	//  (ring->pthresh);		/* PTHRESH = 32 */
 
-	if((int)reg_idx == 0) {
-		printk(KERN_INFO "\t *** TDLEN=%d\n", ring->count);
-		printk(KERN_INFO "\t *** ring->wthresh:%d ring->hthresh:%d ring->pthresh:%d\n", ring->wthresh, ring->hthresh, ring->pthresh);
-	}
-	
+	if((int)reg_idx == 1) {
+	  printk(KERN_INFO "\t *** TDLEN=%d txdctl=0x%X\n", ring->count, txdctl);		
+	  //printk(KERN_INFO "\t *** ring->wthresh:%d ring->hthresh:%d ring->pthresh:%d\n", ring->wthresh, ring->hthresh, ring->pthresh);
+	}	
 
 	/* reinitialize flowdirector state */
 	if (adapter->flags & IXGBE_FLAG_FDIR_HASH_CAPABLE) {
@@ -3871,17 +3931,20 @@ static void ixgbe_configure_srrctl(struct ixgbe_adapter *adapter,
 	/* 	srrctl |= IXGBE_RXBUFFER_2K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT; */
 
 	// IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT == 2
-	srrctl = rx_ring->bsizehdr << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT;
+	//srrctl = rx_ring->bsizehdr << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT;
 
 	//IXGBE_SRRCTL_BSIZEPKT_SHIFT == 10
-	srrctl |=  rx_ring->bsizepkt >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
+	//srrctl |=  rx_ring->bsizepkt >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
+
+	srrctl = IXGBE_RX_HDR_SIZE << IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT;
+	srrctl |= IXGBE_RXBUFFER_3K >> IXGBE_SRRCTL_BSIZEPKT_SHIFT;
 	
 	/* configure descriptor type */
 	srrctl |= IXGBE_SRRCTL_DESCTYPE_ADV_ONEBUF;
 		
 	IXGBE_WRITE_REG(hw, IXGBE_SRRCTL(reg_idx), srrctl);
 	if(reg_idx == 1) {
-	  printk(KERN_INFO "\t *** BIZEPACKET=%d BSIZEHEADER=%d\n", (int)(srrctl & 0x1F), (int)((srrctl >> 8) & 0x3F));
+	  printk(KERN_INFO "\t *** SRRCTL=0x%X\n", srrctl);
 	}
 }
 
@@ -4148,14 +4211,14 @@ static void ixgbe_configure_rscctl(struct ixgbe_adapter *adapter,
 	 * total size of max desc * buf_len is not greater
 	 * than 65536
 	 */
-	//rscctrl |= IXGBE_RSCCTL_MAXDESC_16;
-	rscctrl |= (ring->maxdesc << 2);
+	rscctrl |= IXGBE_RSCCTL_MAXDESC_16;
+	//rscctrl |= (ring->maxdesc << 2);
 	
 	IXGBE_WRITE_REG(hw, IXGBE_RSCCTL(reg_idx), rscctrl);
 
-	if(reg_idx == 1) {
-	  printk(KERN_INFO "\t *** RSCCTL_RSCEN=1, RSCCTL_MAXDESC=%d\n", (int)((rscctrl >> 2) & 0x3));
-	}
+	//if(reg_idx == 1) {
+	printk(KERN_INFO "\t *** i=%u RSCCTL_RSCEN=1, RSCCTL_MAXDESC=0x%X RSCCTL=0x%X\n", reg_idx, rscctrl, rscctrl);
+	  //}
 }
 
 #define IXGBE_MAX_RX_DESC_POLL 10
@@ -4285,7 +4348,7 @@ void ixgbe_configure_rx_ring(struct ixgbe_adapter *adapter,
 	IXGBE_WRITE_REG(hw, IXGBE_RXDCTL(reg_idx), rxdctl);
 
 	ixgbe_rx_desc_queue_enable(adapter, ring);
-	ixgbe_alloc_rx_buffers(ring, ixgbe_desc_unused(ring));
+	ixgbe_alloc_rx_buffers(ring, ixgbe_desc_unused(ring), 0x0);
 }
 
 static void ixgbe_setup_psrtype(struct ixgbe_adapter *adapter)
@@ -4501,7 +4564,7 @@ static void ixgbe_configure_rx(struct ixgbe_adapter *adapter)
 	struct ixgbe_hw *hw = &adapter->hw;
 	int i;
 	u32 rxctrl, rfctl;
-
+	
 	/* disable receives while setting up the descriptors */
 	hw->mac.ops.disable_rx(hw);
 
@@ -4517,7 +4580,8 @@ static void ixgbe_configure_rx(struct ixgbe_adapter *adapter)
 	/* disable NFS filtering */
 	rfctl |= (IXGBE_RFCTL_NFSW_DIS | IXGBE_RFCTL_NFSR_DIS);
 	IXGBE_WRITE_REG(hw, IXGBE_RFCTL, rfctl);
-
+	printk(KERN_INFO "*** RFCTL = 0x%X\n", rfctl);
+	
 	/* Program registers for the distribution of queues */
 	ixgbe_setup_mrqc(adapter);
 
@@ -5821,10 +5885,10 @@ static void ixgbe_setup_gpie(struct ixgbe_adapter *adapter)
 		break;
 	}
 
-	gpie &= ~(0x7 << 11);
-	gpie |= (adapter->rsc_delay << 11);
+	//gpie &= ~(0x7 << 11);
+	//gpie |= (adapter->rsc_delay << 11);
 	IXGBE_WRITE_REG(hw, IXGBE_GPIE, gpie);
-	printk(KERN_INFO "\t *** RSC Delay=%d\n", (int)((gpie >> 11)&0x7));	
+	printk(KERN_INFO "\t *** RSC Delay=0x%X GPIE=0x%X\n", gpie, gpie);
 }
 
 static void ixgbe_up_complete(struct ixgbe_adapter *adapter)
@@ -5835,7 +5899,7 @@ static void ixgbe_up_complete(struct ixgbe_adapter *adapter)
 
 	ixgbe_get_hw_control(adapter);
 	ixgbe_setup_gpie(adapter);
-
+	
 	if (adapter->flags & IXGBE_FLAG_MSIX_ENABLED)
 		ixgbe_configure_msix(adapter);
 	else
@@ -6462,13 +6526,15 @@ static int ixgbe_sw_init(struct ixgbe_adapter *adapter,
 	adapter->rx_itr_setting = 0;
 	adapter->tx_itr_setting = 0;
 	printk(KERN_INFO "\t *** DITR=%d\n", adapter->rx_itr_setting);
-
-	
 	
 	/* set default ring sizes */
 	adapter->tx_ring_count = IXGBE_DEFAULT_TXD;
 	adapter->rx_ring_count = IXGBE_DEFAULT_RXD;
-
+	/*
+	 * log tx free = IXGBE_DEFAULT_TXD
+	 * log rx free = IXGBE_DEFAULT_RXD
+	 */
+	
 	/* set default work limits */
 	adapter->tx_work_limit = IXGBE_DEFAULT_TX_WORK;
 
@@ -8670,9 +8736,6 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
 	u16 count = TXD_USE_COUNT(skb_headlen(skb));
 	__be16 protocol = skb->protocol;
 	u8 hdr_len = 0;
-	int v_idx = tx_ring->q_vector->v_idx;
-	struct timespec tv;
-	u32 tcnt = 0;
 	
 	/*
 	 * need: 1 descriptor per page * PAGE_SIZE/IXGBE_MAX_DATA_PER_TXD,
@@ -8775,15 +8838,6 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
 	}
 
 #endif /* IXGBE_FCOE */
-
-	// actually sending
-	getnstimeofday(&tv);
-	tcnt = adapter->tx_cnt[v_idx];
-	if(tcnt < 800000) {
-	  adapter->log_tx_time_us[v_idx][tcnt] = (tv.tv_sec * 1000000000 + tv.tv_nsec) /1000;
-	  adapter->log_tx_desc[v_idx][tcnt] = count;
-	  adapter->tx_cnt[v_idx] += 1;
-	}
 	
 	tso = ixgbe_tso(tx_ring, first, &hdr_len);
 	if (tso < 0)
@@ -8800,7 +8854,7 @@ xmit_fcoe:
 #endif /* IXGBE_FCOE */
 	if (ixgbe_tx_map(tx_ring, first, hdr_len))
 		goto cleanup_tx_timestamp;
-
+	
 	return NETDEV_TX_OK;
 
 out_drop:
