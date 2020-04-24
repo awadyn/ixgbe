@@ -1,4 +1,3 @@
-
 /*******************************************************************************
 
   Intel 10 Gigabit PCI Express Linux driver
@@ -367,8 +366,8 @@ struct ixgbe_ring {
 					 * different for DCB and RSS modes
 					 */
 	u16 next_to_use;
-	u16 next_to_clean;
-
+        u16 next_to_clean;
+  
 	unsigned long last_rx_timestamp;
 
 	union {
@@ -466,6 +465,14 @@ struct ixgbe_ring_container {
 	u16 work_limit;			/* total work allowed per interrupt */
 	u8 count;			/* total number of rings in vector */
 	u8 itr;				/* current ITR setting for ring */
+
+  // new params
+  u32 per_itr_desc;
+  u32 per_itr_packets;
+  u32 per_itr_bytes;
+  u32 per_itr_free_budget;
+  //u32 per_itr_next_to_use;
+  //u32 per_itr_next_to_clean;  
 };
 
 /* iterator for handling rings in ring container */
@@ -495,7 +502,7 @@ struct ixgbe_q_vector {
 	int numa_node;
 	struct rcu_head rcu;	/* to avoid race with update stats on free */
 	char name[IFNAMSIZ + 9];
-
+  
 	/* for dynamic allocation of rings associated with this q_vector */
 	struct ixgbe_ring ring[0] ____cacheline_internodealigned_in_smp;
 };
@@ -572,6 +579,24 @@ struct ixgbe_mac_addr {
 	u8 addr[ETH_ALEN];
 	u16 pool;
 	u16 state; /* bitmask */
+};
+
+struct ITR_STATS {
+  u64 joules;
+  u64 itr_time_us;
+  u32 rx_desc;
+  u32 rx_packets;
+  u32 rx_bytes;
+  u32 tx_desc;
+  u32 tx_packets;
+  u32 tx_bytes;  
+  u32 rx_free_budget;
+  u32 tx_free_budget;
+  
+  u16 rx_next_to_use;
+  u16 rx_next_to_clean;
+  u16 tx_next_to_use;
+  u16 tx_next_to_clean;
 };
 
 #define IXGBE_MAC_STATE_DEFAULT		0x1
@@ -663,21 +688,22 @@ struct ixgbe_adapter {
         /* updated params */
         u32 dtxmxszrq;
         u32 rsc_delay;
-        u32 totalrxbytes;
         u32 dca_en;
-
-        u32 rx_time_cnt[16];
-        u32 tx_cnt[16];
-
-        u32 rx_desc_cnt[16];
-
-        u64 log_rx_time_us[16][800000];
-        u64 log_tx_time_us[16][800000];
-
-        u64 log_rx_desc[16][800000];
-        u64 log_tx_desc[16][800000];
+        u32 msix_other_cnt;
+        u32 itr_cookie;
+        u32 non_itr_cnt;
+        u64 itr_joules_last_ts;
   
-        u64 log_joules[16][800000];
+        u32 itr_cnt[16];
+        struct ITR_STATS itr_stats[16][800000];  
+  
+  /*u64 itr_time_us[16][800000];
+        u32 itr_rx_desc[16][800000];
+        u32 itr_tx_desc[16][800000];
+        u32 itr_rx_packets[16][800000];
+        u32 itr_tx_packets[16][800000];
+        u32 itr_rx_bytes[16][800000];
+        u32 itr_tx_bytes[16][800000];*/
   
 	/* XDP */
 	int num_xdp_queues;
@@ -926,7 +952,7 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *, struct ixgbe_adapter *,
 				  struct ixgbe_ring *);
 void ixgbe_unmap_and_free_tx_resource(struct ixgbe_ring *,
 				      struct ixgbe_tx_buffer *);
-void ixgbe_alloc_rx_buffers(struct ixgbe_ring *, u16);
+void ixgbe_alloc_rx_buffers(struct ixgbe_ring *, u16, u8);
 void ixgbe_write_eitr(struct ixgbe_q_vector *);
 int ixgbe_poll(struct napi_struct *napi, int budget);
 int ethtool_ioctl(struct ifreq *ifr);

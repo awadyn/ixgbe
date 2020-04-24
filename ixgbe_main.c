@@ -1176,10 +1176,12 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	unsigned int total_bytes = 0, total_packets = 0;
 	unsigned int budget = q_vector->tx.work_limit;
 	unsigned int i = tx_ring->next_to_clean;
-	struct timeval tv;
-	u32 tcnt = 0;
-	int v_idx = q_vector->v_idx;
+	struct ixgbe_hw *hw = &adapter->hw;
 	int tx_desc_cnt = 0;
+	//struct timeval tv;
+	//u32 tcnt = 0;
+	//int v_idx = q_vector->v_idx;
+	
 	  
 	if (test_bit(__IXGBE_DOWN, &adapter->state))
 		return true;
@@ -1271,13 +1273,13 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	tx_ring->stats.packets += total_packets;
 
 	// actually sending
-	do_gettimeofday(&tv);
+	/*do_gettimeofday(&tv);
 	tcnt = adapter->tx_cnt[v_idx];
 	if(tcnt < 800000) {
 	  adapter->log_tx_time_us[v_idx][tcnt] = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);
 	  adapter->log_tx_desc[v_idx][tcnt] = tx_desc_cnt;
 	  adapter->tx_cnt[v_idx] += 1;
-	}
+	  }*/
 	
 /*	if(v_idx == 1) {
 	  adapter->log_txbytes[adapter->log_cnt] = total_bytes;
@@ -1287,6 +1289,13 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	u64_stats_update_end(&tx_ring->syncp);
 	q_vector->tx.total_bytes += total_bytes;
 	q_vector->tx.total_packets += total_packets;
+
+	if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+	  q_vector->tx.per_itr_bytes = total_bytes;
+	  q_vector->tx.per_itr_packets = total_packets;
+	  q_vector->tx.per_itr_desc = tx_desc_cnt;
+	  q_vector->tx.per_itr_free_budget = budget;
+	}
 	
 	if (check_for_tx_hang(tx_ring) && ixgbe_check_tx_hang(tx_ring)) {
 		/* schedule immediate reset if we believe we hung */
@@ -1728,9 +1737,9 @@ void ixgbe_alloc_rx_buffers(struct ixgbe_ring *rx_ring, u16 cleaned_count, u8 ma
 		 */
 		wmb();
 		writel(i, rx_ring->tail);
-		if(maddr == 0x21) {
+		/*if(maddr == 0x21) {
 		  printk(KERN_INFO "XXX ixgbe_alloc_rx_buffers writel i=%d next_to_use=%d\n", i, i);
-		}
+		  }*/
 	}
 }
 
@@ -1819,7 +1828,7 @@ static bool ixgbe_is_non_eop(struct ixgbe_ring *rx_ring,
 			     union ixgbe_adv_rx_desc *rx_desc,
 			     struct sk_buff *skb)
 {
-        u32 ntc = rx_ring->next_to_clean + 1;
+	u32 ntc = rx_ring->next_to_clean + 1;
 	int v_idx = rx_ring->q_vector->v_idx;
 	
 	/* fetch, update, and store next to clean */
@@ -2378,11 +2387,16 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 	bool xdp_xmit = false;
 	int v_idx = q_vector->v_idx;
 	int rx_processed = 0;
-	u32 rcnt = 0;
-
-	if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+	/*u32 rcnt = 0;
+	  unsigned long msrl = 0, msrh = 0;
+	unsigned long long res = 0;
+	struct timeval tv;
+	uint64_t curtime = 0;*/
+	
+	/*if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
 	  printk(KERN_INFO "XXX START\n");
-	}
+	  }*/
+	
 	while (likely(total_rx_packets < budget)) {
 		union ixgbe_adv_rx_desc *rx_desc;
 		struct ixgbe_rx_buffer *rx_buffer;
@@ -2399,9 +2413,9 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		rx_desc = IXGBE_RX_DESC(rx_ring, rx_ring->next_to_clean);
 		size = le16_to_cpu(rx_desc->wb.upper.length);
 		if (!size) {
-		  if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+		  /*if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
 		    printk(KERN_INFO "    !size break exit\n");
-		  }
+		    }*/
 			break;
 		}
 
@@ -2411,10 +2425,10 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		 */
 		dma_rmb();
 
-		if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+		/*if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
 		  //printk(KERN_INFO "    core=%d next_to_use=%u next_to_clean=%u rx_desc->wb.upper.vlan=0x%X rx_desc->wb.upper.length=%u, wb.upper.status_error=0x%X wb.lower.hi_dword.rss=0x%X rx_desc->wb.lo_dword.data=0x%X\n", v_idx, rx_ring->next_to_use, rx_ring->next_to_clean, rx_desc->wb.upper.vlan, rx_desc->wb.upper.length, rx_desc->wb.upper.status_error, rx_desc->wb.lower.hi_dword.rss, rx_desc->wb.lower.lo_dword.data);
 		  printk(KERN_INFO "    core=%d next_to_use=%u next_to_clean=%u size=%u RSCCNT=%u EOP=%u NEXTP=%u\n", v_idx, rx_ring->next_to_use, rx_ring->next_to_clean, size, (rx_desc->wb.lower.lo_dword.data >> IXGBE_RXDADV_RSCCNT_SHIFT)&0xF, (rx_desc->wb.upper.status_error>>1)&0x1, (rx_desc->wb.upper.status_error>>4)&0xFFFF);
-		}
+		  }*/
 		
 		rx_buffer = ixgbe_get_rx_buffer(rx_ring, rx_desc, &skb, size);
 
@@ -2453,9 +2467,9 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		if (!skb) {
 			rx_ring->rx_stats.alloc_rx_buff_failed++;
 			rx_buffer->pagecnt_bias++;
-			if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+			/*if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
 			  printk(KERN_INFO "    !skb break\n");
-			}
+			  }*/
 			break;
 		}
 
@@ -2507,12 +2521,30 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		total_rx_packets++;
 		rx_processed ++;
 	}
+
 	
-	rcnt = adapter->rx_desc_cnt[v_idx];
-	if (rcnt < 800000) {
+	/*if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+	  rcnt = adapter->rx_desc_cnt[v_idx];
+	  do_gettimeofday(&tv);
+	  curtime = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);
+	  
+	  if (rcnt == 0) {	    
+	    adapter->log_rx_time_us[v_idx][rcnt] = curtime;
 	    adapter->log_rx_desc[v_idx][rcnt] = rx_processed;
-	    adapter->rx_desc_cnt[v_idx] += 1;
-	}
+	    adapter->rx_desc_cnt[v_idx] ++;
+	  }
+	  else if (rcnt > 0 && rcnt < 800000 && ((curtime - adapter->log_rx_time_us[v_idx][rcnt-1]) > 10000) ) { // every 10 ms	    
+	    adapter->log_rx_time_us[v_idx][rcnt] = curtime;
+	    adapter->log_rx_desc[v_idx][rcnt] = rx_processed;
+	    if(v_idx == 0 || v_idx == 1) {
+	      asm volatile ("rdmsr" : "=a"(msrl), "=d"(msrh) : "c"(0x611));
+	      res = ((unsigned long long)msrh << 32) | msrl;
+	      adapter->log_joules[v_idx][rcnt] = (uint64_t)res;
+	    }
+
+	    adapter->rx_desc_cnt[v_idx] ++;
+	  }	  	  	  
+	  }*/
  
 	if (xdp_xmit) {
 		struct ixgbe_ring *ring = adapter->xdp_ring[smp_processor_id()];				
@@ -2522,10 +2554,10 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 		 */
 		wmb();
 		writel(ring->next_to_use, ring->tail);
-		
-		if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+
+		/*if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
 		  printk(KERN_INFO "XXX XDP_XMIT writel %d\n", ring->next_to_use);
-		}
+		  }*/
 		
 		xdp_do_flush_map();
 	}
@@ -2535,10 +2567,10 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 	rx_ring->stats.bytes += total_rx_bytes;
 
 	//if(total_rx_bytes > 5000 && total_rx_bytes < 9800) {
-	if(hw->mac.addr[ETH_ALEN-1] == 0x21 && total_rx_bytes > 64) {
+	/*if(hw->mac.addr[ETH_ALEN-1] == 0x21 && total_rx_bytes > 64) {
 	  printk(KERN_INFO "    ixgbe_clean_rx_irq v_idx=%d total_rx_bytes=%u total_rx_packets=%u\n", v_idx, total_rx_bytes, total_rx_packets);
 	  printk(KERN_INFO "xxx END\n\n");
-	}
+	  }*/
 
 /*	if(v_idx == 1) {
 	  adapter->totalrxbytes += total_rx_bytes;
@@ -2549,6 +2581,13 @@ static int ixgbe_clean_rx_irq(struct ixgbe_q_vector *q_vector,
 	u64_stats_update_end(&rx_ring->syncp);
 	q_vector->rx.total_packets += total_rx_packets;
 	q_vector->rx.total_bytes += total_rx_bytes;
+
+	if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+	  q_vector->rx.per_itr_packets = total_rx_packets;
+	  q_vector->rx.per_itr_bytes = total_rx_bytes;
+	  q_vector->rx.per_itr_desc = rx_processed;
+	  q_vector->rx.per_itr_free_budget = budget - total_rx_packets;
+	}
 	
 	return total_rx_packets;
 }
@@ -3195,6 +3234,8 @@ static irqreturn_t ixgbe_msix_other(int irq, void *data)
 	struct ixgbe_hw *hw = &adapter->hw;
 	u32 eicr;
 
+	adapter->msix_other_cnt ++;
+	
 	/*
 	 * Workaround for Silicon errata.  Use clear-by-write instead
 	 * of clear-by-read.  Reading with EICS will return the
@@ -3277,20 +3318,60 @@ static irqreturn_t ixgbe_msix_other(int irq, void *data)
 
 static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 {
-	struct ixgbe_q_vector *q_vector = data;
-
-	/** 
-	 * irq
-	 * v_idx
-	 * timestamp in usecs
-	 * rx_processed
-	 * tx_processed
-	 * bytes_tx
-	 * bytes_rx
-	 * packets_tx
-	 * packets_tx
-	 **/
+	struct ixgbe_q_vector *q_vector = data;	
+	struct ixgbe_adapter *adapter = q_vector->adapter;
+	struct ixgbe_hw *hw = &adapter->hw;
+	struct timeval tv;
+	unsigned long msrl = 0, msrh = 0;
+	unsigned long long res = 0;		
+	int v_idx = 0;
+	int icnt = 0;
+	uint64_t now = 0, last = 0;
 	
+	if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
+	  v_idx = q_vector->v_idx;
+	  icnt = adapter->itr_cnt[v_idx];
+	
+	  if(v_idx == 1) {
+	    adapter->itr_cookie = 1;
+	  }
+
+	  if (icnt < 800000) {
+	    do_gettimeofday(&tv);	    
+	    now = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);	    
+	    adapter->itr_stats[v_idx][icnt].itr_time_us = now;
+
+	    if (v_idx == 1) {
+	      last = adapter->itr_joules_last_ts;
+	      
+	      if ((now - last) > 1000) {
+		asm volatile ("rdmsr" : "=a"(msrl), "=d"(msrh) : "c"(0x611));
+		res = ((unsigned long long)msrh << 32) | msrl;
+
+		adapter->itr_stats[v_idx][icnt].joules = (u64)res;
+		adapter->itr_joules_last_ts = now;
+	      } 
+	    }
+	    
+	    adapter->itr_stats[v_idx][icnt].rx_desc = q_vector->rx.per_itr_desc;
+	    adapter->itr_stats[v_idx][icnt].rx_packets = q_vector->rx.per_itr_packets;
+	    adapter->itr_stats[v_idx][icnt].rx_bytes = q_vector->rx.per_itr_bytes;
+	    adapter->itr_stats[v_idx][icnt].rx_free_budget = q_vector->rx.per_itr_free_budget;
+	    adapter->itr_stats[v_idx][icnt].rx_next_to_use = adapter->rx_ring[v_idx]->next_to_use;
+	    adapter->itr_stats[v_idx][icnt].rx_next_to_clean = adapter->rx_ring[v_idx]->next_to_clean;	    	    
+	    
+	    adapter->itr_stats[v_idx][icnt].tx_desc = q_vector->tx.per_itr_desc;
+	    adapter->itr_stats[v_idx][icnt].tx_packets = q_vector->tx.per_itr_packets;
+	    adapter->itr_stats[v_idx][icnt].tx_bytes = q_vector->tx.per_itr_bytes;
+	    adapter->itr_stats[v_idx][icnt].tx_free_budget = q_vector->tx.per_itr_free_budget;
+	    adapter->itr_stats[v_idx][icnt].tx_next_to_use = adapter->tx_ring[v_idx]->next_to_use;
+	    adapter->itr_stats[v_idx][icnt].tx_next_to_clean = adapter->tx_ring[v_idx]->next_to_clean;
+	    
+	    adapter->itr_cnt[v_idx] ++;
+	  }
+
+	  
+	}
 	/* EIAM disabled interrupts (on this vector) for us */
 
 	if (q_vector->rx.ring || q_vector->tx.ring)
@@ -3311,18 +3392,24 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	struct ixgbe_q_vector *q_vector =
 				container_of(napi, struct ixgbe_q_vector, napi);
 	struct ixgbe_adapter *adapter = q_vector->adapter;
+	struct ixgbe_hw *hw = &adapter->hw;
 	struct ixgbe_ring *ring;
 	int per_ring_budget, work_done = 0;
 	bool clean_complete = true;
-      	struct timeval tv;
-	int v_idx = q_vector->v_idx;
+      	int v_idx = q_vector->v_idx;
+	/*
 	u32 pcnt = 0;
 	unsigned long msrl = 0, msrh = 0;
 	unsigned long long res = 0;
-
+	*/
+	
 	/*	if(v_idx == 1) {
 	  printk(KERN_INFO "ixgbe_poll START\n");
 	  }*/
+
+	if(hw->mac.addr[ETH_ALEN-1] == 0x21 && adapter->itr_cookie == 0 && v_idx == 1) {
+	  adapter->non_itr_cnt ++;
+	}
 	
 #ifdef CONFIG_IXGBE_DCA
 	//if (adapter->flags & IXGBE_FLAG_DCA_ENABLED)
@@ -3355,19 +3442,19 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 		  }*/
 	}
 
-	do_gettimeofday(&tv);
+	/*do_gettimeofday(&tv);
 	pcnt = adapter->rx_time_cnt[v_idx];
 	if (pcnt < 800000) {
-	  adapter->log_rx_time_us[v_idx][pcnt] = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);
+	adapter->log_rx_time_us[v_idx][pcnt] = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);
 	  
-	  if(v_idx == 0 || v_idx == 1) {
+	if(v_idx == 0 || v_idx == 1) {
 	    asm volatile ("rdmsr" : "=a"(msrl), "=d"(msrh) : "c"(0x611));
 	    res = ((unsigned long long)msrh << 32) | msrl;
 	    adapter->log_joules[v_idx][pcnt] = (uint64_t)res;
 	  }
 	  
 	  adapter->rx_time_cnt[v_idx] += 1;
-	}
+	  }*/
 	
 	ixgbe_for_each_ring(ring, q_vector->rx) {
 		int cleaned = ixgbe_clean_rx_irq(q_vector, ring,
@@ -3382,6 +3469,7 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	if (!clean_complete) {
 	  return budget;
 	}
+
 	
 	/* all work done, exit the polling mode */
 	napi_complete_done(napi, work_done);
@@ -3400,6 +3488,9 @@ int ixgbe_poll(struct napi_struct *napi, int budget)
 	    adapter->log_cnt = 0;
 	  }
 	  }*/
+	if(hw->mac.addr[ETH_ALEN-1] == 0x21 && adapter->itr_cookie == 1 && v_idx == 1) {
+	  adapter->itr_cookie = 0;
+	}
 	
 	return min(work_done, budget - 1);
 }
@@ -3417,6 +3508,7 @@ static int ixgbe_request_msix_irqs(struct ixgbe_adapter *adapter)
 	unsigned int ri = 0, ti = 0;
 	int vector, err;
 
+	printk(KERN_INFO "\t *** IXGBE_REQUEST_MSIX_IRQS\n");
 	for (vector = 0; vector < adapter->num_q_vectors; vector++) {
 		struct ixgbe_q_vector *q_vector = adapter->q_vector[vector];
 		struct msix_entry *entry = &adapter->msix_entries[vector];
@@ -3435,8 +3527,11 @@ static int ixgbe_request_msix_irqs(struct ixgbe_adapter *adapter)
 			/* skip this unused q_vector */
 			continue;
 		}
+		printk(KERN_INFO "\t   *** %s\n", q_vector->name);		
 		err = request_irq(entry->vector, &ixgbe_msix_clean_rings, 0,
 				  q_vector->name, q_vector);
+		printk(KERN_INFO "\t   *** irq=%u v_idx=%u\n", entry->vector, (uint32_t)(q_vector->v_idx));
+		
 		if (err) {
 			e_err(probe, "request_irq failed for MSIX interrupt "
 			      "Error: %d\n", err);
@@ -6521,20 +6616,18 @@ static int ixgbe_sw_init(struct ixgbe_adapter *adapter,
 #endif /* CONFIG_PCI_IOV */
 
 	/* enable itr by default in dynamic mode */
-	//adapter->rx_itr_setting = 1;
-	//adapter->tx_itr_setting = 1;
-	adapter->rx_itr_setting = 0;
-	adapter->tx_itr_setting = 0;
-	printk(KERN_INFO "\t *** DITR=%d\n", adapter->rx_itr_setting);
+	adapter->rx_itr_setting = 1;
+	adapter->tx_itr_setting = 1;
+	//adapter->rx_itr_setting = 0;
+	//adapter->tx_itr_setting = 0;
+	printk(KERN_INFO "\t *** DYNAMIC_ITR==%d\n", adapter->rx_itr_setting);
+
+	
 	
 	/* set default ring sizes */
 	adapter->tx_ring_count = IXGBE_DEFAULT_TXD;
 	adapter->rx_ring_count = IXGBE_DEFAULT_RXD;
-	/*
-	 * log tx free = IXGBE_DEFAULT_TXD
-	 * log rx free = IXGBE_DEFAULT_RXD
-	 */
-	
+
 	/* set default work limits */
 	adapter->tx_work_limit = IXGBE_DEFAULT_TX_WORK;
 
@@ -6895,10 +6988,34 @@ int ixgbe_open(struct net_device *netdev)
 	  init = 1;
 	  printk(KERN_INFO "\t *** ixgbe_open\n");
 	} else {
-	  printk(KERN_INFO "\t *** ixgbe_open: dtxmxszrq=%d rsc_delay=%d\n", adapter->dtxmxszrq, adapter->rsc_delay);
+	  printk(KERN_INFO "\t *** ixgbe_open: dtxmxszrq=%d rsc_delay=%d rx_itr_setting=0x%X tx_itr_setting=0x%X\n", adapter->dtxmxszrq, adapter->rsc_delay, adapter->rx_itr_setting, adapter->tx_itr_setting);
 	}
-	
+
+	// initialize new params
 	for(i=0; i<16; i++) {
+	  adapter->itr_cnt[i] = 0;
+	  for(j=0;j<800000;j++){
+	    adapter->itr_stats[i][j].joules = 0;
+	    adapter->itr_stats[i][j].rx_desc = 0;
+	    adapter->itr_stats[i][j].rx_packets = 0;
+	    adapter->itr_stats[i][j].rx_bytes = 0;
+	    adapter->itr_stats[i][j].rx_free_budget = 0;
+	    adapter->itr_stats[i][j].rx_next_to_use = 0;
+	    adapter->itr_stats[i][j].rx_next_to_clean = 0;
+
+	    adapter->itr_stats[i][j].tx_desc = 0;
+	    adapter->itr_stats[i][j].tx_packets = 0;
+	    adapter->itr_stats[i][j].tx_bytes = 0;
+	    adapter->itr_stats[i][j].tx_free_budget = 0;
+	    adapter->itr_stats[i][j].tx_next_to_use = 0;
+	    adapter->itr_stats[i][j].tx_next_to_clean = 0;
+	  }
+	}
+	adapter->itr_cookie = 0;
+	adapter->non_itr_cnt = 0;
+	adapter->itr_joules_last_ts = 0;
+	
+	/*for(i=0; i<16; i++) {
 	  adapter->rx_time_cnt[i] = 0;
 	  adapter->tx_cnt[i] = 0;	  
 	  adapter->rx_desc_cnt[i] = 0;
@@ -6908,17 +7025,15 @@ int ixgbe_open(struct net_device *netdev)
 	    adapter->log_tx_time_us[i][j] = 0;
 	    
 	    adapter->log_rx_desc[i][j] = 0;
-	    adapter->log_tx_desc[i][j] = 0;
-	    
-	    adapter->log_joules[i][j] = 0;
+	    adapter->log_tx_desc[i][j] = 0;	    
 	  }
-	}
+	  }*/
 	
 	//asm volatile ("rdmsr" : "=a"(msrl), "=d"(msrh) : "c"(0x611));
 	//res = ((unsigned long long)msrh << 32) | msrl;	
       
-	adapter->totalrxbytes = 0;
-	
+	adapter->msix_other_cnt = 0;
+	  
 	/* disallow open during test */
 	if (test_bit(__IXGBE_TESTING, &adapter->state))
 		return -EBUSY;

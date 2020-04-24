@@ -1989,7 +1989,7 @@ static u16 ixgbe_clean_test_rings(struct ixgbe_ring *rx_ring,
 	netdev_tx_reset_queue(txring_txq(tx_ring));
 
 	/* re-map buffers to ring, store next to clean values */
-	ixgbe_alloc_rx_buffers(rx_ring, count);
+	ixgbe_alloc_rx_buffers(rx_ring, count, 0x0);
 	rx_ring->next_to_clean = rx_ntc;
 	tx_ring->next_to_clean = tx_ntc;
 
@@ -2381,12 +2381,15 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	/*     (ec->tx_coalesce_usecs > (IXGBE_MAX_EITR >> 2))) */
 	/* 	return -EINVAL; */
 
+	printk(KERN_INFO "\t *** ec->rx_coalesce_usecs=0x%X\n", ec->rx_coalesce_usecs);
 	if (ec->rx_coalesce_usecs > 1) {
 	  adapter->rx_itr_setting = ec->rx_coalesce_usecs << 2;
-	  printk(KERN_INFO "\t *** ixgbe_set_coalesc: adapter->rx_itr_setting = %d\n", adapter->rx_itr_setting);
+	  printk(KERN_INFO "\t *** ixgbe_set_coalesc: static adapter->rx_itr_setting = 0x%X\n", adapter->rx_itr_setting);
 	}
 	else {
 	  adapter->rx_itr_setting = ec->rx_coalesce_usecs;
+	  adapter->tx_itr_setting = ec->rx_coalesce_usecs;
+	  printk(KERN_INFO "\t *** ixgbe_set_coalesc: dynamic adapter->rx_itr_setting = 0x%X\n", adapter->rx_itr_setting);
 	}
 
 	
@@ -2527,46 +2530,65 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 
         if (ec->rx_max_coalesced_frames_low) {
 	  core = ec->rx_max_coalesced_frames_low - 1;
+
+	  if (core >= adapter->num_q_vectors || core > 15) {
+	    printk(KERN_INFO "\t core %d error >= num_q_vectors=%u\n", core, adapter->num_q_vectors);
+	  }
 	  
-	  if(core >= 0 && core < 16) {
-	    printk(KERN_INFO "\t xxx Core=%d rx_time_cnt=%u rx_desc_cnt=%u\n", core,
+	  printk(KERN_INFO "Core=%d itr_cnt=%u msix_other_cnt=%u non_itr_cnt=%u\n", core, adapter->itr_cnt[core], adapter->msix_other_cnt, adapter->non_itr_cnt);
+	  printk(KERN_INFO "i rx_desc rx_free_budget rx_packets rx_next_to_clean rx_next_to_use rx_bytes tx_desc tx_free_budget tx_packets tx_next_to_clean tx_next_to_use tx_bytes joules time_us\n");
+
+	  for (i = 0; i < adapter->itr_cnt[core]; i++) {
+	    printk(KERN_INFO "%u %u %u %u %hu %hu %u %u %u %u %hu %hu %u %llu %llu\n",
+		   i, adapter->itr_stats[core][i].rx_desc, adapter->itr_stats[core][i].rx_free_budget,
+		   adapter->itr_stats[core][i].rx_packets, adapter->itr_stats[core][i].rx_next_to_clean,
+		   adapter->itr_stats[core][i].rx_next_to_use, adapter->itr_stats[core][i].rx_bytes,
+		   
+		   adapter->itr_stats[core][i].tx_desc, adapter->itr_stats[core][i].tx_free_budget,
+		   adapter->itr_stats[core][i].tx_packets, adapter->itr_stats[core][i].tx_next_to_clean,
+		   adapter->itr_stats[core][i].tx_next_to_use, adapter->itr_stats[core][i].tx_bytes,
+		   
+		   adapter->itr_stats[core][i].joules,
+		   adapter->itr_stats[core][i].itr_time_us);
+	  }
+
+	  // clean up	  
+	  for (i = 0; i < adapter->itr_cnt[core]; i++) {
+	    adapter->itr_stats[core][i].joules = 0;
+	    adapter->itr_stats[core][i].rx_desc = 0;
+	    adapter->itr_stats[core][i].rx_packets = 0;
+	    adapter->itr_stats[core][i].rx_bytes = 0;
+	    adapter->itr_stats[core][i].rx_free_budget = 0;
+	    adapter->itr_stats[core][i].rx_next_to_use = 0;
+	    adapter->itr_stats[core][i].rx_next_to_clean = 0;
+
+	    adapter->itr_stats[core][i].tx_desc = 0;
+	    adapter->itr_stats[core][i].tx_packets = 0;
+	    adapter->itr_stats[core][i].tx_bytes = 0;
+	    adapter->itr_stats[core][i].tx_free_budget = 0;
+	    adapter->itr_stats[core][i].tx_next_to_use = 0;
+	    adapter->itr_stats[core][i].tx_next_to_clean = 0;
+	    
+	    adapter->itr_stats[core][i].itr_time_us = 0;
+	  }
+	  adapter->msix_other_cnt = 0;
+	  adapter->itr_cnt[core] = 0;
+	  adapter->non_itr_cnt = 0;
+	  adapter->itr_joules_last_ts = 0;
+	  
+	    /*printk(KERN_INFO "\t xxx Core=%d rx_time_cnt=%u rx_desc_cnt=%u\n", core,
 		   adapter->rx_time_cnt[core], adapter->rx_desc_cnt[core]);
 	    
 	    totalc = adapter->rx_time_cnt[core] > adapter->rx_desc_cnt[core] ?
 	      adapter->rx_desc_cnt[core] : adapter->rx_time_cnt[core];
 	    
-	    for (i = 0; i < totalc; i++) {
+	    for (i = 1; i < totalc; i++) {
 	      if(core == 0 || core == 1) {
-		printk(KERN_INFO "\t xxx log_rx_time_us %lld log_rx_desc %lld log_joules %lld\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i], adapter->log_joules[core][i]);
+		printk(KERN_INFO "server_rx_timestamp %llu server_rx_desc %llu server_rx_joules %llu\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i], (adapter->log_joules[core][i] - adapter->log_joules[core][i-1]));
 	      } else {
-		printk(KERN_INFO "\t xxx log_rx_time_us %lld log_rx_desc %lld\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i]);
-	      }
-	      
-	      adapter->log_rx_time_us[core][i] = 0;
-	      adapter->log_rx_desc[core][i] = 0;
-	      adapter->log_joules[core][i] = 0;
-	    }
-	    
-	    adapter->rx_time_cnt[core] = 0;
-	    adapter->rx_desc_cnt[core] = 0;
-	  } else if(core >=16 && core < 32) {	    
-	    core = core % 16;
-	    printk(KERN_INFO "\t xxx Core=%d tx_cnt=%u\n", core,
-		   adapter->tx_cnt[core]);
-	    
-	    for(i=0; i<adapter->tx_cnt[core]; i++) {
-	      printk(KERN_INFO "\t xxx log_tx_time_us %lld log_tx_desc %lld\n", adapter->log_tx_time_us[core][i],
-		     adapter->log_tx_desc[core][i]);
-
-	      adapter->log_tx_time_us[core][i] = 0;
-	      adapter->log_tx_desc[core][i] = 0;	      
-	    }
-	    
-	    adapter->tx_cnt[core] = 0;	    	    
-	  } else {
-	    printk(KERN_INFO "\t xxx core %d error\n", core);
-	  }
-	  
+		printk(KERN_INFO "server_rx_timestamp %llu server_rx_desc %llu\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i]);
+	      }	     	      
+	      }*/	  
 	  
 	  /*printk(KERN_INFO "\n\t xxx poll_cnt1 = %lld rxdesc_cnt1 = %lld\n", adapter->poll_cnt1, adapter->rxdesc_cnt1);	  	  
 	  totalc = adapter->poll_cnt1 > adapter->rxdesc_cnt1 ? adapter->poll_cnt1 : adapter->rxdesc_cnt1;
