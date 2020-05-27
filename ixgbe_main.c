@@ -3323,10 +3323,10 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 	struct ixgbe_hw *hw = &adapter->hw;
 	struct timeval tv;
 	unsigned long msrl = 0, msrh = 0;
-	unsigned long long res = 0;		
+	//unsigned long long res = 0;		
 	int v_idx = 0;
 	int icnt = 0;
-	uint64_t now = 0, last = 0;
+	uint64_t now = 0, last = 0, tmp = 0, res = 0;
 	
 	if(hw->mac.addr[ETH_ALEN-1] == 0x21) {
 	  v_idx = q_vector->v_idx;
@@ -3344,14 +3344,94 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 	    if (v_idx == 1) {
 	      last = adapter->itr_joules_last_ts;
 	      
-	      if ((now - last) > 1000) {
-		asm volatile ("rdmsr" : "=a"(msrl), "=d"(msrh) : "c"(0x611));
-		res = ((unsigned long long)msrh << 32) | msrl;
-
+	      if ((now - last) > 1000) { // 1 ms
+		//asm volatile ("rdmsr" : "=a"(msrl), "=d"(msrh) : "c"(0x611));
+		//res = ((unsigned long long)msrh << 32) | msrl;
+	        rdmsrl(0x611, res);
+		  
 		adapter->itr_stats[v_idx][icnt].joules = (u64)res;
 		adapter->itr_joules_last_ts = now;
+		
+		if(adapter->perf_started[v_idx]) {
+		  // llc
+		  tmp = 0;
+		  rdmsrl(0xC1, tmp);
+		  adapter->itr_stats[v_idx][icnt].nllc_miss = tmp - adapter->llcmiss_prev[v_idx];
+		  rdmsrl(0xC1, tmp);
+
+		  // ins
+		  tmp = 0;
+		  wrmsrl(0x38F, 0x200000000);
+		  rdmsrl(0x309, tmp);
+		  adapter->itr_stats[v_idx][icnt].ninstructions = tmp - adapter->ins_prev[v_idx];
+		  rdmsrl(0x309, tmp);
+
+		  // cycles
+		  tmp = 0;
+		  wrmsrl(0x38F, 0x0);
+		  rdmsrl(0x30A, tmp);
+		  adapter->itr_stats[v_idx][icnt].ncycles = tmp - adapter->cyc_prev[v_idx];
+		  rdmsrl(0x30A, tmp);
+
+		  wrmsrl(0x38F, 0x0);
+		  rdmsrl(0x38D, tmp);
+		  wrmsrl(0x186, 0x0);
+		  wrmsrl(0x38F, 0x0);
+		  rdmsrl(0x38D, tmp);
+		  wrmsrl(0x38F, 0x0);
+		  rdmsrl(0x38D, tmp);
+		}
+
+		adapter->perf_started[v_idx] = 1;
+
+		// init ins
+		tmp = 0;
+		rdmsrl(0x309, tmp);
+		adapter->ins_prev[v_idx] = tmp;
+		wrmsrl(0x38D, 0x33);
+
+		// init cycles
+		tmp = 0;
+		rdmsrl(0x30A, tmp);
+		adapter->cyc_prev[v_idx] = tmp;
+		wrmsrl(0x38D, 0x33);
+
+		// init llc_miss
+		wrmsrl(0x186, 0x43412E);
+		tmp = 0;
+		rdmsrl(0xC1, tmp);
+		adapter->llcmiss_prev[v_idx] = tmp;
+
+		// start
+		wrmsrl(0x38F, 0x1);
+		wrmsrl(0x38F, 0x100000001);
+		wrmsrl(0x38F, 0x300000001);
 	      } 
 	    }
+
+	    /*if(adapter->perf_started[v_idx]) {
+	      // stop perf
+	      wrmsrl(0x38F, 0x0);
+
+	      // read perf
+	      rdmsrl(0x309, tmp);	      
+	      adapter->itr_stats[v_idx][icnt].ninstructions = tmp - adapter->ins_prev[v_idx];
+	      
+	      //clear perf
+	      rdmsrl(0x309, tmp);
+	      wrmsrl(0x38F, 0x0);
+	      }*/
+
+	    /*
+	    // prev perf
+	    rdmsrl(0x309, tmp);
+	    adapter->ins_prev[v_idx] = tmp;
+	    // init perf
+	    wrmsrl(0x38D, 0x333);
+	    // start perf
+	    wrmsrl(0x38F, 0x100000000);
+	    adapter->perf_started[v_idx] = 1;
+	    */
 	    
 	    adapter->itr_stats[v_idx][icnt].rx_desc = q_vector->rx.per_itr_desc;
 	    adapter->itr_stats[v_idx][icnt].rx_packets = q_vector->rx.per_itr_packets;
@@ -3368,10 +3448,11 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 	    adapter->itr_stats[v_idx][icnt].tx_next_to_clean = adapter->tx_ring[v_idx]->next_to_clean;
 	    
 	    adapter->itr_cnt[v_idx] ++;
-	  }
 
-	  
+	    
+	  }
 	}
+	
 	/* EIAM disabled interrupts (on this vector) for us */
 
 	if (q_vector->rx.ring || q_vector->tx.ring)
@@ -6994,8 +7075,14 @@ int ixgbe_open(struct net_device *netdev)
 	// initialize new params
 	for(i=0; i<16; i++) {
 	  adapter->itr_cnt[i] = 0;
+	  adapter->perf_started[i] = 0;
+	  adapter->ins_prev[i] = 0;
+	  adapter->cyc_prev[i] = 0;
+	  adapter->llcmiss_prev[i] = 0;
+	  
 	  for(j=0;j<800000;j++){
 	    adapter->itr_stats[i][j].joules = 0;
+	    adapter->itr_stats[i][j].ninstructions = 0;
 	    adapter->itr_stats[i][j].rx_desc = 0;
 	    adapter->itr_stats[i][j].rx_packets = 0;
 	    adapter->itr_stats[i][j].rx_bytes = 0;
@@ -7013,7 +7100,7 @@ int ixgbe_open(struct net_device *netdev)
 	}
 	adapter->itr_cookie = 0;
 	adapter->non_itr_cnt = 0;
-	adapter->itr_joules_last_ts = 0;
+	adapter->itr_joules_last_ts = 0;	
 	
 	/*for(i=0; i<16; i++) {
 	  adapter->rx_time_cnt[i] = 0;

@@ -2366,7 +2366,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	//u32 dtxmx, txdctl, srrctl;
 	//u16 tx_itr_param, rx_itr_param, tx_itr_prev;
 	bool need_reset = false;
-	u64 totalc = 0;
+	//u64 nins = 0, ncyc = 0, nllcm = 0;
 	
 	/* if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) { */
 	/* 	/\* reject Tx specific changes in case of mixed RxTx vectors *\/ */
@@ -2536,10 +2536,11 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  }
 	  
 	  printk(KERN_INFO "Core=%d itr_cnt=%u msix_other_cnt=%u non_itr_cnt=%u\n", core, adapter->itr_cnt[core], adapter->msix_other_cnt, adapter->non_itr_cnt);
-	  printk(KERN_INFO "i rx_desc rx_free_budget rx_packets rx_next_to_clean rx_next_to_use rx_bytes tx_desc tx_free_budget tx_packets tx_next_to_clean tx_next_to_use tx_bytes joules time_us\n");
-
-	  for (i = 0; i < adapter->itr_cnt[core]; i++) {
-	    printk(KERN_INFO "%u %u %u %u %hu %hu %u %u %u %u %hu %hu %u %llu %llu\n",
+	  
+	  /*printk(KERN_INFO "i rx_desc rx_free_budget rx_packets rx_next_to_clean rx_next_to_use rx_bytes tx_desc tx_free_budget tx_packets tx_next_to_clean tx_next_to_use tx_bytes joules instructions time_us\n");
+	  
+	    for (i = 0; i < adapter->itr_cnt[core]; i++) {
+	    printk(KERN_INFO "%u %u %u %u %hu %hu %u %u %u %u %hu %hu %u %llu %llu %llu\n",
 		   i, adapter->itr_stats[core][i].rx_desc, adapter->itr_stats[core][i].rx_free_budget,
 		   adapter->itr_stats[core][i].rx_packets, adapter->itr_stats[core][i].rx_next_to_clean,
 		   adapter->itr_stats[core][i].rx_next_to_use, adapter->itr_stats[core][i].rx_bytes,
@@ -2549,12 +2550,39 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 		   adapter->itr_stats[core][i].tx_next_to_use, adapter->itr_stats[core][i].tx_bytes,
 		   
 		   adapter->itr_stats[core][i].joules,
+		   adapter->itr_stats[core][i].ninstructions,
 		   adapter->itr_stats[core][i].itr_time_us);
+	    nins += adapter->itr_stats[core][i].ninstructions;
+	    }*/
+
+	  printk(KERN_INFO "i rx_desc rx_bytes tx_desc tx_bytes instructions cycles llc_miss joules timestamp\n");
+	  for (i = 0; i < adapter->itr_cnt[core]; i++) {
+	    printk(KERN_INFO "%u %u %u %u %u %llu %llu %llu %llu %llu\n",
+		   i,
+		   adapter->itr_stats[core][i].rx_desc, adapter->itr_stats[core][i].rx_bytes,
+		   adapter->itr_stats[core][i].tx_desc,  adapter->itr_stats[core][i].tx_bytes,
+		   adapter->itr_stats[core][i].ninstructions,
+		   adapter->itr_stats[core][i].ncycles,
+		   adapter->itr_stats[core][i].nllc_miss,		   
+		   adapter->itr_stats[core][i].joules,		   
+		   adapter->itr_stats[core][i].itr_time_us);
+	    
+	    //nins += adapter->itr_stats[core][i].ninstructions;
+	    //ncyc += adapter->itr_stats[core][i].ncycles;
+	    //nllcm += adapter->itr_stats[core][i].nllc_miss;
 	  }
+	  
+  
+	  //printk(KERN_INFO "total instructions = %llu\n", nins);
+	  //printk(KERN_INFO "total cycles = %llu\n", ncyc);
+	  //printk(KERN_INFO "total llc miss = %llu\n", nllcm);
 
 	  // clean up	  
 	  for (i = 0; i < adapter->itr_cnt[core]; i++) {
 	    adapter->itr_stats[core][i].joules = 0;
+	    adapter->itr_stats[core][i].ninstructions = 0;
+	    adapter->itr_stats[core][i].ncycles = 0;
+	    adapter->itr_stats[core][i].nllc_miss = 0;
 	    adapter->itr_stats[core][i].rx_desc = 0;
 	    adapter->itr_stats[core][i].rx_packets = 0;
 	    adapter->itr_stats[core][i].rx_bytes = 0;
@@ -2575,6 +2603,10 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  adapter->itr_cnt[core] = 0;
 	  adapter->non_itr_cnt = 0;
 	  adapter->itr_joules_last_ts = 0;
+	  adapter->perf_started[core] = 0;
+	  adapter->ins_prev[core] = 0;
+	  adapter->cyc_prev[core] = 0;
+	  adapter->llcmiss_prev[core] = 0;
 	  
 	    /*printk(KERN_INFO "\t xxx Core=%d rx_time_cnt=%u rx_desc_cnt=%u\n", core,
 		   adapter->rx_time_cnt[core], adapter->rx_desc_cnt[core]);
@@ -2651,10 +2683,10 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	}
 	return 0;
 
-reset:
+	/*reset:
 	ixgbe_down(adapter);
 	ixgbe_up(adapter);
-	return 0;
+	return 0;*/
 }
 
 static int ixgbe_get_ethtool_fdir_entry(struct ixgbe_adapter *adapter,

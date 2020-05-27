@@ -584,6 +584,9 @@ struct ixgbe_mac_addr {
 struct ITR_STATS {
   u64 joules;
   u64 itr_time_us;
+  u64 ninstructions;
+  u64 ncycles;
+  u64 nllc_miss;
   u32 rx_desc;
   u32 rx_packets;
   u32 rx_bytes;
@@ -695,7 +698,11 @@ struct ixgbe_adapter {
         u64 itr_joules_last_ts;
   
         u32 itr_cnt[16];
-        struct ITR_STATS itr_stats[16][800000];  
+        struct ITR_STATS itr_stats[16][800000];
+        u32 perf_started[16];
+        u64 ins_prev[16];
+        u64 cyc_prev[16];
+        u64 llcmiss_prev[16];
   
   /*u64 itr_time_us[16][800000];
         u32 itr_rx_desc[16][800000];
