@@ -1,30 +1,5 @@
-/*******************************************************************************
-
-  Intel 10 Gigabit PCI Express Linux driver
-  Copyright(c) 1999 - 2016 Intel Corporation.
-
-  This program is free software; you can redistribute it and/or modify it
-  under the terms and conditions of the GNU General Public License,
-  version 2, as published by the Free Software Foundation.
-
-  This program is distributed in the hope it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-  more details.
-
-  You should have received a copy of the GNU General Public License along with
-  this program; if not, write to the Free Software Foundation, Inc.,
-  51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
-
-  The full GNU General Public License is included in this distribution in
-  the file called "COPYING".
-
-  Contact Information:
-  Linux NICS <linux.nics@intel.com>
-  e1000-devel Mailing List <e1000-devel@lists.sourceforge.net>
-  Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
-
-*******************************************************************************/
+// SPDX-License-Identifier: GPL-2.0
+/* Copyright(c) 1999 - 2018 Intel Corporation. */
 
 /* ethtool support for ixgbe */
 
@@ -97,6 +72,7 @@ static const struct ixgbe_stats ixgbe_gstrings_stats[] = {
 	{"tx_heartbeat_errors", IXGBE_NETDEV_STAT(tx_heartbeat_errors)},
 	{"tx_timeout_count", IXGBE_STAT(tx_timeout_count)},
 	{"tx_restart_queue", IXGBE_STAT(restart_queue)},
+	{"rx_length_errors", IXGBE_STAT(stats.rlec)},
 	{"rx_long_length_errors", IXGBE_STAT(stats.roc)},
 	{"rx_short_length_errors", IXGBE_STAT(stats.ruc)},
 	{"tx_flow_control_xon", IXGBE_STAT(stats.lxontxc)},
@@ -115,6 +91,8 @@ static const struct ixgbe_stats ixgbe_gstrings_stats[] = {
 	{"tx_hwtstamp_timeouts", IXGBE_STAT(tx_hwtstamp_timeouts)},
 	{"tx_hwtstamp_skipped", IXGBE_STAT(tx_hwtstamp_skipped)},
 	{"rx_hwtstamp_cleared", IXGBE_STAT(rx_hwtstamp_cleared)},
+	{"tx_ipsec", IXGBE_STAT(tx_ipsec)},
+	{"rx_ipsec", IXGBE_STAT(rx_ipsec)},
 #ifdef IXGBE_FCOE
 	{"fcoe_bad_fccrc", IXGBE_STAT(stats.fccrc)},
 	{"rx_fcoe_dropped", IXGBE_STAT(stats.fcoerpdc)},
@@ -158,6 +136,8 @@ static const char ixgbe_gstrings_test[][ETH_GSTRING_LEN] = {
 static const char ixgbe_priv_flags_strings[][ETH_GSTRING_LEN] = {
 #define IXGBE_PRIV_FLAGS_LEGACY_RX	BIT(0)
 	"legacy-rx",
+#define IXGBE_PRIV_FLAGS_VF_IPSEC_EN	BIT(1)
+	"vf-ipsec",
 };
 
 #define IXGBE_PRIV_FLAGS_STR_LEN ARRAY_SIZE(ixgbe_priv_flags_strings)
@@ -533,7 +513,7 @@ static void ixgbe_set_msglevel(struct net_device *netdev, u32 data)
 
 static int ixgbe_get_regs_len(struct net_device *netdev)
 {
-#define IXGBE_REGS_LEN  1139
+#define IXGBE_REGS_LEN  1145
 	return IXGBE_REGS_LEN * sizeof(u32);
 }
 
@@ -896,6 +876,14 @@ static void ixgbe_get_regs(struct net_device *netdev,
 	/* X540 specific DCB registers  */
 	regs_buff[1137] = IXGBE_READ_REG(hw, IXGBE_RTTQCNCR);
 	regs_buff[1138] = IXGBE_READ_REG(hw, IXGBE_RTTQCNTG);
+
+	/* Security config registers */
+	regs_buff[1139] = IXGBE_READ_REG(hw, IXGBE_SECTXCTRL);
+	regs_buff[1140] = IXGBE_READ_REG(hw, IXGBE_SECTXSTAT);
+	regs_buff[1141] = IXGBE_READ_REG(hw, IXGBE_SECTXBUFFAF);
+	regs_buff[1142] = IXGBE_READ_REG(hw, IXGBE_SECTXMINIFG);
+	regs_buff[1143] = IXGBE_READ_REG(hw, IXGBE_SECRXCTRL);
+	regs_buff[1144] = IXGBE_READ_REG(hw, IXGBE_SECRXSTAT);
 }
 
 static int ixgbe_get_eeprom_len(struct net_device *netdev)
@@ -923,7 +911,7 @@ static int ixgbe_get_eeprom(struct net_device *netdev,
 	last_word = (eeprom->offset + eeprom->len - 1) >> 1;
 	eeprom_len = last_word - first_word + 1;
 
-	eeprom_buff = kmalloc(sizeof(u16) * eeprom_len, GFP_KERNEL);
+	eeprom_buff = kmalloc_array(eeprom_len, sizeof(u16), GFP_KERNEL);
 	if (!eeprom_buff)
 		return -ENOMEM;
 
@@ -1014,16 +1002,13 @@ static void ixgbe_get_drvinfo(struct net_device *netdev,
 			      struct ethtool_drvinfo *drvinfo)
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
-	u32 nvm_track_id;
 
 	strlcpy(drvinfo->driver, ixgbe_driver_name, sizeof(drvinfo->driver));
 	strlcpy(drvinfo->version, ixgbe_driver_version,
 		sizeof(drvinfo->version));
 
-	nvm_track_id = (adapter->eeprom_verh << 16) |
-			adapter->eeprom_verl;
-	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version), "0x%08x",
-		 nvm_track_id);
+	strlcpy(drvinfo->fw_version, adapter->eeprom_id,
+		sizeof(drvinfo->fw_version));
 
 	strlcpy(drvinfo->bus_info, pci_name(adapter->pdev),
 		sizeof(drvinfo->bus_info));
@@ -1088,7 +1073,7 @@ static int ixgbe_set_ringparam(struct net_device *netdev,
 	/* allocate temporary buffer to store rings in */
 	i = max_t(int, adapter->num_tx_queues + adapter->num_xdp_queues,
 		  adapter->num_rx_queues);
-	temp_ring = vmalloc(i * sizeof(struct ixgbe_ring));
+	temp_ring = vmalloc(array_size(i, sizeof(struct ixgbe_ring)));
 
 	if (!temp_ring) {
 		err = -ENOMEM;
@@ -1155,6 +1140,10 @@ static int ixgbe_set_ringparam(struct net_device *netdev,
 		for (i = 0; i < adapter->num_rx_queues; i++) {
 			memcpy(&temp_ring[i], adapter->rx_ring[i],
 			       sizeof(struct ixgbe_ring));
+
+			/* Clear copied XDP RX-queue info */
+			memset(&temp_ring[i].xdp_rxq, 0,
+			       sizeof(temp_ring[i].xdp_rxq));
 
 			temp_ring[i].count = new_rx_count;
 			err = ixgbe_setup_rx_resources(adapter, &temp_ring[i]);
@@ -1711,35 +1700,17 @@ static int ixgbe_intr_test(struct ixgbe_adapter *adapter, u64 *data)
 
 static void ixgbe_free_desc_rings(struct ixgbe_adapter *adapter)
 {
-	struct ixgbe_ring *tx_ring = &adapter->test_tx_ring;
-	struct ixgbe_ring *rx_ring = &adapter->test_rx_ring;
-	struct ixgbe_hw *hw = &adapter->hw;
-	u32 reg_ctl;
-
-	/* shut down the DMA engines now so they can be reinitialized later */
+	/* Shut down the DMA engines now so they can be reinitialized later,
+	 * since the test rings and normally used rings should overlap on
+	 * queue 0 we can just use the standard disable Rx/Tx calls and they
+	 * will take care of disabling the test rings for us.
+	 */
 
 	/* first Rx */
-	hw->mac.ops.disable_rx(hw);
-	ixgbe_disable_rx_queue(adapter, rx_ring);
+	ixgbe_disable_rx(adapter);
 
 	/* now Tx */
-	reg_ctl = IXGBE_READ_REG(hw, IXGBE_TXDCTL(tx_ring->reg_idx));
-	reg_ctl &= ~IXGBE_TXDCTL_ENABLE;
-	IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(tx_ring->reg_idx), reg_ctl);
-
-	switch (hw->mac.type) {
-	case ixgbe_mac_82599EB:
-	case ixgbe_mac_X540:
-	case ixgbe_mac_X550:
-	case ixgbe_mac_X550EM_x:
-	case ixgbe_mac_x550em_a:
-		reg_ctl = IXGBE_READ_REG(hw, IXGBE_DMATXCTL);
-		reg_ctl &= ~IXGBE_DMATXCTL_TE;
-		IXGBE_WRITE_REG(hw, IXGBE_DMATXCTL, reg_ctl);
-		break;
-	default:
-		break;
-	}
+	ixgbe_disable_tx(adapter);
 
 	ixgbe_reset(adapter);
 
@@ -1989,7 +1960,7 @@ static u16 ixgbe_clean_test_rings(struct ixgbe_ring *rx_ring,
 	netdev_tx_reset_queue(txring_txq(tx_ring));
 
 	/* re-map buffers to ring, store next to clean values */
-	ixgbe_alloc_rx_buffers(rx_ring, count, 0x0);
+	ixgbe_alloc_rx_buffers(rx_ring, count);
 	rx_ring->next_to_clean = rx_ntc;
 	tx_ring->next_to_clean = tx_ntc;
 
@@ -2235,7 +2206,8 @@ static int ixgbe_set_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 
-	if (wol->wolopts & (WAKE_PHY | WAKE_ARP | WAKE_MAGICSECURE))
+	if (wol->wolopts & (WAKE_PHY | WAKE_ARP | WAKE_MAGICSECURE |
+			    WAKE_FILTER))
 		return -EOPNOTSUPP;
 
 	if (ixgbe_wol_exclusion(adapter, wol))
@@ -2341,14 +2313,12 @@ static bool ixgbe_update_rsc(struct ixgbe_adapter *adapter)
 		if (!(adapter->flags2 & IXGBE_FLAG2_RSC_ENABLED)) {
 			adapter->flags2 |= IXGBE_FLAG2_RSC_ENABLED;
 			e_info(probe, "rx-usecs value high enough to re-enable RSC\n");
-			printk(KERN_INFO "\t *** ixgbe_update_rsc: rx-usecs value high enough to re-enable RSC\n");
 			return true;
 		}
 	/* if interrupt rate is too high then disable RSC */
 	} else if (adapter->flags2 & IXGBE_FLAG2_RSC_ENABLED) {
 		adapter->flags2 &= ~IXGBE_FLAG2_RSC_ENABLED;
 		e_info(probe, "rx-usecs set too low, disabling RSC\n");
-		printk(KERN_INFO "\t *** ixgbe_update_rsc: rx-usecs set too low, disabling RSC\n");		
 		return true;
 	}
 	return false;
@@ -2359,92 +2329,105 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 	struct ixgbe_q_vector *q_vector;
-	struct ixgbe_hw *hw = &adapter->hw;
 	int i, core;
-        //u32 dtxmx, txdctl;
-	u32 dtxmx;
-	//u32 dtxmx, txdctl, srrctl;
-	//u16 tx_itr_param, rx_itr_param, tx_itr_prev;
+	u16 tx_itr_param, rx_itr_param, tx_itr_prev;
 	bool need_reset = false;
-	//u64 nins = 0, ncyc = 0, nllcm = 0;
-	
-	/* if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) { */
-	/* 	/\* reject Tx specific changes in case of mixed RxTx vectors *\/ */
-	/* 	if (ec->tx_coalesce_usecs) */
-	/* 		return -EINVAL; */
-	/* 	tx_itr_prev = adapter->rx_itr_setting; */
-	/* } else { */
-	/* 	tx_itr_prev = adapter->tx_itr_setting; */
-	/* } */
-
-	/* if ((ec->rx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)) || */
-	/*     (ec->tx_coalesce_usecs > (IXGBE_MAX_EITR >> 2))) */
-	/* 	return -EINVAL; */
-
-	printk(KERN_INFO "\t *** ec->rx_coalesce_usecs=0x%X\n", ec->rx_coalesce_usecs);
-	if (ec->rx_coalesce_usecs > 1) {
-	  adapter->rx_itr_setting = ec->rx_coalesce_usecs << 2;
-	  printk(KERN_INFO "\t *** ixgbe_set_coalesc: static adapter->rx_itr_setting = 0x%X\n", adapter->rx_itr_setting);
-	}
-	else {
-	  adapter->rx_itr_setting = ec->rx_coalesce_usecs;
-	  adapter->tx_itr_setting = ec->rx_coalesce_usecs;
-	  printk(KERN_INFO "\t *** ixgbe_set_coalesc: dynamic adapter->rx_itr_setting = 0x%X\n", adapter->rx_itr_setting);
+	struct IxgbeLog *il;
+	union IxgbeLogEntry *ile;
+	  
+	if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) {
+		/* reject Tx specific changes in case of mixed RxTx vectors */
+		if (ec->tx_coalesce_usecs)
+			return -EINVAL;
+		tx_itr_prev = adapter->rx_itr_setting;
+	} else {
+		tx_itr_prev = adapter->tx_itr_setting;
 	}
 
-	
-	
-	/* if (adapter->rx_itr_setting == 1) */
-	/* 	rx_itr_param = IXGBE_20K_ITR; */
-	/* else */
-	/* 	rx_itr_param = adapter->rx_itr_setting; */
+	if ((ec->rx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)) ||
+	    (ec->tx_coalesce_usecs > (IXGBE_MAX_EITR >> 2)))
+		return -EINVAL;
 
-	/* if (ec->tx_coalesce_usecs > 1) */
-	/* 	adapter->tx_itr_setting = ec->tx_coalesce_usecs << 2; */
-	/* else */
-	/* 	adapter->tx_itr_setting = ec->tx_coalesce_usecs; */
+	if (ec->rx_coalesce_usecs > 1)
+		adapter->rx_itr_setting = ec->rx_coalesce_usecs << 2;
+	else
+		adapter->rx_itr_setting = ec->rx_coalesce_usecs;
 
-	/* if (adapter->tx_itr_setting == 1) */
-	/* 	tx_itr_param = IXGBE_12K_ITR; */
-	/* else */
-	/* 	tx_itr_param = adapter->tx_itr_setting; */
+	if (adapter->rx_itr_setting == 1)
+		rx_itr_param = IXGBE_20K_ITR;
+	else
+		rx_itr_param = adapter->rx_itr_setting;
 
-	/* /\* mixed Rx/Tx *\/ */
-	/* if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) */
-	/* 	adapter->tx_itr_setting = adapter->rx_itr_setting; */
+	if (ec->tx_coalesce_usecs > 1)
+		adapter->tx_itr_setting = ec->tx_coalesce_usecs << 2;
+	else
+		adapter->tx_itr_setting = ec->tx_coalesce_usecs;
 
-	/* /\* detect ITR changes that require update of TXDCTL.WTHRESH *\/ */
-	/* if ((adapter->tx_itr_setting != 1) && */
-	/*     (adapter->tx_itr_setting < IXGBE_100K_ITR)) { */
-	/* 	if ((tx_itr_prev == 1) || */
-	/* 	    (tx_itr_prev >= IXGBE_100K_ITR)) */
-	/* 		need_reset = true; */
-	/* } else { */
-	/* 	if ((tx_itr_prev != 1) && */
-	/* 	    (tx_itr_prev < IXGBE_100K_ITR)) */
-	/* 		need_reset = true; */
-	/* } */
+	if (adapter->tx_itr_setting == 1)
+		tx_itr_param = IXGBE_12K_ITR;
+	else
+		tx_itr_param = adapter->tx_itr_setting;
+
+	/* mixed Rx/Tx */
+	if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count)
+		adapter->tx_itr_setting = adapter->rx_itr_setting;
+
+	/* detect ITR changes that require update of TXDCTL.WTHRESH */
+	if ((adapter->tx_itr_setting != 1) &&
+	    (adapter->tx_itr_setting < IXGBE_100K_ITR)) {
+		if ((tx_itr_prev == 1) ||
+		    (tx_itr_prev >= IXGBE_100K_ITR))
+			need_reset = true;
+	} else {
+		if ((tx_itr_prev != 1) &&
+		    (tx_itr_prev < IXGBE_100K_ITR))
+			need_reset = true;
+	}
 
 	/* check the old value and enable RSC if necessary */
 	need_reset |= ixgbe_update_rsc(adapter);
 
 	for (i = 0; i < adapter->num_q_vectors; i++) {
-	  q_vector = adapter->q_vector[i];
-	  q_vector->itr = (u16)(adapter->rx_itr_setting);
-	  ixgbe_write_eitr(q_vector);
+		q_vector = adapter->q_vector[i];
+		if (q_vector->tx.count && !q_vector->rx.count)
+			/* tx only */
+			q_vector->itr = tx_itr_param;
+		else
+			/* rx only or mixed */
+			q_vector->itr = rx_itr_param;
+		ixgbe_write_eitr(q_vector);
 	}
-	/* for (i = 0; i < adapter->num_q_vectors; i++) { */
-	/* 	q_vector = adapter->q_vector[i]; */
-	/* 	if (q_vector->tx.count && !q_vector->rx.count) */
-	/* 		/\* tx only *\/ */
-	/* 		q_vector->itr = tx_itr_param; */
-	/* 	else */
-	/* 		/\* rx only or mixed *\/ */
-	/* 		q_vector->itr = rx_itr_param; */
-	/* 	ixgbe_write_eitr(q_vector); */
-	/* } */
 
-	/*
+	if (ec->rx_max_coalesced_frames_low) {
+	  core = ec->rx_max_coalesced_frames_low - 1;
+	  
+	  if (core >= adapter->num_q_vectors || core > 15) {
+	    printk(KERN_INFO "\t core %d error >= num_q_vectors=%u\n", core, adapter->num_q_vectors);
+	  }
+
+	  il= &ixgbe_logs[core];
+	  
+	  printk(KERN_INFO "Core=%d itr_cnt=%u\n", core, il->itr_cnt);
+	  printk(KERN_INFO "i rx_desc rx_bytes tx_desc tx_bytes instructions cycles llc_miss joules timestamp\n");
+	  for (i = 0; i < il->itr_cnt; i++) {
+	    ile = &il->log[i];
+	    
+	    printk(KERN_INFO "%u %u %u %u %u %llu %llu %llu %u %llu\n",
+		   i,
+		   ile->Fields.rx_desc, ile->Fields.rx_bytes,
+		   ile->Fields.tx_desc, ile->Fields.tx_bytes,
+		   ile->Fields.ninstructions,
+		   ile->Fields.ncycles,
+		   ile->Fields.nllc_miss,		   
+		   ile->Fields.joules,		   
+		   ile->Fields.tsc);
+	  }
+
+	  // clean up
+	  memset(ixgbe_logs, 0, sizeof(ixgbe_logs));
+	}
+	
+	  /*
 	 * do reset here at the end to make sure EITR==0 case is handled
 	 * correctly w.r.t stopping tx, and changing TXDCTL.WTHRESH settings
 	 * also locks in RSC enable/disable which requires reset
@@ -2452,241 +2435,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	if (need_reset)
 		ixgbe_do_reset(netdev);
 
-	if (ec->rx_max_coalesced_frames) {
-	  printk(KERN_INFO "\t *** PREV IXGBE_DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
-	  adapter->dtxmxszrq = ec->rx_max_coalesced_frames;	  
-	  dtxmx = (u32)adapter->dtxmxszrq;
-	  IXGBE_WRITE_REG(hw, IXGBE_DTXMXSZRQ, dtxmx);
-	  printk(KERN_INFO "\t *** NEW IXGBE_DTXMXSZRQ = %d\n", (int)dtxmx);
-	}
-
-	if (ec->rx_coalesce_usecs_irq) {	  
-	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
-	    txdctl = IXGBE_READ_REG(hw, IXGBE_TXDCTL(i));
-	    txdctl &= ~0x7F << 16;
-	    txdctl |= ec->rx_coalesce_usecs_irq << 16;
-	    IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(i), txdctl);
-	    }*/
-	  for (i = 0; i < adapter->num_q_vectors; i++) {
-	    adapter->tx_ring[i]->wthresh = ec->rx_coalesce_usecs_irq;
-	  }
-	  printk(KERN_INFO "\t *** Update WTHRESH = %d\n", ec->rx_coalesce_usecs_irq);
-	  //goto reset;
-	}
-
-	if (ec->rx_max_coalesced_frames_irq) {
-	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
-	    txdctl = IXGBE_READ_REG(hw, IXGBE_TXDCTL(i));
-	    txdctl &= ~0x7F << 8;
-	    txdctl |= ec->rx_max_coalesced_frames_irq << 8;
-	    IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(i), txdctl);
-	    }*/
-	  for (i = 0; i < adapter->num_q_vectors; i++) {
-	    adapter->tx_ring[i]->hthresh = ec->rx_max_coalesced_frames_irq;
-	  }
-	  printk(KERN_INFO "\t *** Update HTHRESH = %d\n", ec->rx_max_coalesced_frames_irq);
-	  //goto reset;
-	}
-
-	if (ec->tx_coalesce_usecs) {
-	  /*for (i = 0; i < adapter->num_q_vectors; i++) {
-	    txdctl = IXGBE_READ_REG(hw, IXGBE_TXDCTL(i));
-	    txdctl &= ~0x7F;
-	    txdctl |= ec->tx_coalesce_usecs;
-	    IXGBE_WRITE_REG(hw, IXGBE_TXDCTL(i), txdctl);
-	    }*/
-	  for (i = 0; i < adapter->num_q_vectors; i++) {
-	    adapter->tx_ring[i]->pthresh = ec->tx_coalesce_usecs;
-	  }
-	  printk(KERN_INFO "\t *** Update PTHRESH = %d\n", ec->tx_coalesce_usecs);
-	  //goto reset;
-	}
-
-	if (ec->tx_max_coalesced_frames) {
-	  for (i = 0; i < adapter->num_q_vectors; i++) {
-	    adapter->rx_ring[i]->bsizepkt = ec->tx_max_coalesced_frames;
-	  }
-	  printk(KERN_INFO "\t *** Update BSIZEPACKET = %d\n", ec->tx_max_coalesced_frames);
-	}
-
-	if (ec->tx_coalesce_usecs_irq) {
-	  for (i = 0; i < adapter->num_q_vectors; i++) {
-	    adapter->rx_ring[i]->bsizehdr = ec->tx_coalesce_usecs_irq;
-	  }
-	  printk(KERN_INFO "\t *** Update BSIZEHEADER = %d\n", ec->tx_coalesce_usecs_irq);
-	}
-
-	if (ec->tx_max_coalesced_frames_irq) {
-	  for (i = 0; i < adapter->num_q_vectors; i++) {
-	    adapter->rx_ring[i]->maxdesc = ec->tx_max_coalesced_frames_irq;
-	  }
-	  printk(KERN_INFO "\t *** Update MAXDESC = %d\n", ec->tx_max_coalesced_frames_irq);
-	}
-
-	if (ec->rx_coalesce_usecs_low) {
-	  adapter->rsc_delay = ec->rx_coalesce_usecs_low;
-	  printk(KERN_INFO "\t *** Update RSCDELAY = %d\n", ec->rx_coalesce_usecs_low);
-	}
-
-        if (ec->rx_max_coalesced_frames_low) {
-	  core = ec->rx_max_coalesced_frames_low - 1;
-
-	  if (core >= adapter->num_q_vectors || core > 15) {
-	    printk(KERN_INFO "\t core %d error >= num_q_vectors=%u\n", core, adapter->num_q_vectors);
-	  }
-	  
-	  printk(KERN_INFO "Core=%d itr_cnt=%u msix_other_cnt=%u non_itr_cnt=%u\n", core, adapter->itr_cnt[core], adapter->msix_other_cnt, adapter->non_itr_cnt);
-	  
-	  /*printk(KERN_INFO "i rx_desc rx_free_budget rx_packets rx_next_to_clean rx_next_to_use rx_bytes tx_desc tx_free_budget tx_packets tx_next_to_clean tx_next_to_use tx_bytes joules instructions time_us\n");
-	  
-	    for (i = 0; i < adapter->itr_cnt[core]; i++) {
-	    printk(KERN_INFO "%u %u %u %u %hu %hu %u %u %u %u %hu %hu %u %llu %llu %llu\n",
-		   i, adapter->itr_stats[core][i].rx_desc, adapter->itr_stats[core][i].rx_free_budget,
-		   adapter->itr_stats[core][i].rx_packets, adapter->itr_stats[core][i].rx_next_to_clean,
-		   adapter->itr_stats[core][i].rx_next_to_use, adapter->itr_stats[core][i].rx_bytes,
-		   
-		   adapter->itr_stats[core][i].tx_desc, adapter->itr_stats[core][i].tx_free_budget,
-		   adapter->itr_stats[core][i].tx_packets, adapter->itr_stats[core][i].tx_next_to_clean,
-		   adapter->itr_stats[core][i].tx_next_to_use, adapter->itr_stats[core][i].tx_bytes,
-		   
-		   adapter->itr_stats[core][i].joules,
-		   adapter->itr_stats[core][i].ninstructions,
-		   adapter->itr_stats[core][i].itr_time_us);
-	    nins += adapter->itr_stats[core][i].ninstructions;
-	    }*/
-
-	  printk(KERN_INFO "i rx_desc rx_bytes tx_desc tx_bytes instructions cycles llc_miss joules timestamp\n");
-	  for (i = 0; i < adapter->itr_cnt[core]; i++) {
-	    printk(KERN_INFO "%u %u %u %u %u %llu %llu %llu %llu %llu\n",
-		   i,
-		   adapter->itr_stats[core][i].rx_desc, adapter->itr_stats[core][i].rx_bytes,
-		   adapter->itr_stats[core][i].tx_desc,  adapter->itr_stats[core][i].tx_bytes,
-		   adapter->itr_stats[core][i].ninstructions,
-		   adapter->itr_stats[core][i].ncycles,
-		   adapter->itr_stats[core][i].nllc_miss,		   
-		   adapter->itr_stats[core][i].joules,		   
-		   adapter->itr_stats[core][i].itr_time_us);
-	    
-	    //nins += adapter->itr_stats[core][i].ninstructions;
-	    //ncyc += adapter->itr_stats[core][i].ncycles;
-	    //nllcm += adapter->itr_stats[core][i].nllc_miss;
-	  }
-	  
-  
-	  //printk(KERN_INFO "total instructions = %llu\n", nins);
-	  //printk(KERN_INFO "total cycles = %llu\n", ncyc);
-	  //printk(KERN_INFO "total llc miss = %llu\n", nllcm);
-
-	  // clean up	  
-	  for (i = 0; i < adapter->itr_cnt[core]; i++) {
-	    adapter->itr_stats[core][i].joules = 0;
-	    adapter->itr_stats[core][i].ninstructions = 0;
-	    adapter->itr_stats[core][i].ncycles = 0;
-	    adapter->itr_stats[core][i].nllc_miss = 0;
-	    adapter->itr_stats[core][i].rx_desc = 0;
-	    adapter->itr_stats[core][i].rx_packets = 0;
-	    adapter->itr_stats[core][i].rx_bytes = 0;
-	    adapter->itr_stats[core][i].rx_free_budget = 0;
-	    adapter->itr_stats[core][i].rx_next_to_use = 0;
-	    adapter->itr_stats[core][i].rx_next_to_clean = 0;
-
-	    adapter->itr_stats[core][i].tx_desc = 0;
-	    adapter->itr_stats[core][i].tx_packets = 0;
-	    adapter->itr_stats[core][i].tx_bytes = 0;
-	    adapter->itr_stats[core][i].tx_free_budget = 0;
-	    adapter->itr_stats[core][i].tx_next_to_use = 0;
-	    adapter->itr_stats[core][i].tx_next_to_clean = 0;
-	    
-	    adapter->itr_stats[core][i].itr_time_us = 0;
-	  }
-	  adapter->msix_other_cnt = 0;
-	  adapter->itr_cnt[core] = 0;
-	  adapter->non_itr_cnt = 0;
-	  adapter->itr_joules_last_ts = 0;
-	  adapter->perf_started[core] = 0;
-	  adapter->ins_prev[core] = 0;
-	  adapter->cyc_prev[core] = 0;
-	  adapter->llcmiss_prev[core] = 0;
-	  
-	    /*printk(KERN_INFO "\t xxx Core=%d rx_time_cnt=%u rx_desc_cnt=%u\n", core,
-		   adapter->rx_time_cnt[core], adapter->rx_desc_cnt[core]);
-	    
-	    totalc = adapter->rx_time_cnt[core] > adapter->rx_desc_cnt[core] ?
-	      adapter->rx_desc_cnt[core] : adapter->rx_time_cnt[core];
-	    
-	    for (i = 1; i < totalc; i++) {
-	      if(core == 0 || core == 1) {
-		printk(KERN_INFO "server_rx_timestamp %llu server_rx_desc %llu server_rx_joules %llu\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i], (adapter->log_joules[core][i] - adapter->log_joules[core][i-1]));
-	      } else {
-		printk(KERN_INFO "server_rx_timestamp %llu server_rx_desc %llu\n", adapter->log_rx_time_us[core][i], adapter->log_rx_desc[core][i]);
-	      }	     	      
-	      }*/	  
-	  
-	  /*printk(KERN_INFO "\n\t xxx poll_cnt1 = %lld rxdesc_cnt1 = %lld\n", adapter->poll_cnt1, adapter->rxdesc_cnt1);	  	  
-	  totalc = adapter->poll_cnt1 > adapter->rxdesc_cnt1 ? adapter->poll_cnt1 : adapter->rxdesc_cnt1;
-	  for (i = 0; i < totalc; i++) {
-	    printk(KERN_INFO "\n\t xxx log_time_ns1 %lld log_rx_desc1 %lld\n", adapter->log_time_ns1[i], adapter->log_rx_desc1[i]);
-	    adapter->log_time_ns1[i] = 0;
-	    adapter->log_rx_desc1[i] = 0;
-	  }
-	  adapter->rxdesc_cnt1 = 0;
-	  adapter->poll_cnt1 = 0;
-	  */
-	  /*printk(KERN_INFO "\n\t xxx poll_cnt14 = %lld rxdesc_cnt14 = %lld\n", adapter->poll_cnt14, adapter->rxdesc_cnt14);
-	  totalc = adapter->poll_cnt14 > adapter->rxdesc_cnt14 ? adapter->poll_cnt14 : adapter->rxdesc_cnt14;
-	  for (i = 0; i < totalc; i++) {
-	    printk(KERN_INFO "\n\t xxx log_time_ns14 %lld log_rx_desc14 %lld\n", adapter->log_time_ns14[i], adapter->log_rx_desc14[i]);
-	    adapter->log_time_ns14[i] = 0;
-	    adapter->log_rx_desc14[i] = 0;
-	  }
-	  adapter->rxdesc_cnt14 = 0;
-	  adapter->poll_cnt14 = 0;
-	  */
-	  //printk(KERN_INFO "\t XXX DTXMXSZRQ=%d", (int)IXGBE_READ_REG(hw, IXGBE_DTXMXSZRQ));
-	  //printk(KERN_INFO "\t XXX RSC_Delay=%d\n", (int)((IXGBE_READ_REG(hw, IXGBE_EITR(1)) >> 3)&0x1FF));
-	  //txdctl = (u32)IXGBE_READ_REG(hw, IXGBE_TXDCTL(1));
-	  //printk(KERN_INFO "\t XXX PTHRESH=%d\n", txdctl & 0x7F);
-	  //printk(KERN_INFO "\t XXX HTHRESH=%d\n", (txdctl >> 8) & 0x7F);
-	  //printk(KERN_INFO "\t XXX WTHRESH=%d\n", (txdctl >> 16) & 0x7F);
-	  
-	  /*printk(KERN_INFO "\n\t xxx log_cnt = %d START\n", adapter->log_cnt);
-	  printk(KERN_INFO "\t xxx totalrxbytes = %d\n", adapter->totalrxbytes);
-	  for (i = 0; i < adapter->log_cnt; i++) {
-	    printk(KERN_INFO "\t xxx %d work_done:%d rxbytes:%d rxpackets:%d txbytes:%d txpackets:%d\n", i, adapter->log_work_done[i], adapter->log_rxbytes[i], adapter->log_rxpackets[i], adapter->log_txbytes[i], adapter->log_txpackets[i]);
-	    
-	    adapter->log_work_done[i]=0;
-	    //adapter->log_budget[i]=0;
-	    adapter->log_rxbytes[i]=0;
-	    adapter->log_rxpackets[i]=0;
-	    adapter->log_txbytes[i]=0;
-	    adapter->log_txpackets[i]=0;
-	  }
-	  adapter->totalrxbytes = 0;
-	  adapter->log_cnt = 0;
-	  
-	  printk(KERN_INFO "\n\t xxx log_cnt = %d END\n", adapter->log_itrs_cnt);
-	  for (i = 0; i < adapter->log_itrs_cnt; i++) {
-	    printk(KERN_INFO "\t xxx %d itr:%d\n", i, adapter->log_itrs[i]);
-	    adapter->log_itrs[i] = 0;
-	  }
-	  adapter->log_itrs_cnt = 0;
-	  printk(KERN_INFO "\n\t xxx log_itrs_cnt = %d START\n", adapter->log_itrs_cnt);*/
-	}
-
-	// ec->tx_coalesce_usecs_low == 1, RX_DCA = OFF, TX_DCA = OFF
-	// ec->tx_coalesce_usecs_low == 2, RX_DCA = ON, TX_DCA = OFF
-	// ec->tx_coalesce_usecs_low == 3, RX_DCA = OFF, TX_DCA = ON
-	// ec->tx_coalesce_usecs_low == 4, RX_DCA = ON, TX_DCA = ON
-	if (ec->tx_coalesce_usecs_low) {
-	  adapter->dca_en = ec->tx_coalesce_usecs_low - 1;
-	  printk(KERN_INFO "\t *** Update DCA = %d\n", adapter->dca_en);
-	}
 	return 0;
-
-	/*reset:
-	ixgbe_down(adapter);
-	ixgbe_up(adapter);
-	return 0;*/
 }
 
 static int ixgbe_get_ethtool_fdir_entry(struct ixgbe_adapter *adapter,
@@ -3310,6 +3059,8 @@ static int ixgbe_set_rxfh(struct net_device *netdev, const u32 *indir,
 
 		for (i = 0; i < reta_entries; i++)
 			adapter->rss_indir_tbl[i] = indir[i];
+
+		ixgbe_store_reta(adapter);
 	}
 
 	/* Fill out the rss hash key */
@@ -3317,8 +3068,6 @@ static int ixgbe_set_rxfh(struct net_device *netdev, const u32 *indir,
 		memcpy(adapter->rss_key, key, ixgbe_get_rxfh_key_size(netdev));
 		ixgbe_store_key(adapter);
 	}
-
-	ixgbe_store_reta(adapter);
 
 	return 0;
 }
@@ -3336,26 +3085,9 @@ static int ixgbe_get_ts_info(struct net_device *dev,
 	case ixgbe_mac_X550EM_x:
 	case ixgbe_mac_x550em_a:
 		info->rx_filters |= BIT(HWTSTAMP_FILTER_ALL);
-		/* fallthrough */
+		break;
 	case ixgbe_mac_X540:
 	case ixgbe_mac_82599EB:
-		info->so_timestamping =
-			SOF_TIMESTAMPING_TX_SOFTWARE |
-			SOF_TIMESTAMPING_RX_SOFTWARE |
-			SOF_TIMESTAMPING_SOFTWARE |
-			SOF_TIMESTAMPING_TX_HARDWARE |
-			SOF_TIMESTAMPING_RX_HARDWARE |
-			SOF_TIMESTAMPING_RAW_HARDWARE;
-
-		if (adapter->ptp_clock)
-			info->phc_index = ptp_clock_index(adapter->ptp_clock);
-		else
-			info->phc_index = -1;
-
-		info->tx_types =
-			BIT(HWTSTAMP_TX_OFF) |
-			BIT(HWTSTAMP_TX_ON);
-
 		info->rx_filters |=
 			BIT(HWTSTAMP_FILTER_PTP_V1_L4_SYNC) |
 			BIT(HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ) |
@@ -3364,13 +3096,31 @@ static int ixgbe_get_ts_info(struct net_device *dev,
 	default:
 		return ethtool_op_get_ts_info(dev, info);
 	}
+
+	info->so_timestamping =
+		SOF_TIMESTAMPING_TX_SOFTWARE |
+		SOF_TIMESTAMPING_RX_SOFTWARE |
+		SOF_TIMESTAMPING_SOFTWARE |
+		SOF_TIMESTAMPING_TX_HARDWARE |
+		SOF_TIMESTAMPING_RX_HARDWARE |
+		SOF_TIMESTAMPING_RAW_HARDWARE;
+
+	if (adapter->ptp_clock)
+		info->phc_index = ptp_clock_index(adapter->ptp_clock);
+	else
+		info->phc_index = -1;
+
+	info->tx_types =
+		BIT(HWTSTAMP_TX_OFF) |
+		BIT(HWTSTAMP_TX_ON);
+
 	return 0;
 }
 
 static unsigned int ixgbe_max_channels(struct ixgbe_adapter *adapter)
 {
 	unsigned int max_combined;
-	u8 tcs = netdev_get_num_tc(adapter->netdev);
+	u8 tcs = adapter->hw_tcs;
 
 	if (!(adapter->flags & IXGBE_FLAG_MSIX_ENABLED)) {
 		/* We only support one q_vector without MSI-X */
@@ -3427,7 +3177,7 @@ static void ixgbe_get_channels(struct net_device *dev,
 		return;
 
 	/* same thing goes for being DCB enabled */
-	if (netdev_get_num_tc(dev) > 1)
+	if (adapter->hw_tcs > 1)
 		return;
 
 	/* if ATR is disabled we can exit */
@@ -3473,7 +3223,7 @@ static int ixgbe_set_channels(struct net_device *dev,
 
 #endif
 	/* use setup TC to update any traffic class queue mapping */
-	return ixgbe_setup_tc(dev, netdev_get_num_tc(dev));
+	return ixgbe_setup_tc(dev, adapter->hw_tcs);
 }
 
 static int ixgbe_get_module_info(struct net_device *dev,
@@ -3507,7 +3257,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
 		page_swap = true;
 	}
 
-	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
+	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
+	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
 		/* We have a SFP, but it does not support SFF-8472 */
 		modinfo->type = ETH_MODULE_SFF_8079;
 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
@@ -3693,6 +3444,9 @@ static u32 ixgbe_get_priv_flags(struct net_device *netdev)
 	if (adapter->flags2 & IXGBE_FLAG2_RX_LEGACY)
 		priv_flags |= IXGBE_PRIV_FLAGS_LEGACY_RX;
 
+	if (adapter->flags2 & IXGBE_FLAG2_VF_IPSEC_ENABLED)
+		priv_flags |= IXGBE_PRIV_FLAGS_VF_IPSEC_EN;
+
 	return priv_flags;
 }
 
@@ -3704,6 +3458,10 @@ static int ixgbe_set_priv_flags(struct net_device *netdev, u32 priv_flags)
 	flags2 &= ~IXGBE_FLAG2_RX_LEGACY;
 	if (priv_flags & IXGBE_PRIV_FLAGS_LEGACY_RX)
 		flags2 |= IXGBE_FLAG2_RX_LEGACY;
+
+	flags2 &= ~IXGBE_FLAG2_VF_IPSEC_ENABLED;
+	if (priv_flags & IXGBE_PRIV_FLAGS_VF_IPSEC_EN)
+		flags2 |= IXGBE_FLAG2_VF_IPSEC_ENABLED;
 
 	if (flags2 != adapter->flags2) {
 		adapter->flags2 = flags2;
