@@ -552,15 +552,14 @@ union IxgbeLogEntry {
     long long ninstructions;
     long long ncycles;
     long long nllc_miss;
+    long long joules;
     
     unsigned int rx_desc;
     unsigned int rx_bytes;
     unsigned int tx_desc;
     unsigned int tx_bytes;
-    unsigned int joules;
-    
-    unsigned int unused1;
-    long long unused2;
+
+    long long unused1;
   } __attribute((packed)) Fields;
 } __attribute((packed));
 

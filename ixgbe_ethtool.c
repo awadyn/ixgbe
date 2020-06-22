@@ -2412,7 +2412,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  for (i = 0; i < il->itr_cnt; i++) {
 	    ile = &il->log[i];
 	    
-	    printk(KERN_INFO "%u %u %u %u %u %llu %llu %llu %u %llu\n",
+	    printk(KERN_INFO "%u %u %u %u %u %llu %llu %llu %llu %llu\n",
 		   i,
 		   ile->Fields.rx_desc, ile->Fields.rx_bytes,
 		   ile->Fields.tx_desc, ile->Fields.tx_bytes,
