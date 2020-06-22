@@ -3213,7 +3213,7 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
         if(hw->mac.addr[ETH_ALEN-1] == 0x00) {	  
           v_idx = q_vector->v_idx;
 	  il = &ixgbe_logs[v_idx];
-	    
+	  
           icnt = il->itr_cnt; //adapter->itr_cnt[v_idx];
 	  
           if(v_idx == 1) {
@@ -3229,7 +3229,7 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
             //adapter->itr_stats[v_idx][icnt].itr_time_us = now;
 	    now = ixgbe_rdtsc();
 	    //__builtin_ia32_movnti64(&ile->Fields.tsc, now);
-	    write_nti64(&ile->Fields.tsc, now);	    
+	    write_nti64(&ile->Fields.tsc, now);
 	      
             if (v_idx == 1) {
               last = il->itr_joules_last_tsc; //adapter->itr_joules_last_ts;
