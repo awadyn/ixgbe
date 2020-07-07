@@ -3203,7 +3203,6 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 	struct ixgbe_q_vector *q_vector = data;
 	struct ixgbe_adapter *adapter = q_vector->adapter;
         struct ixgbe_hw *hw = &adapter->hw;
-        //struct timeval tv;
 	struct IxgbeLog *il;
 	union IxgbeLogEntry *ile;
         int v_idx = 0;
@@ -3214,112 +3213,71 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
           v_idx = q_vector->v_idx;
 	  il = &ixgbe_logs[v_idx];
 	    
-          icnt = il->itr_cnt; //adapter->itr_cnt[v_idx];
-	  
-          if(v_idx == 1) {
-	    //il->itr_cookie = 1;
-            //adapter->itr_cookie = 1;
-          }
+          icnt = il->itr_cnt;	  
 	  
           if (icnt < IXGBE_LOG_SIZE) {
-            //do_gettimeofday(&tv);
-            //now = (uint64_t)((tv.tv_sec * 1000000) + tv.tv_usec);
 	    ile = &il->log[icnt];
 	    
-            //adapter->itr_stats[v_idx][icnt].itr_time_us = now;
 	    now = ixgbe_rdtsc();
-	    //__builtin_ia32_movnti64(&ile->Fields.tsc, now);
-	    write_nti64(&ile->Fields.tsc, now);	    
-	      
-            if (v_idx == 1) {
-              last = il->itr_joules_last_tsc; //adapter->itr_joules_last_ts;
-	      
-              if ((now - last) > ixgbe_tsc_per_milli) { // 1 ms
-                rdmsrl(0x611, res);
-
-                //adapter->itr_stats[v_idx][icnt].joules = (u64)res;
+	    write_nti64(&ile->Fields.tsc, now);
+	    
+	    if (v_idx == 1) {      
+	      last = il->itr_joules_last_tsc;	    
+	      if ((now - last) > ixgbe_tsc_per_milli) { // 1 ms
+		rdmsrl(0x611, res);
 		write_nti64(&ile->Fields.joules, res);
-		
-                //adapter->itr_joules_last_ts = now;
-	        il->itr_joules_last_tsc = now;
+		il->itr_joules_last_tsc = now;
 
-                //if(adapter->perf_started[v_idx]) {
+		rdmsrl(0x3FC, res);
+		write_nti64(&ile->Fields.c3, res);
+
+		rdmsrl(0x3FD, res);
+		write_nti64(&ile->Fields.c6, res);
+
+		rdmsrl(0x3FE, res);
+		write_nti64(&ile->Fields.c7, res);
+	      
 		if(il->perf_started) {
-                  // llc
-                  rdmsrl(0xC1, tmp);
-                  //adapter->itr_stats[v_idx][icnt].nllc_miss = tmp - adapter->llcmiss_prev[v_idx];
+		  // llc
+		  rdmsrl(0xC1, tmp);
 		  write_nti64(&ile->Fields.nllc_miss, tmp);
-                  //rdmsrl(0xC1, tmp);
-
-                  // ins
-                  //wrmsrl(0x38F, 0x200000000);
-                  rdmsrl(0x309, tmp);
-		  write_nti64(&ile->Fields.ninstructions, tmp);
-                  //adapter->itr_stats[v_idx][icnt].ninstructions = tmp - adapter->ins_prev[v_idx];
-                  //rdmsrl(0x309, tmp);
-
-                  // cycles
-                  //wrmsrl(0x38F, 0x0);
-                  rdmsrl(0x30A, tmp);
-		  write_nti64(&ile->Fields.ncycles, tmp);
-		  //ile->ncycles = tmp;
-                  //adapter->itr_stats[v_idx][icnt].ncycles = tmp - adapter->cyc_prev[v_idx];
-                  //rdmsrl(0x30A, tmp);
-
-                  //wrmsrl(0x38F, 0x0);
-                  //rdmsrl(0x38D, tmp);
-                  //wrmsrl(0x186, 0x0);
-                  //wrmsrl(0x38F, 0x0);
-                  //rdmsrl(0x38D, tmp);
-		}
 		
-                //adapter->perf_started[v_idx] = 1;
+		  // ins
+		  rdmsrl(0x309, tmp);
+		  write_nti64(&ile->Fields.ninstructions, tmp);
+		
+		  // cycles
+		  rdmsrl(0x30A, tmp);
+		  write_nti64(&ile->Fields.ncycles, tmp);
+
+		  // ref cycles
+		  rdmsrl(0x30B, tmp);
+		  write_nti64(&ile->Fields.nref_cycles, tmp);
+		}
+	      
 		if(il->perf_started == 0) {
-		  // init ins
-		  //rdmsrl(0x309, tmp);
-		  //adapter->ins_prev[v_idx] = tmp;
-		  wrmsrl(0x38D, 0x33);
+		  // init ins, cycles. ref_cycles
+		  wrmsrl(0x38D, 0x333);
 		  
 		  // init cycles
-		  //rdmsrl(0x30A, tmp);
-		  //adapter->cyc_prev[v_idx] = tmp;
-		  wrmsrl(0x38D, 0x33);
-		  
+		  //wrmsrl(0x38D, 0x33);
+		
 		  // init llc_miss
 		  wrmsrl(0x186, 0x43412E);
-		  //tmp = 0;
-		  //rdmsrl(0xC1, tmp);
-		  //adapter->llcmiss_prev[v_idx] = tmp;
-		  
+		
 		  // start
-		  wrmsrl(0x38F, 0x1);
-		  wrmsrl(0x38F, 0x100000001);
-		  wrmsrl(0x38F, 0x300000001);
-
+		  //wrmsrl(0x38F, 0x1);
+		  //wrmsrl(0x38F, 0x100000001);
+		  wrmsrl(0x38F, 0x700000001);
+		
 		  il->perf_started = 1;
 		}
-              }
-            }
-	    
+	      }            
+	    }
 	    write_nti32(&(ile->Fields.rx_desc), q_vector->rx.per_itr_desc);
 	    write_nti32(&(ile->Fields.rx_bytes), q_vector->rx.per_itr_bytes);
 	    write_nti32(&(ile->Fields.tx_desc), q_vector->rx.per_itr_desc);
-	    write_nti32(&(ile->Fields.tx_bytes), q_vector->rx.per_itr_bytes);
-	    
-	    /*adapter->itr_stats[v_idx][icnt].rx_desc = q_vector->rx.per_itr_desc;
-            adapter->itr_stats[v_idx][icnt].rx_packets = q_vector->rx.per_itr_packets;
-            adapter->itr_stats[v_idx][icnt].rx_bytes = q_vector->rx.per_itr_bytes;
-            adapter->itr_stats[v_idx][icnt].rx_free_budget = q_vector->rx.per_itr_free_budget;
-            adapter->itr_stats[v_idx][icnt].rx_next_to_use = adapter->rx_ring[v_idx]->next_to_use;
-            adapter->itr_stats[v_idx][icnt].rx_next_to_clean = adapter->rx_ring[v_idx]->next_to_clean;
-
-            adapter->itr_stats[v_idx][icnt].tx_desc = q_vector->tx.per_itr_desc;
-            adapter->itr_stats[v_idx][icnt].tx_packets = q_vector->tx.per_itr_packets;
-            adapter->itr_stats[v_idx][icnt].tx_bytes = q_vector->tx.per_itr_bytes;
-            adapter->itr_stats[v_idx][icnt].tx_free_budget = q_vector->tx.per_itr_free_budget;
-            adapter->itr_stats[v_idx][icnt].tx_next_to_use = adapter->tx_ring[v_idx]->next_to_use;
-            adapter->itr_stats[v_idx][icnt].tx_next_to_clean = adapter->tx_ring[v_idx]->next_to_clean;
-	    */
+	    write_nti32(&(ile->Fields.tx_bytes), q_vector->rx.per_itr_bytes);	    
 	    
 	    //reset 
 	    q_vector->rx.per_itr_desc = 0;
@@ -3333,7 +3291,6 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
             q_vector->tx.per_itr_free_budget = 0;
 
 	    il->itr_cnt++;
-            //adapter->itr_cnt[v_idx] ++;
           }
         }
 
@@ -6984,52 +6941,36 @@ int ixgbe_open(struct net_device *netdev)
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
 	struct ixgbe_hw *hw = &adapter->hw;
-	int err, queues;//, i, j;
+	int err, queues, i;//, j;
 	uint64_t now;
 	//u8 inb0x43, inb0x40_1, inb0x40_2, lo, hi;
 	//uint16_t start_tick, end_tick, total_tick;
 	//uint64_t start_tsc, end_tsc, total_tsc, freq, step;	  
 
+	printk(KERN_INFO "ixgbe_open()\n");
 	
-	memset(ixgbe_logs, 0, sizeof(ixgbe_logs));
-	ixgbe_tsc_per_milli = tsc_khz;
-	
-	// initialize new params
-        /*for(i=0; i<16; i++) {	  
-          adapter->itr_cnt[i] = 0; 
-          adapter->perf_started[i] = 0;
-          adapter->ins_prev[i] = 0;
-          adapter->cyc_prev[i] = 0;
-          adapter->llcmiss_prev[i] = 0;
-
-          for(j=0;j<800000;j++){
-            adapter->itr_stats[i][j].joules = 0;
-            adapter->itr_stats[i][j].ninstructions = 0;
-            adapter->itr_stats[i][j].rx_desc = 0; 
-            adapter->itr_stats[i][j].rx_packets = 0;
-            adapter->itr_stats[i][j].rx_bytes = 0;
-            adapter->itr_stats[i][j].rx_free_budget = 0;
-            adapter->itr_stats[i][j].rx_next_to_use = 0;
-            adapter->itr_stats[i][j].rx_next_to_clean = 0;
-
-            adapter->itr_stats[i][j].tx_desc = 0; 
-            adapter->itr_stats[i][j].tx_packets = 0;
-            adapter->itr_stats[i][j].tx_bytes = 0;
-            adapter->itr_stats[i][j].tx_free_budget = 0;
-            adapter->itr_stats[i][j].tx_next_to_use = 0;
-            adapter->itr_stats[i][j].tx_next_to_clean = 0;
-          }
+	for(i=0; i<16; i++) {	  
+	  ixgbe_logs[i].log = (union IxgbeLogEntry *)vmalloc(sizeof(union IxgbeLogEntry) * IXGBE_LOG_SIZE);
+	  printk(KERN_INFO "%d vmalloc size=%lu addr=%p\n", i, (sizeof(union IxgbeLogEntry) * IXGBE_LOG_SIZE), (void*)(ixgbe_logs[i].log));
+	  memset(ixgbe_logs[i].log, 0, (sizeof(union IxgbeLogEntry) * IXGBE_LOG_SIZE));
+	  if(!(ixgbe_logs[i].log)) {
+	    printk(KERN_INFO "Fail to vmalloc ixgbe_logs[%d]->log\n", i);
 	  }
-	
-        adapter->itr_cookie = 0;
-        adapter->non_itr_cnt = 0;
-        adapter->itr_joules_last_ts = 0;
-	*/
-	
+
+	  ixgbe_logs[i].itr_joules_last_tsc = 0;
+	  ixgbe_logs[i].msix_other_cnt = 0;
+	  ixgbe_logs[i].itr_cookie = 0;
+	  ixgbe_logs[i].non_itr_cnt = 0;
+	  ixgbe_logs[i].itr_cnt = 0;
+	  ixgbe_logs[i].perf_started = 0;  	  
+	}
+	//memset(ixgbe_logs, 0, sizeof(ixgbe_logs));	
+	ixgbe_tsc_per_milli = tsc_khz;
 	
 	now = ixgbe_rdtsc();	
 	write_nti64(&(ixgbe_logs[0].log[0].Fields.tsc), now);
-	printk(KERN_INFO "+++++ ixgbe_open tsc_khz = %u now=%llu tsc=%llu ++++++\n", tsc_khz, now, ixgbe_logs[0].log[0].Fields.tsc);
+	printk(KERN_INFO "+++++ ixgbe_open tsc_khz = %u now=%llu tsc=%llu ++++++\n",
+	       tsc_khz, now, ixgbe_logs[0].log[0].Fields.tsc);
 	
 	/******************** EbbRT PitClock.cc START*****************/
         /*outb(0x43, 0x34);
@@ -7156,7 +7097,8 @@ static void ixgbe_close_suspend(struct ixgbe_adapter *adapter)
 int ixgbe_close(struct net_device *netdev)
 {
 	struct ixgbe_adapter *adapter = netdev_priv(netdev);
-
+	int i;
+	
 	ixgbe_ptp_stop(adapter);
 
 	if (netif_device_present(netdev))
@@ -7166,6 +7108,12 @@ int ixgbe_close(struct net_device *netdev)
 
 	ixgbe_release_hw_control(adapter);
 
+	for(i=0;i<16;i++) {
+	  if(ixgbe_logs[i].log) {
+	    vfree(ixgbe_logs[i].log);
+	  }	  
+	}
+	
 	return 0;
 }
 

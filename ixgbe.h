@@ -546,35 +546,37 @@ struct ixgbe_mac_addr {
 };
 
 union IxgbeLogEntry {
-  long long data[8];
+  long long data[12];
   struct {
     long long tsc;    
     long long ninstructions;
     long long ncycles;
+    long long nref_cycles;
     long long nllc_miss;
     long long joules;
+    long long c3;
+    long long c6;
+    long long c7;
     
     unsigned int rx_desc;
     unsigned int rx_bytes;
     unsigned int tx_desc;
     unsigned int tx_bytes;
 
-    long long unused1;
+    long long pad1;
   } __attribute((packed)) Fields;
 } __attribute((packed));
 
 #define IXGBE_CACHE_LINE_SIZE 64
-#define IXGBE_LOG_SIZE 800000
+#define IXGBE_LOG_SIZE 2000000
+//#define IXGBE_LOG_SIZE 200000
 
 struct IxgbeLog {
-  union IxgbeLogEntry log[IXGBE_LOG_SIZE];
+  //union IxgbeLogEntry log[IXGBE_LOG_SIZE];
+  union IxgbeLogEntry *log;
   //char padding[IXGBE_CACHE_LINE_SIZE- sizeof(union LogEntry *)];
   
-  u64 ins_prev;
-  u64 cyc_prev;
-  u64 llcmiss_prev;
-  u64 itr_joules_last_tsc;
-  
+  u64 itr_joules_last_tsc;  
   u32 msix_other_cnt;
   u32 itr_cookie;
   u32 non_itr_cnt;
