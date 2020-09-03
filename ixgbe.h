@@ -568,7 +568,7 @@ union IxgbeLogEntry {
 } __attribute((packed));
 
 #define IXGBE_CACHE_LINE_SIZE 64
-#define IXGBE_LOG_SIZE 2000000
+#define IXGBE_LOG_SIZE 6000000
 //#define IXGBE_LOG_SIZE 200000
 
 struct IxgbeLog {

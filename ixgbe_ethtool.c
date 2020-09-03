@@ -2408,7 +2408,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  il= &ixgbe_logs[core];
 	  
 	  printk(KERN_INFO "Core=%d itr_cnt=%u\n", core, il->itr_cnt);
-	  printk(KERN_INFO "i rxdesc rxbytes txdesc txbytes ins cyc refcyc llcm JOULE C3 C6 C7 TSC\n");
+	  printk(KERN_INFO "i rxdesc rxbytes txdesc txbytes ins cyc refcyc llcm C3 C6 C7 JOULE TSC\n");
 	  for (i = 0; i < il->itr_cnt; i++) {
 	    ile = &il->log[i];
 	    
@@ -2419,24 +2419,24 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 		   ile->Fields.ninstructions,
 		   ile->Fields.ncycles,
 		   ile->Fields.nref_cycles,
-		   ile->Fields.nllc_miss,		   
-		   ile->Fields.joules,
+		   ile->Fields.nllc_miss,		   		   
 		   ile->Fields.c3,
 		   ile->Fields.c6,
 		   ile->Fields.c7,
+		   ile->Fields.joules,
 		   ile->Fields.tsc);
 	  }
 
 	  // clean up
-	  for(i=0; i<16; i++) {
-	    memset(ixgbe_logs[i].log, 0, (sizeof(union IxgbeLogEntry) * IXGBE_LOG_SIZE));
-	    ixgbe_logs[i].itr_joules_last_tsc = 0;
-	    ixgbe_logs[i].msix_other_cnt = 0;
-	    ixgbe_logs[i].itr_cookie = 0;
-	    ixgbe_logs[i].non_itr_cnt = 0;
-	    ixgbe_logs[i].itr_cnt = 0;
-	    ixgbe_logs[i].perf_started = 0;
-	  }
+	  //for(i=0; i<16; i++) {
+	  memset(ixgbe_logs[core].log, 0, (sizeof(union IxgbeLogEntry) * IXGBE_LOG_SIZE));
+	  ixgbe_logs[core].itr_joules_last_tsc = 0;
+	  ixgbe_logs[core].msix_other_cnt = 0;
+	  ixgbe_logs[core].itr_cookie = 0;
+	  ixgbe_logs[core].non_itr_cnt = 0;
+	  ixgbe_logs[core].itr_cnt = 0;
+	  ixgbe_logs[core].perf_started = 0;
+	  //}
 	    //memset(ixgbe_logs, 0, sizeof(ixgbe_logs));
 	}
 	

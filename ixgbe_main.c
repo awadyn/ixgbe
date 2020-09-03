@@ -38,6 +38,14 @@
 #include <net/xdp_sock.h>
 #include <net/xfrm.h>
 
+// test sysfs
+#include <linux/init.h>
+#include <linux/kobject.h>
+#include <linux/stat.h>
+#include <linux/string.h>
+#include <linux/sysfs.h>
+#include <uapi/linux/stat.h> /* S_IRUSR, S_IWUSR  */
+
 #include <linux/time.h>
 #include "ixgbe.h"
 #include "ixgbe_common.h"
@@ -79,6 +87,64 @@ static const struct ixgbe_info *ixgbe_info_tbl[] = {
 
 unsigned int ixgbe_tsc_per_milli;
 struct IxgbeLog ixgbe_logs[16];
+
+// test sysfs
+static ssize_t log0_show(struct kobject *kobj, struct kobj_attribute *attr,
+        char *buff)
+{
+  int i = 0;
+  ssize_t rsize = 0;
+  
+  pr_info("%s: %u %p %lu\n", __FUNCTION__, ixgbe_logs[i].itr_cnt, ixgbe_logs[i].log, sizeof(union IxgbeLogEntry) * 2000000);
+  rsize = sizeof(union IxgbeLogEntry) * ixgbe_logs[i].itr_cnt;
+  if (rsize > PAGE_SIZE) {
+    pr_info("%s: rsize (%ld) > PAGE_SIZE (%lu)\n", __FUNCTION__, rsize, PAGE_SIZE);
+    return 0;
+  }
+  
+  strncpy(buff, (char*)(ixgbe_logs[0].log), rsize);
+  return rsize;
+}
+static ssize_t log0_store(struct  kobject *kobj, struct kobj_attribute *attr,
+			  const char *buff, size_t count)
+{
+  return 0;
+}
+
+static ssize_t log1_show(struct kobject *kobj, struct kobj_attribute *attr,
+        char *buff)
+{
+  int i = 1;
+  pr_info("%s: %u %p %lu\n", __FUNCTION__, ixgbe_logs[i].itr_cnt, ixgbe_logs[i].log, sizeof(union IxgbeLogEntry) * 2000000);
+  
+  //strncpy(buff, (char*)(ixgbe_logs[0].log), sizeof(union IxgbeLogEntry) * 2000000);
+  //return sizeof(union IxgbeLogEntry) * 2000000;
+  return 0;
+}
+static ssize_t log1_store(struct  kobject *kobj, struct kobj_attribute *attr,
+			  const char *buff, size_t count)
+{
+  return 0;
+}
+
+static struct kobj_attribute log0_attribute =
+  __ATTR(log0, S_IRUGO | S_IWUSR, log0_show, log0_store);
+static struct kobj_attribute log1_attribute =
+  __ATTR(log1, S_IRUGO | S_IWUSR, log1_show, log1_store);
+
+static struct attribute *attrs[] = {
+    &log0_attribute.attr,
+    &log1_attribute.attr,
+    NULL,
+};
+
+static struct attribute_group attr_group = {
+    .attrs = attrs,
+};
+
+static struct kobject *kobj;
+//
+
 
 /* ixgbe_pci_tbl - PCI Device ID Table
  *
@@ -1225,8 +1291,7 @@ static bool ixgbe_clean_tx_irq(struct ixgbe_q_vector *q_vector,
 	if(hw->mac.addr[ETH_ALEN-1] == 0x00) {
           q_vector->tx.per_itr_packets += total_packets;
           q_vector->tx.per_itr_bytes += total_bytes;
-          q_vector->tx.per_itr_desc += tx_desc_cnt;
-	  
+          q_vector->tx.per_itr_desc += tx_desc_cnt;	  
           q_vector->tx.per_itr_free_budget += budget;
         }
 	
@@ -3209,7 +3274,7 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
         int icnt = 0;
         uint64_t now = 0, last = 0, tmp = 0, res = 0;
 	
-        if(hw->mac.addr[ETH_ALEN-1] == 0x00) {	  
+        if(hw->mac.addr[ETH_ALEN-1] == 0x00) {
           v_idx = q_vector->v_idx;
 	  il = &ixgbe_logs[v_idx];
 	    
@@ -3219,65 +3284,79 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 	    ile = &il->log[icnt];
 	    
 	    now = ixgbe_rdtsc();
-	    write_nti64(&ile->Fields.tsc, now);
 	    
-	    if (v_idx == 1) {      
-	      last = il->itr_joules_last_tsc;	    
-	      if ((now - last) > ixgbe_tsc_per_milli) { // 1 ms
-		rdmsrl(0x611, res);
-		write_nti64(&ile->Fields.joules, res);
-		il->itr_joules_last_tsc = now;
+	    write_nti64(&ile->Fields.tsc, now);
+	    //ile->Fields.tsc = now;
+	    
+	    last = il->itr_joules_last_tsc;
+	    if ((now - last) > ixgbe_tsc_per_milli) { // 1 ms
+	      rdmsrl(0x611, res);
+	      write_nti64(&ile->Fields.joules, res);
+	      //ile->Fields.joules = res;
+	      
+	      il->itr_joules_last_tsc = now;	      	      
+	      
+	      if(il->perf_started) {
+		// llc
+		rdmsrl(0xC1, tmp);
+		write_nti64(&ile->Fields.nllc_miss, tmp);
+		//ile->Fields.nllc_miss = tmp;
+		
+		// ins
+		rdmsrl(0x309, tmp);
+		write_nti64(&ile->Fields.ninstructions, tmp);
+		//ile->Fields.ninstructions = tmp;
+		
+		// cycles
+		rdmsrl(0x30A, tmp);
+		write_nti64(&ile->Fields.ncycles, tmp);
+		//ile->Fields.ncycles = tmp;
+		
+		// ref cycles
+		rdmsrl(0x30B, tmp);
+		write_nti64(&ile->Fields.nref_cycles, tmp);
+		//ile->Fields.nref_cycles = tmp;
 
 		rdmsrl(0x3FC, res);
 		write_nti64(&ile->Fields.c3, res);
-
+		//ile->Fields.c3 = res;
+		
 		rdmsrl(0x3FD, res);
 		write_nti64(&ile->Fields.c6, res);
-
+		//ile->Fields.c6 = res;
+		
 		rdmsrl(0x3FE, res);
 		write_nti64(&ile->Fields.c7, res);
+		//ile->Fields.c7 = res;
+	      }
 	      
-		if(il->perf_started) {
-		  // llc
-		  rdmsrl(0xC1, tmp);
-		  write_nti64(&ile->Fields.nllc_miss, tmp);
+	      if(il->perf_started == 0) {
+		// init ins, cycles. ref_cycles
+		wrmsrl(0x38D, 0x333);
 		
-		  // ins
-		  rdmsrl(0x309, tmp);
-		  write_nti64(&ile->Fields.ninstructions, tmp);
+		// init cycles
+		//wrmsrl(0x38D, 0x33);
 		
-		  // cycles
-		  rdmsrl(0x30A, tmp);
-		  write_nti64(&ile->Fields.ncycles, tmp);
-
-		  // ref cycles
-		  rdmsrl(0x30B, tmp);
-		  write_nti64(&ile->Fields.nref_cycles, tmp);
-		}
-	      
-		if(il->perf_started == 0) {
-		  // init ins, cycles. ref_cycles
-		  wrmsrl(0x38D, 0x333);
-		  
-		  // init cycles
-		  //wrmsrl(0x38D, 0x33);
+		// init llc_miss
+		wrmsrl(0x186, 0x43412E);
 		
-		  // init llc_miss
-		  wrmsrl(0x186, 0x43412E);
+		// start
+		//wrmsrl(0x38F, 0x1);
+		//wrmsrl(0x38F, 0x100000001);
 		
-		  // start
-		  //wrmsrl(0x38F, 0x1);
-		  //wrmsrl(0x38F, 0x100000001);
-		  wrmsrl(0x38F, 0x700000001);
+		wrmsrl(0x38F, 0x700000001);
 		
-		  il->perf_started = 1;
-		}
-	      }            
+		il->perf_started = 1;
+	      }
 	    }
+	    //ile->Fields.rx_desc = q_vector->rx.per_itr_desc;
+	    //ile->Fields.rx_bytes = q_vector->rx.per_itr_bytes;
+	    //ile->Fields.tx_desc = q_vector->rx.per_itr_desc;
+	    //ile->Fields.tx_bytes = q_vector->rx.per_itr_bytes;
 	    write_nti32(&(ile->Fields.rx_desc), q_vector->rx.per_itr_desc);
 	    write_nti32(&(ile->Fields.rx_bytes), q_vector->rx.per_itr_bytes);
-	    write_nti32(&(ile->Fields.tx_desc), q_vector->rx.per_itr_desc);
-	    write_nti32(&(ile->Fields.tx_bytes), q_vector->rx.per_itr_bytes);	    
+	    write_nti32(&(ile->Fields.tx_desc), q_vector->tx.per_itr_desc);
+	    write_nti32(&(ile->Fields.tx_bytes), q_vector->tx.per_itr_bytes);	    
 	    
 	    //reset 
 	    q_vector->rx.per_itr_desc = 0;
@@ -11782,6 +11861,16 @@ static int __init ixgbe_init_module(void)
 	dca_register_notify(&dca_notifier);
 #endif
 
+	//test sysfs
+	kobj = kobject_create_and_add("ixgbe_logs", kernel_kobj);
+	if (!kobj) {
+	  printk(KERN_INFO "!kobj");
+	  return 0;
+	}
+	ret = sysfs_create_group(kobj, &attr_group);
+	if (ret)
+	  kobject_put(kobj);
+	
 	return 0;
 }
 
@@ -11805,6 +11894,7 @@ static void __exit ixgbe_exit_module(void)
 		destroy_workqueue(ixgbe_wq);
 		ixgbe_wq = NULL;
 	}
+	kobject_put(kobj);
 }
 
 #ifdef CONFIG_IXGBE_DCA
