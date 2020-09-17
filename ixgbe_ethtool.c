@@ -2333,7 +2333,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	u16 tx_itr_param, rx_itr_param, tx_itr_prev;
 	bool need_reset = false;
 	struct IxgbeLog *il;
-	union IxgbeLogEntry *ile;
+	//union IxgbeLogEntry *ile;
 	  
 	if (adapter->q_vector[0]->tx.count && adapter->q_vector[0]->rx.count) {
 		/* reject Tx specific changes in case of mixed RxTx vectors */
@@ -2408,7 +2408,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 	  il= &ixgbe_logs[core];
 	  
 	  printk(KERN_INFO "Core=%d itr_cnt=%u\n", core, il->itr_cnt);
-	  printk(KERN_INFO "i rxdesc rxbytes txdesc txbytes ins cyc refcyc llcm C3 C6 C7 JOULE TSC\n");
+	  /*printk(KERN_INFO "i rxdesc rxbytes txdesc txbytes ins cyc refcyc llcm C3 C6 C7 JOULE TSC\n");
 	  for (i = 0; i < il->itr_cnt; i++) {
 	    ile = &il->log[i];
 	    
@@ -2426,7 +2426,7 @@ static int ixgbe_set_coalesce(struct net_device *netdev,
 		   ile->Fields.joules,
 		   ile->Fields.tsc);
 	  }
-
+	  */
 	  // clean up
 	  //for(i=0; i<16; i++) {
 	  memset(ixgbe_logs[core].log, 0, (sizeof(union IxgbeLogEntry) * IXGBE_LOG_SIZE));

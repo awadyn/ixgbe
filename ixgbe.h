@@ -562,13 +562,14 @@ union IxgbeLogEntry {
     unsigned int rx_bytes;
     unsigned int tx_desc;
     unsigned int tx_bytes;
-
+    
     long long pad1;
   } __attribute((packed)) Fields;
 } __attribute((packed));
 
 #define IXGBE_CACHE_LINE_SIZE 64
 #define IXGBE_LOG_SIZE 6000000
+//#define IXGBE_LOG_SIZE 20
 //#define IXGBE_LOG_SIZE 200000
 
 struct IxgbeLog {

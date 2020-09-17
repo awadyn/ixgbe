@@ -38,13 +38,13 @@
 #include <net/xdp_sock.h>
 #include <net/xfrm.h>
 
-// test sysfs
-#include <linux/init.h>
-#include <linux/kobject.h>
+// procfs
 #include <linux/stat.h>
 #include <linux/string.h>
 #include <linux/sysfs.h>
 #include <uapi/linux/stat.h> /* S_IRUSR, S_IWUSR  */
+#include <linux/proc_fs.h>
+#include <linux/seq_file.h> /* seq_read, seq_lseek, single_release */
 
 #include <linux/time.h>
 #include "ixgbe.h"
@@ -87,64 +87,129 @@ static const struct ixgbe_info *ixgbe_info_tbl[] = {
 
 unsigned int ixgbe_tsc_per_milli;
 struct IxgbeLog ixgbe_logs[16];
+static struct proc_dir_entry *ixgbe_stats_dir;
+static struct proc_dir_entry *ixgbe_core_dir;
 
-// test sysfs
-static ssize_t log0_show(struct kobject *kobj, struct kobj_attribute *attr,
-        char *buff)
+static void *ct_start(struct seq_file *s, loff_t *pos)
 {
-  int i = 0;
-  ssize_t rsize = 0;
+  loff_t *spos;
+  struct IxgbeLog *il;
+  unsigned long id = (unsigned long)s->private;
   
-  pr_info("%s: %u %p %lu\n", __FUNCTION__, ixgbe_logs[i].itr_cnt, ixgbe_logs[i].log, sizeof(union IxgbeLogEntry) * 2000000);
-  rsize = sizeof(union IxgbeLogEntry) * ixgbe_logs[i].itr_cnt;
-  if (rsize > PAGE_SIZE) {
-    pr_info("%s: rsize (%ld) > PAGE_SIZE (%lu)\n", __FUNCTION__, rsize, PAGE_SIZE);
-    return 0;
+  il= &ixgbe_logs[id];
+  
+  //pr_info("ct_start pos = %llu il->itr_cnt=%u core=%ld\n", (unsigned long long)*pos, il->itr_cnt, id);
+  
+  spos = kmalloc(sizeof(loff_t), GFP_KERNEL);
+
+  // if we've printed more than itr_cnt, then it means we're done and reset data structure
+  if (!spos || (unsigned int)(*pos) >= (unsigned int)(il->itr_cnt)) {
+    memset(ixgbe_logs[id].log, 0, (sizeof(union IxgbeLogEntry) *  IXGBE_LOG_SIZE));
+    ixgbe_logs[id].itr_joules_last_tsc = 0;
+    ixgbe_logs[id].msix_other_cnt = 0;
+    ixgbe_logs[id].itr_cookie = 0;
+    ixgbe_logs[id].non_itr_cnt = 0;
+    ixgbe_logs[id].itr_cnt = 0;
+    ixgbe_logs[id].perf_started = 0;    
+    return NULL;
+  }
+  *spos = *pos;
+  return spos;
+}
+
+static void *ct_next(struct seq_file *s, void *v, loff_t *pos)
+{
+  loff_t *spos;
+  int i;
+  unsigned long id = (unsigned long)s->private;
+  struct IxgbeLog *il;
+  il= &ixgbe_logs[id];
+  
+  spos = v;
+  if((unsigned int)(*pos) >= (unsigned int)(il->itr_cnt))
+    return NULL;
+  
+  for(i=0;i<40;i++) {
+    *pos = ++*spos;
+  }
+  //pr_info("ct_next pos = %llu il->itr_cnt=%u core=%ld\n", (unsigned long long)*pos, il->itr_cnt, id);
+  return spos;
+}
+
+static int ct_show(struct seq_file *s, void *v)
+{
+  loff_t *spos;
+  int i = 0;
+  unsigned long id = (unsigned long)s->private;
+  
+  struct IxgbeLog *il;
+  union IxgbeLogEntry *ile;
+  
+  spos = v;
+  //pr_info("ct_show pos = %llu core=%ld\n", (unsigned long long)*spos, id);
+  
+  il= &ixgbe_logs[id];
+
+  // roughly 1 page of data printed at once
+  for (i = 0; i < 40; i++) {
+    ile = &il->log[(int)*spos+i];
+    if(ile->Fields.tsc != 0) {
+      seq_printf(s, "%u %u %u %u %u %llu %llu %llu %llu %llu %llu %llu %llu %llu\n",
+		 (unsigned int)*spos+i,
+		 ile->Fields.rx_desc, ile->Fields.rx_bytes,
+		 ile->Fields.tx_desc, ile->Fields.tx_bytes,
+		 ile->Fields.ninstructions,
+		 ile->Fields.ncycles,
+		 ile->Fields.nref_cycles,
+		 ile->Fields.nllc_miss,		   		   
+		 ile->Fields.c3,
+		 ile->Fields.c6,
+		 ile->Fields.c7,
+		 ile->Fields.joules,
+		 ile->Fields.tsc);
+    }
   }
   
-  strncpy(buff, (char*)(ixgbe_logs[0].log), rsize);
-  return rsize;
-}
-static ssize_t log0_store(struct  kobject *kobj, struct kobj_attribute *attr,
-			  const char *buff, size_t count)
-{
   return 0;
 }
 
-static ssize_t log1_show(struct kobject *kobj, struct kobj_attribute *attr,
-        char *buff)
+static void ct_stop(struct seq_file *s, void *v)
 {
-  int i = 1;
-  pr_info("%s: %u %p %lu\n", __FUNCTION__, ixgbe_logs[i].itr_cnt, ixgbe_logs[i].log, sizeof(union IxgbeLogEntry) * 2000000);
+  //pr_info("ct_stop\n");
+  kfree(v);  
+}
+
+static struct seq_operations my_seq_ops =
+{
+ .next  = ct_next,
+ .show  = ct_show,
+ .start = ct_start,
+ .stop  = ct_stop,
+};
+
+static int ct_open(struct inode *inode, struct file *file)
+{
+  int ret;
   
-  //strncpy(buff, (char*)(ixgbe_logs[0].log), sizeof(union IxgbeLogEntry) * 2000000);
-  //return sizeof(union IxgbeLogEntry) * 2000000;
-  return 0;
+  ret = seq_open(file, &my_seq_ops);
+
+  //possibly most important part to pass in core id and no idea how this works really but c&p from somewhere
+  if(ret == 0) {
+    struct seq_file *m = file->private_data;
+    m->private = PDE_DATA(inode);
+  }
+  
+  return ret; 
 }
-static ssize_t log1_store(struct  kobject *kobj, struct kobj_attribute *attr,
-			  const char *buff, size_t count)
+
+static const struct file_operations ct_file_ops =
 {
-  return 0;
-}
-
-static struct kobj_attribute log0_attribute =
-  __ATTR(log0, S_IRUGO | S_IWUSR, log0_show, log0_store);
-static struct kobj_attribute log1_attribute =
-  __ATTR(log1, S_IRUGO | S_IWUSR, log1_show, log1_store);
-
-static struct attribute *attrs[] = {
-    &log0_attribute.attr,
-    &log1_attribute.attr,
-    NULL,
+ .owner   = THIS_MODULE,
+ .open    = ct_open,
+ .read    = seq_read,
+ .llseek  = seq_lseek,
+ .release = seq_release
 };
-
-static struct attribute_group attr_group = {
-    .attrs = attrs,
-};
-
-static struct kobject *kobj;
-//
-
 
 /* ixgbe_pci_tbl - PCI Device ID Table
  *
@@ -3317,16 +3382,17 @@ static irqreturn_t ixgbe_msix_clean_rings(int irq, void *data)
 		write_nti64(&ile->Fields.nref_cycles, tmp);
 		//ile->Fields.nref_cycles = tmp;
 
-		rdmsrl(0x3FC, res);
-		write_nti64(&ile->Fields.c3, res);
+		// c3, c6, c7 registers seem bogus atm
+		//rdmsrl(0x3FC, res);
+		write_nti64(&ile->Fields.c3, 0);
 		//ile->Fields.c3 = res;
 		
-		rdmsrl(0x3FD, res);
-		write_nti64(&ile->Fields.c6, res);
+		//rdmsrl(0x3FD, res);
+		write_nti64(&ile->Fields.c6, 0);
 		//ile->Fields.c6 = res;
 		
-		rdmsrl(0x3FE, res);
-		write_nti64(&ile->Fields.c7, res);
+		//rdmsrl(0x3FE, res);
+		write_nti64(&ile->Fields.c7, 0);
 		//ile->Fields.c7 = res;
 	      }
 	      
@@ -11838,10 +11904,12 @@ static struct pci_driver ixgbe_driver = {
  **/
 static int __init ixgbe_init_module(void)
 {
-	int ret;
+        int ret;	
+	unsigned long i;
+	
 	pr_info("%s - version %s\n", ixgbe_driver_string, ixgbe_driver_version);
 	pr_info("%s\n", ixgbe_copyright);
-
+	
 	ixgbe_wq = create_singlethread_workqueue(ixgbe_driver_name);
 	if (!ixgbe_wq) {
 		pr_err("%s: Failed to create workqueue\n", ixgbe_driver_name);
@@ -11856,21 +11924,35 @@ static int __init ixgbe_init_module(void)
 		ixgbe_dbg_exit();
 		return ret;
 	}
-
 #ifdef CONFIG_IXGBE_DCA
 	dca_register_notify(&dca_notifier);
 #endif
-
-	//test sysfs
-	kobj = kobject_create_and_add("ixgbe_logs", kernel_kobj);
-	if (!kobj) {
-	  printk(KERN_INFO "!kobj");
-	  return 0;
-	}
-	ret = sysfs_create_group(kobj, &attr_group);
-	if (ret)
-	  kobject_put(kobj);
 	
+	/* Create /proc/ixgbe_stats */
+	ixgbe_stats_dir = proc_mkdir("ixgbe_stats", NULL);
+	if(!ixgbe_stats_dir) {
+	  printk(KERN_ERR "Couldn't create base directory /proc/ixgbe_stats/\n");
+	  return -ENOMEM;
+	}
+
+	/* Create /proc/ixgbe_stats/core */
+	ixgbe_core_dir = proc_mkdir("core", ixgbe_stats_dir);
+	if(!ixgbe_core_dir) {
+	  printk(KERN_ERR "Couldn't create base directory /proc/ixgbe_stats/core/\n");
+	  return -ENOMEM;
+	}
+
+	/* Create per-core file at /proc/ixgbe_stats/core */
+	for(i=0;i<16;i++) {
+	  char name[4];	  
+	  sprintf(name, "%ld", i);
+	  
+	  // pass in "i" as core id
+	  if(!proc_create_data(name, 0444, ixgbe_core_dir, &ct_file_ops, (void*)i)) {
+	    printk(KERN_ERR "Couldn't create base directory /proc/ixgbe_stats/core/%ld\n", i);
+	  }     
+	}
+	printk(KERN_INFO "Successfully loaded /proc/ixgbe_stats/\n");
 	return 0;
 }
 
@@ -11884,6 +11966,9 @@ module_init(ixgbe_init_module);
  **/
 static void __exit ixgbe_exit_module(void)
 {
+  // clean up /prc/ixgbe_stats procfs
+  remove_proc_subtree("ixgbe_stats", NULL);
+  
 #ifdef CONFIG_IXGBE_DCA
 	dca_unregister_notify(&dca_notifier);
 #endif
@@ -11893,8 +11978,7 @@ static void __exit ixgbe_exit_module(void)
 	if (ixgbe_wq) {
 		destroy_workqueue(ixgbe_wq);
 		ixgbe_wq = NULL;
-	}
-	kobject_put(kobj);
+	}	
 }
 
 #ifdef CONFIG_IXGBE_DCA
