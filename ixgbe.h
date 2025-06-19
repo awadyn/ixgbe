@@ -479,7 +479,15 @@ struct ixgbe_ring_container {
 	unsigned int total_packets;	/* total packets processed this int */
 	u16 work_limit;			/* total work allowed per interrupt */
 	u8 count;			/* total number of rings in vector */
-	u8 itr;				/* current ITR setting for ring */
+  u8 itr;				/* current ITR setting for ring */
+
+  /*********************************************************************************
+         * intLog: to keep track of additional per interrupt information
+         *********************************************************************************/
+        u32 per_itr_desc;
+        u32 per_itr_packets;
+        u32 per_itr_bytes;
+        u32 per_itr_free_budget;
 };
 
 /* iterator for handling rings in ring container */
@@ -587,6 +595,58 @@ struct ixgbe_mac_addr {
 	u16 pool;
 	u16 state; /* bitmask */
 };
+
+/*************************************************************************
+ * intLog: START of code block
+ *************************************************************************/
+
+// a single IxgbeLogEntry is a single row of data in the entire log
+union IxgbeLogEntry { 
+  long long data[14];
+  struct {
+    long long tsc;             // rdtsc timestamp of when log entry was collected
+    long long ninstructions;   // number of instructions
+    long long ncycles;         // number of CPU cycles (will be impacted by CPU frequency changes, generally have it as a sanity check)
+    long long nref_cycles;     // number of CPU cycles (counts at fixed rate, not impacted by CPU frequency changes)
+    long long nllc_miss;       // number of last-level cache misses
+    long long joules;          // current energy reading (Joules) from RAPL MSR register
+
+    long long c0;              // C0 sleep state
+    long long c1;              // C1 sleep state
+    long long c1e;             // C1E sleep state
+    long long c3;              // C3 sleep state
+    long long c6;              // C6 sleep state
+    long long c7;              // C7 sleep state
+    
+    unsigned int rx_desc;      // number of receive descriptors
+    unsigned int rx_bytes;     // number of receive bytes
+    unsigned int tx_desc;      // number of transmit descriptors
+    unsigned int tx_bytes;     // number of transmit bytes
+  } __attribute((packed)) Fields;
+} __attribute((packed));
+
+#define IXGBE_CACHE_LINE_SIZE 64
+// pre-allocate size for number of IxgbeLogEntry struct
+// Note: change this depending on your estimated log size entries, there are kernel limits for this too
+#define IXGBE_LOG_SIZE 1000000
+
+// a global data structure for each core
+struct IxgbeLog {
+  union IxgbeLogEntry *log;  
+  u64 itr_joules_last_tsc;    // stores the last RDTSC timestamp to check of 1 millisecond has passed
+  u32 msix_other_cnt;         
+  u32 itr_cookie;
+  u32 non_itr_cnt;   
+  u32 itr_cnt;                // this keeps track of number of IxgbeLogEntry in *log
+  u32 perf_started;    
+} __attribute__((packed, aligned(IXGBE_CACHE_LINE_SIZE)));
+//extern struct IxgbeLog ixgbe_logs[16];
+extern struct IxgbeLog *ixgbe_logs;
+extern unsigned int ixgbe_tsc_per_milli; 
+
+/*************************************************************************
+ * intLog: END of code block
+ *************************************************************************/
 
 #define IXGBE_MAC_STATE_DEFAULT		0x1
 #define IXGBE_MAC_STATE_MODIFIED	0x2
