@@ -3,6 +3,7 @@
 
 #### Clone/Download Linux kernel version 6.15.1 source code:
 ```
+git clone git@github.com:awadyn/ixgbe.git
 wget https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.15.1.tar.gz
 tar -xzf linux-6.15.1.tar.gz
 ```
@@ -15,6 +16,9 @@ cp -r ixgbe/ linux-6.15.1/drivers/net/ethernet/intel/
 #### Configure Linux kernel 6.15.1:
 ```
 sudo apt install -y fakeroot dwarves flex bison libssl-dev libelf-dev
+```
+If the above fails, then you probably need to update your package index and upgrade installed packages to current versions via `apt update` and `apt upgrade` commands.
+```
 cd linux-6.15.1/
 cp -v /boot/config-$(uname -r) .config 
 yes "" | make localmodconfig
